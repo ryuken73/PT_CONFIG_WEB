@@ -1,6 +1,7 @@
 /* eslint-disable import/named */
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import axiosRequest from 'lib/axiosRequest';
 import constants from 'config/constants';
 import useAppState from 'hooks/useAppState';
 import {
@@ -14,6 +15,7 @@ import {
   // startMediainfoQueue,
 } from 'Components/Pages/MainTab/assetSlice';
 
+const [axiosWithAuth] = axiosRequest();
 const { LOG_LEVEL } = constants;
 
 export default function useAssetListState() {
@@ -52,8 +54,15 @@ export default function useAssetListState() {
   const removeAssetState = React.useCallback((id) => {
     // run axios.del and get new assets 
     // and then dispatch setAssets
-    const newAssetList = assetList.filter(asset => asset.id !== id);
-    dispatch(setAssets({assetList: newAssetList}));
+    axiosWithAuth.delAsset({id})
+    .then(result => {
+      return axiosWithAuth.getAssetList();
+    })
+    .then(result => {
+      setAssetsState(result.assetList);
+    })
+    // const newAssetList = assetList.filter(asset => asset.id !== id);
+    // dispatch(setAssets({assetList: newAssetList}));
   },[assetList, dispatch])
 
   const removeAssetAllCheckedState = React.useCallback(() => {

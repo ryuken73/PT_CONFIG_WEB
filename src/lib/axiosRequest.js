@@ -71,6 +71,24 @@ const axiosRequest = {
         }
     },  
 
+    async delAsset(params) {
+        const {id} = params;
+        try {
+            const options = {
+                ...this.options
+            }
+            const url = `${SERVER_URL}/asset/${id}`;
+            const response = await axios.delete(url, '', options);
+            if(response.status === 200 && response.data.success){
+                    return response.data;
+            }
+            return {success:false};
+        } catch(err) { 
+            console.error(err)
+            return {success:false};
+        }
+    },
+
     async requestVerifySecret(url, params){
         const {secretReqID, user_nm, dept_nm, handphone_nbr, secret} = params;
         try {
