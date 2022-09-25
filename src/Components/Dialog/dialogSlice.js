@@ -18,8 +18,8 @@ export const dialogSlice = createSlice({
     },
     addSource: (state, action) => {
       const { payload } = action;
-      const { src, id } = payload;
-      state.sources.push({src, id, progress:0});
+      const { src, size, id } = payload;
+      state.sources.push({src, size, id, progress:0});
     },
     removeSource: (state, action) => {
       const { payload } = action;
@@ -41,12 +41,14 @@ export const dialogSlice = createSlice({
       const { type } = payload;
       state.type = type;
     },
-    resetDialog: (state, action) => {
-      state = initialState;
+    clearDialog: (state, action) => {
+      state.title = '';
+      state.type = '';
+      state.sources = [];
     },
   },
 })
 
-export const { setDialogOpen, setTitle, setType, addSource, removeSource, setSources, resetDialog } = dialogSlice.actions;
+export const { setDialogOpen, setTitle, setType, addSource, removeSource, setSources, clearDialog } = dialogSlice.actions;
 
 export default dialogSlice.reducer;

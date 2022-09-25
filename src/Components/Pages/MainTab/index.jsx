@@ -32,9 +32,10 @@ const getAssets = () => {
   }])
 }
 
-const MainTab = () => {
+const MainTab = (props) => {
+  const { setFilesToUpload } = props;
   const { assetList, setAssetsState } = useAssetListState();
-  const { setDialogOpenState, setDroppedSrcState } = useDialogState();
+  const { setDialogOpenState, setDialogAssetState } = useDialogState();
 
   React.useEffect(() => {
     getAssets()
@@ -47,15 +48,16 @@ const MainTab = () => {
 
   const handleDrop = React.useCallback(
     (drops) => {
-      if(drops.length > 1){
-        alert('only one file can be dropped!')
-        return;
-      }
-      const droppedSrc = drops[0];
-      setDroppedSrcState(droppedSrc);
+      // if(drops.length > 1){
+      //   alert('only one file can be dropped!')
+      //   return;
+      // }
+      // const dropped = drops[0];
+      setFilesToUpload(files => [...files, ...drops]);
+      setDialogAssetState(drops)
       setDialogOpenState(true)
     },
-    [setDialogOpenState, setDroppedSrcState]
+    [setFilesToUpload, setDialogAssetState, setDialogOpenState]
   );
 
   const showInfoText = assetList.length == 0;

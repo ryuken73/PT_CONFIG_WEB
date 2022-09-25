@@ -3,6 +3,7 @@ import Header from 'Components/Header';
 import MainTab from 'Components/Pages/MainTab';
 import Loading from 'Components/Common/Loading';
 import MessageBox from 'Components/Common/MessageBox';
+import AddDialog from 'Components/Dialog/AddDialog';
 import styled from 'styled-components';
 import constants from 'config/constants';
 import colors from 'config/colors';
@@ -63,6 +64,8 @@ const NotFound = () => {
 };
 export default function App() {
   console.log('re-render App')
+  const [filesToUpload, setFilesToUpload] = React.useState([])
+  console.log(filesToUpload)
   // const [connected, setSocketConnected] = React.useState(false);
   // const { modalOpen, setModalOpenState } = useAppState();
   // const { showMessageBox } = useMessageBox();
@@ -78,11 +81,15 @@ export default function App() {
       </HeaderContainer>
       <BodyContainer>
         <CenterPane>
-          <MainTab></MainTab>
+          <MainTab setFilesToUpload={setFilesToUpload} />
         </CenterPane>
       </BodyContainer>
       <MessageBox />
       <Loading />
+      <AddDialog 
+        filesToUpload={filesToUpload} 
+        setFilesToUpload={setFilesToUpload} 
+      />
     </AppContainer>
   );
 }

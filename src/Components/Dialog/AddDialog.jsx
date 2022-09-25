@@ -8,29 +8,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
+import DialogAsset from 'Components/Dialog/DialogAsset';
 import useDialogState from 'hooks/useDialogState';
-import useConfigState from 'hooks/useConfigState';
 import CONSTANTS from 'config/constants';
-import useAssetState from 'hooks/useAssetState';
-
-
-// const toLabelValueFormat = type => {
-//   return Object.keys(CONSTANTS[type]).map(key => {
-//     return { label: key, value: CONSTANTS[type][key] }
-//   })
-// }
-// const mediaTypeFormItems = toLabelValueFormat('MEDIA_TYPE');
-// const urlTypeFormItems = toLabelValueFormat('URL_TYPE');
-// const streamTypeFormItems = toLabelValueFormat('STREAM_TYPE');
 
 const assetTypeFormItems = [
   {label: 'video', value: 'video'},
   {label: 'image', value: 'image'},
   {label: 'web', value: 'web'}
-];
-
-const radioButtons = [
-  {title: 'TYPE', id: 'assetType', formItems: assetTypeFormItems}
 ];
 
 const CustomDialog = styled(Dialog)`
@@ -42,54 +27,85 @@ const CustomDialog = styled(Dialog)`
     }
   }
 `
+const DialogAssets = styled.div`
+  width: 100%;
+  background: black;
+`
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
+
+const handleDragOver = (event) => {
+  event.preventDefault();
+};
+
+const toArray = obj => {
+  return Object.values(obj);
+}
 
 const AddDialog = props => {
   const {
     dialogOpen: open,
     setDialogOpenState: setOpen,
-    droppedSrc,
+    clearDialogState,
+    setTitleState,
+    setTypeState,
+    addSourceState,
+    title,
+    type,
+    sources
   } = useDialogState();
-  const { addAssetState } = useAssetState();
-  const [asset, setAsset] = React.useState({
-    src: droppedSrc,
-    assetType: 'web'
-  })
-  React.useEffect(() => {
-    setAsset(asset => {
-      return {
-        ...asset,
-        src: droppedSrc
-      }
-    })
-  },[droppedSrc])
-  console.log(asset.src)
-  // const {addMonitorItemToList} = useMonitorListState();
+
+  const {
+    filesToUpload,
+    setFilesToUpload
+  } = props
 
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
     setOpen(false);
-  },[setOpen]);
+    clearDialogState();
+    setFilesToUpload([]);
+  },[clearDialogState, setFilesToUpload, setOpen]);
 
   const handleAddAsset = React.useCallback(() => {
-    console.log(asset);
-    addAssetState(asset);
+    console.log(title, type, sources, filesToUpload);
     handleClose();
-  }, [asset, addAssetState, handleClose]);
+  }, [filesToUpload, handleClose, sources, title, type]);
 
-  const onChangeOption = React.useCallback((event, idOfRadiioButton) => {
-      const key = event.target.id !== '' ? event.target.id : idOfRadiioButton;
-      const { value } = event.target;
-      console.log(key, value)
-      setAsset({
-        ...asset,
-        [key]: value
-      })
-    },
-    [setAsset, asset]
-  );
+  const onChangeTitle = React.useCallback((event) => {
+    setTitleState(event.target.value);
+  },[setTitleState])
+
+  const onChangeType = React.useCallback((event) => {
+    setTypeState(event.target.value);
+  },[setTypeState])
+
+  const handleDrop = React.useCallback((event) => {
+    const {files} = event.dataTransfer;
+    const filesArray = toArray(files);
+    console.log(files, filesArray);
+    const now = Date.now();
+    setFilesToUpload(filesToUpload => [...filesToUpload, ...filesArray]);
+    filesArray.forEach(file => {
+      const id = now + 1;
+      const {name, size} = file;
+      addSourceState({src: name, size, id});
+    })
+  },[addSourceState, setFilesToUpload])
+
+  // const onChangeOption = React.useCallback((event, idOfRadiioButton) => {
+  //     const key = event.target.id !== '' ? event.target.id : idOfRadiioButton;
+  //     const { value } = event.target;
+  //     console.log(key, value)
+  //     setAsset({
+  //       ...asset,
+  //       [key]: value
+  //     })
+  //   },
+  //   [setAsset, asset]
+  // );
 
   return (
     <div>
@@ -99,30 +115,35 @@ const AddDialog = props => {
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
+        onDrop={handleDrop} 
+        onDragOver={handleDragOver}>
       >
         <DialogTitle>{"Add Asset"}</DialogTitle>
         <DialogContent>
           <OptionItemText
             autoFocus
-            onChange={onChangeOption}
-            title="Title"
+            onChange={onChangeTitle}
+            title="TITLE"
             id="title"
+            value={title}
           />
-          <OptionItemText
-            onChange={onChangeOption}
-            value={asset.src}
-            title="Source"
-            id="src"
+          <OptionItemRadio
+            onChange={onChangeType}
+            title="TYPE"
+            id="assetType"
+            selected={type}
+            formItems={assetTypeFormItems}
           />
-          {radioButtons.map((radioButton) => (
-            <OptionItemRadio
-              onChange={onChangeOption}
-              title={radioButton.title}
-              id={radioButton.id}
-              selected={asset[radioButton.id]}
-              formItems={radioButton.formItems}
-             />
-          ))}
+          <div>ASSETS</div>
+          <DialogAssets>
+            {sources.map(source => (
+              <DialogAsset
+                name={source.src}
+                size={source.size}
+                progress={source.progress}
+              ></DialogAsset>
+            ))}
+          </DialogAssets>
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: 'black' }} onClick={handleClose}>
