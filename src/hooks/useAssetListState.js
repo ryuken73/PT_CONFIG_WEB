@@ -54,7 +54,7 @@ export default function useAssetListState() {
     // and then dispatch setAssets
     const newAssetList = assetList.filter(asset => asset.id !== id);
     dispatch(setAssets({assetList: newAssetList}));
-  },[])
+  },[assetList, dispatch])
 
   const removeAssetAllCheckedState = React.useCallback(() => {
     const checkedAssets = assetListRef.current.filter(

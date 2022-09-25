@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import colors from 'config/colors';
-import { Pause } from '@mui/icons-material';
 import useAssetListState from 'hooks/useAssetListState';
 
 const Container = styled(Box)`
@@ -74,16 +73,20 @@ const AssetItem = (props) => {
     updated
   } = asset;
 
-  const checked = false;
-  const updateJobCheckState = () => {};
-  const onClickEdit = () => {};
-  const onClickRemove = () => {};
-
-  const firstSource = sources[0];
-
   const {
     removeAssetState,
   } = useAssetListState();
+
+
+  const checked = false;
+  const updateJobCheckState = () => {};
+  const onClickEdit = () => {};
+  const onClickRemove = React.useCallback(() => {
+    removeAssetState(id)
+  },[id, removeAssetState]);
+
+  const firstSource = sources[0];
+
 
   return (
     <Container>
