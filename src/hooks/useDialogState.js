@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setDialogOpen, clearDialog, addSource, setTitle, setType } from 'Components/Dialog/dialogSlice'
+import { setDialogOpen, clearDialog, addSource, setSourceProgress, setTitle, setType } from 'Components/Dialog/dialogSlice'
 
 export default function useDialogState() {
   const dispatch = useDispatch();
@@ -50,6 +50,12 @@ export default function useDialogState() {
     dispatch(addSource({src, size, id}));
   },[dispatch])
 
+  const updateProgressState = React.useCallback((sourceId) => {
+    return (progress) => {
+      dispatch(setSourceProgress({id: sourceId, progress}));
+    }
+  },[dispatch])
+
   const clearDialogState = React.useCallback(() => {
     dispatch(clearDialog())
   },[dispatch])
@@ -64,6 +70,7 @@ export default function useDialogState() {
     setTitleState,
     setTypeState,
     addSourceState,
+    updateProgressState,
     clearDialogState
   };
 }

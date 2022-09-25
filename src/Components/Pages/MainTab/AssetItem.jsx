@@ -40,13 +40,14 @@ const SmallBox = styled(Box)`
 `
 const MediumBox = styled(Box)`
   flex: 3;
-  /* min-width: 120px;
-  max-width: 120px; */
+  min-width: 150px;
+  max-width: 200px;
 `
 const BigBox = styled(Box)`
   flex: 4;
-  /* width: 100%;
-  min-width: 400px; */
+  width: 100%;
+  min-width: 200px;
+  /* max-width: 400px; */
 `
 const LightTextBox = styled(TextBox)`
   text-align: center;

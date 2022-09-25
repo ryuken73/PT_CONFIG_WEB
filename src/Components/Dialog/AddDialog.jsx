@@ -10,7 +10,10 @@ import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogAsset from 'Components/Dialog/DialogAsset';
 import useDialogState from 'hooks/useDialogState';
+import useAssetListState from 'hooks/useAssetListState';
+import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
+
 
 const assetTypeFormItems = [
   {label: 'video', value: 'video'},
@@ -52,27 +55,60 @@ const AddDialog = props => {
     setTitleState,
     setTypeState,
     addSourceState,
+    updateProgressState,
     title,
     type,
     sources
   } = useDialogState();
+
+  const { setAssetsState } = useAssetListState();
 
   const {
     filesToUpload,
     setFilesToUpload
   } = props
 
+  const reqAborters = React.useRef([]);
+
+
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
+    reqAborters.current.forEach(aborter => aborter.cancel());
+    const [axiosWithAuth] = axiosRequest();
+    axiosWithAuth.getAssetList()
+    .then(result => {
+      setAssetsState(result.assetList);
+    })    
     setOpen(false);
     clearDialogState();
     setFilesToUpload([]);
-  },[clearDialogState, setFilesToUpload, setOpen]);
+  },[clearDialogState, setAssetsState, setFilesToUpload, setOpen]);
 
   const handleAddAsset = React.useCallback(() => {
     console.log(title, type, sources, filesToUpload);
-    handleClose();
-  }, [filesToUpload, handleClose, sources, title, type]);
+    reqAborters.current = [];
+    const sendFilePromise = sources.map((source, index) => {
+      const blob = filesToUpload[index];
+      const params = { fname: source.src };
+      const progressHandler = updateProgressState(source.id);
+      const [axiosRequestWithAuth, aborter] = axiosRequest();
+      reqAborters.current.push(aborter);
+      return axiosRequestWithAuth.putAttach(params, blob, progressHandler)
+    });
+    Promise.all(sendFilePromise)
+    .then(async results => {
+      console.log('$$$$',results);
+      const sourcesWithFullPath = results.map(result => result.saved);
+      const [axiosRequestWithAuth, ] = axiosRequest();
+      const params = {title, type, sources: sourcesWithFullPath};
+      await axiosRequestWithAuth.putAsset(params)
+      handleClose();
+    })
+    .catch(err => {
+      console.error(err);
+      reqAborters.current.forEach(aborter => aborter.cancel());
+    })
+  }, [filesToUpload, handleClose, sources, title, type, updateProgressState]);
 
   const onChangeTitle = React.useCallback((event) => {
     setTitleState(event.target.value);

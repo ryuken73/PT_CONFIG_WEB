@@ -31,6 +31,15 @@ export const dialogSlice = createSlice({
       const { sources } = payload;
       state.sources = sources
     },
+    setSourceProgress: (state, action) => {
+      const { payload } = action;
+      const { id, progress } = payload;
+      state.sources.forEach(source => {
+        if(source.id === id){
+          source.progress = progress
+        }
+      })
+    },
     setTitle: (state, action) => {
       const { payload } = action;
       const { title } = payload;
@@ -49,6 +58,15 @@ export const dialogSlice = createSlice({
   },
 })
 
-export const { setDialogOpen, setTitle, setType, addSource, removeSource, setSources, clearDialog } = dialogSlice.actions;
+export const { 
+  setDialogOpen, 
+  setTitle, 
+  setType, 
+  addSource, 
+  setSourceProgress, 
+  removeSource, 
+  setSources, 
+  clearDialog 
+} = dialogSlice.actions;
 
 export default dialogSlice.reducer;

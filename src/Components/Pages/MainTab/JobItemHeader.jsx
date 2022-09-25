@@ -26,8 +26,6 @@ const TextContainer = styled(Container)`
 const IconContainer = styled(Container)`
   margin-left: 20px;
 `
-
-
 const TinyBox = styled(Box)`
   flex: 1;
   min-width: 60px;
@@ -40,13 +38,13 @@ const SmallBox = styled(Box)`
 `
 const MediumBox = styled(Box)`
   flex: 3;
-  /* min-width: 120px;
-  max-width: 120px; */
+  min-width: 150px;
+  max-width: 200px;
 `
 const BigBox = styled(Box)`
   flex: 4;
-  /* width: 100%;
-  min-width: 400px; */
+  width: 100%;
+  min-width: 200px;
 `
 const CustomTextBox = styled(TextBox)`
   text-align: center;

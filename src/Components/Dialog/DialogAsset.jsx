@@ -23,7 +23,7 @@ const AssetItem = (props) => {
     const {name, size, progress} = props
     return (
         <Container>
-            <LightTextBox text={`${progress}%`}></LightTextBox>
+            <LightTextBox text={`${progress}`}></LightTextBox>
             <LightTextBox text={prettyBytes(size)}></LightTextBox>
             <LightTextBox text={name}></LightTextBox>
         </Container>
