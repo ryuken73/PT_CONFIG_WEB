@@ -1,25 +1,88 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Header from 'Components/Header';
+import MainTab from 'Components/Pages/MainTab';
+import Loading from 'Components/Common/Loading';
+import MessageBox from 'Components/Common/MessageBox';
+import styled from 'styled-components';
+import constants from 'config/constants';
+import colors from 'config/colors';
 
-function App() {
+
+const BasicBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: grey 1px solid;
+  box-sizing: border-box;
+  border-collapse: collapse;
+  font-size: calc(10px + 2vmin);
+`;
+
+const AppContainer = styled(BasicBox)`
+  text-align: center;
+  background-color: ${colors.base};
+  flex-direction: column;
+  justify-content: flex-start;
+  color: white;
+  height: 100%;
+`;
+const HeaderContainer = styled(BasicBox)`
+  margin-bottom: -1px;
+  /* height: 10%; */
+`;
+const BodyContainer = styled.div`
+  margin-left: -1px;
+  margin-right: -1px;
+  border: grey 1px solid;
+  box-sizing: border-box;
+  border-collapse: collapse;
+  width: 100%;
+  height: 90%;
+`;
+const CenterPane = styled(BasicBox)`
+  flex-direction: column;
+  font-size: calc(1px + 2vmin);
+  padding: 8px;
+  border-right: none;
+  margin-right: -1px;
+  margin-left: -1px;
+  height: 100%;
+`;
+const FooterContainer = styled(BasicBox)`
+  height: 40px;
+  margin-top: -1px;
+  font-size: calc(1px + 1.5vmin);
+  flex-shrink: 0;
+`;
+const Index = () => {
+  return <div>index</div>;
+};
+const NotFound = () => {
+  return <div>not found</div>;
+};
+export default function App() {
+  console.log('re-render App')
+  // const [connected, setSocketConnected] = React.useState(false);
+  // const { modalOpen, setModalOpenState } = useAppState();
+  // const { showMessageBox } = useMessageBox();
+  // const { socket } = useSocketIO({
+  //   hostAddress: SOCKET_SERVER_URL,
+  //   setSocketConnected,
+  // });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContainer>
+      <HeaderContainer>
+        <Header />
+      </HeaderContainer>
+      <BodyContainer>
+        <CenterPane>
+          <MainTab></MainTab>
+        </CenterPane>
+      </BodyContainer>
+      <MessageBox />
+      <Loading />
+    </AppContainer>
   );
 }
-
-export default App;

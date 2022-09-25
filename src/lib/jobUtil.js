@@ -1,0 +1,78 @@
+import { getNextId } from 'utils';
+import JOB_CONSTANTS from 'config/bull-constants';
+
+const { JOB_STATUS, Q_ITEM_STATUS, TASK_DEFAULT } = JOB_CONSTANTS;
+
+const createTask = (taskInfo, index) => {
+  const { jobId, taskType } = taskInfo;
+  return {
+    jobId,
+    taskId: getNextId(),
+    status: Q_ITEM_STATUS.STANDBY,
+    progress: 0,
+    ...taskInfo
+  }
+};
+
+export const createJob = (jobInfo) => {
+  const { taskFlow = [], sourceFile } = jobInfo;
+  const jobId = getNextId();
+  const tasks = taskFlow.map((taskType, index) => {
+    const taskInfo = {
+      jobId,
+      taskType,
+      ...TASK_DEFAULT[taskType],
+    }
+    return createTask(taskInfo, index);
+  });
+  console.log('---------------', tasks)
+  return {
+    jobId,
+    tasks,
+    status: JOB_STATUS.STANDBY,
+    checked: true,
+    manualStarted: false,
+    sourceFile,
+  };
+};
+
+export const getTask = (job, task) => {
+  return job.tasks.find((ele) => ele.taskId === task.taskId);
+};
+export const getNextStandbyTask = (job) => {
+  return job.tasks.find((task) => task.status === Q_ITEM_STATUS.STANDBY);
+};
+export const taskUpdater = (task) => {
+  return (dataObj) => {
+    return {
+      ...task,
+      ...dataObj,
+    };
+  };
+};
+
+export const getNextTask = (job, task) => {
+  const index = job.tasks.findIndex((ele) => ele.taskId === task.taskId);
+  if (index + 1 > job.tasks.length || index === -1) {
+    return null;
+  }
+  return job.tasks[index + 1];
+};
+
+export const getActiveTask = job => {
+  if (job) {
+    const activeTask = job.tasks.find(
+      (task) => task.status === Q_ITEM_STATUS.ACTIVE
+    );
+    if (activeTask) return activeTask.taskType;
+  }
+  return null;
+};
+
+export const clearWorker = (jobId, setWorkers) => {
+  setWorkers((workers) => {
+    const cloneWorkers = { ...workers };
+    delete cloneWorkers[jobId];
+    return cloneWorkers;
+  });
+};
