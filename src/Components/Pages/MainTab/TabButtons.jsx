@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ButtonIcon from 'Components/Common/ButtonIcon';
 import useAssetListState from 'hooks/useAssetListState';
+import useDialogState from 'hooks/useDialogState';
 
 const Container = styled.div`
   display: flex;
@@ -23,9 +24,12 @@ const ButtonContainer = styled(Box)`
 `;
 
 const TabButtons = () => {
-  const {
-    removeAssetAllCheckedState,
-  } = useAssetListState();
+  const { removeAssetAllCheckedState } = useAssetListState();
+  const { setDialogOpenState } = useDialogState();
+  const setDialogOpen = React.useCallback(() => {
+    setDialogOpenState(true);
+  },[setDialogOpenState])
+
   // console.log('re-render TabButtons');
   return (
     <ButtonContainer>
@@ -34,7 +38,7 @@ const TabButtons = () => {
         iconComponent={<AddIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
-        onClick={removeAssetAllCheckedState}
+        onClick={setDialogOpen}
       />
       <ButtonIcon
         text="삭제"
