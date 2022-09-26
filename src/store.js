@@ -4,6 +4,7 @@ import appReducer from 'appSlice';
 import configReducer from 'Components/Header/configSlice';
 import assetReducer from 'Components/Pages/MainTab/assetSlice';
 import dialogReducer from 'Components/Dialog/dialogSlice';
+import headerReducer from 'Components/Header/headerSlice';
 import CONSTANTS from 'config/constants';
 
 const { LOGLESS_REDUX_ACTIONS = ['assetSlice/updateJobProgress'] } = CONSTANTS;
@@ -17,7 +18,8 @@ export const store = configureStore({
     app: appReducer,
     asset: assetReducer,
     config: configReducer,
-    dialog: dialogReducer
+    dialog: dialogReducer,
+    header: headerReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
   devTools: process.env.NODE_ENV !== 'production',

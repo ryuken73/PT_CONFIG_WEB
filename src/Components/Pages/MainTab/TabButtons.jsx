@@ -44,7 +44,7 @@ const TabButtons = () => {
         onClick={safeRemoveJobAllCheckedState}
       />
       <ButtonIcon
-        text="메뉴추가"
+        text="메뉴등록"
         iconComponent={<ArrowUpwardIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"

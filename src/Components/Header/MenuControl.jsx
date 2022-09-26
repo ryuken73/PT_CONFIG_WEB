@@ -1,5 +1,7 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import useHeaderState from 'hooks/useHeaderState';
+import axiosRequest from 'lib/axiosRequest';
 
 // fake data generator
 const getItems = count =>
@@ -43,20 +45,28 @@ const getListStyle = isDraggingOver => ({
 
 
 const MenuControl = (props) => {
-    const [items, setItems] = React.useState(getItems(6));
+    // const [items, setItems] = React.useState(getItems(6));
+    const { menued, setMenuedState } = useHeaderState();
+    const [ axiosWithAuth ] = axiosRequest();
+    React.useEffect(() => {
+        axiosWithAuth.getMenuList()
+        .then(result => {
+            setMenuedState(result.menuList);
+        })
+    },[axiosWithAuth, setMenuedState])
     const onDragEnd = React.useCallback((result) => {
         // dropped outside the list
         if (!result.destination) {
             return;
         }
 
-        const newItems = reorder(
-            items,
+        const newMenued = reorder(
+            menued,
             result.source.index,
             result.destination.index
         );
-        setItems(newItems)
-    },[items])
+        setMenuedState(newMenued)
+    },[menued, setMenuedState])
 
     return (
       <DragDropContext onDragEnd={onDragEnd}>
@@ -67,7 +77,10 @@ const MenuControl = (props) => {
               style={getListStyle(snapshot.isDraggingOver)}
               {...provided.droppableProps}
             >
-              {items.map((item, index) => (
+              {menued.length === 0 && (
+                  <div>No Menu Selected</div>
+              )}
+              {menued.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided, snapshot) => (
                     <div

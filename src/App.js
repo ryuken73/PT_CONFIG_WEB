@@ -39,7 +39,7 @@ const BodyContainer = styled.div`
   box-sizing: border-box;
   border-collapse: collapse;
   width: 100%;
-  height: 90%;
+  height: 100%;
 `;
 const CenterPane = styled(BasicBox)`
   flex-direction: column;

@@ -71,6 +71,23 @@ const axiosRequest = {
         }
     },  
 
+    async getMenuList(){
+        try {
+            const options = {
+                ...this.options,
+            }
+            const url = `${SERVER_URL}/menuList`
+            const response = await axios.get(url, options);
+            if(response.status === 200){
+                return response.data;
+            }
+            return null;            
+        } catch (err) { 
+            console.error(err);
+            return null;
+        }
+    },  
+
     async delAsset(params) {
         const {id} = params;
         try {
@@ -89,6 +106,7 @@ const axiosRequest = {
         }
     },
 
+    // old code
     async requestVerifySecret(url, params){
         const {secretReqID, user_nm, dept_nm, handphone_nbr, secret} = params;
         try {
