@@ -45,6 +45,14 @@ const HolderContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
 `
+const PlaceHolder = (props) => {
+  const { show, message } = props;
+  return (
+    <HolderContainer show={show}>
+      <Box>{message}</Box>
+    </HolderContainer>
+  )
+}
 
 const DnD = (props) => {
   const { onDrop, showPlaceholder = true, message = 'Drop File(jpg, png, gif, mp4)' } = props;
@@ -70,23 +78,14 @@ const DnD = (props) => {
     [getRootProps, isDragAccept, isDragReject, isFocused]
   );
 
-  const PlaceHolder = (props) => {
-    const { show, message } = props;
-    return (
-      <HolderContainer show={show}>
-        <Box>{message}</Box>
-      </HolderContainer>
-    )
-  }
 
   const inputPropsMemo = React.useMemo(() => getInputProps(), [getInputProps]);
 
   return (
     <Container showPlaceholder={showPlaceholder} {...rootPropsMemo}>
       <input {...inputPropsMemo} />
-      {/* {props.showPlaceholder && <PlaceHolder message={message}></PlaceHolder>} */}
       {props.children}
-      <PlaceHolder show={showPlaceholder} message={message} />
+      <PlaceHolder show={showPlaceholder} message={message} {...rootPropsMemo} />
     </Container>
   );
 };
