@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import DnD from 'Components/Common/DnD';
 import TabButtons from 'Components/Pages/MainTab/TabButtons';
 import AssetItem from 'Components/Pages/MainTab/AssetItem';
-import JobItemHeader from 'Components/Pages/MainTab/JobItemHeader';
+import AssetItemHeader from 'Components/Pages/MainTab/AssetItemHeader';
 import ScrollbarSmooth from 'Components/Common/ScrollBarSmooth';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
@@ -64,13 +64,14 @@ const MainTab = (props) => {
   return (
     <Container>
       <TabButtons />
-      <JobItemHeader />
+      <AssetItemHeader />
       <DnD onDrop={handleDrop} showPlaceholder={showInfoText}>
         <ScrollbarSmooth>
           {assetList.map((asset, index) => (
             <AssetItem
               asset={asset}
               key={asset.id}
+              checked={asset.checked}
               rownum={index+1}
             />
           ))}

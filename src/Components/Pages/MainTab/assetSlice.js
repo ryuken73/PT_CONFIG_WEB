@@ -5,7 +5,8 @@ import { createSlice } from '@reduxjs/toolkit';
 //  id, created, updated 
 
 const initialState = {
-  assetList: []
+  assetList: [],
+  assetChecked: []
 };
 
 export const assetSlice = createSlice({
@@ -43,12 +44,21 @@ export const assetSlice = createSlice({
       const { key, value } = payload;
       state.assetList.forEach(asset => asset[key] = value);
     },
-    updateCheckedAssets: (state, action) => {
+    toggleChecked: (state, action) => {
       const { payload } = action;
-      const { key, value } = payload;
-      state.assetList.forEach(asset => {
-        if(asset.checked) {asset[key] = value};
-      });
+      const { assetId } = payload;
+      const checked = state.assetChecked.includes(assetId);
+      if(checked){
+        state.assetChecked = state.assetChecked.filter(id => id !== assetId);
+      } else {
+        state.assetChecked.push(assetId);
+      }
+    },
+    setAllAssetChecked: (state, action) => {
+      state.assetChecked = state.assetList.map(asset => asset.id);
+    },
+    setAllAssetUnChecked: (state, action) => {
+      state.assetChecked = [];
     },
     updateJobProgress: (state, action) => {
       const { payload } = action;
@@ -69,7 +79,9 @@ export const {
   removeAsset, 
   updateAsset, 
   updateAllAssets, 
-  updateCheckedAssets, 
+  toggleChecked,
+  setAllAssetChecked,
+  setAllAssetUnChecked,
   updateJobProgress 
 } = assetSlice.actions;
 

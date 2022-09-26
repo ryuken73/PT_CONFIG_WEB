@@ -24,7 +24,7 @@ const ButtonContainer = styled(Box)`
 
 const TabButtons = () => {
   const {
-    safeRemoveJobAllCheckedState,
+    removeAssetAllCheckedState,
   } = useAssetListState();
   // console.log('re-render TabButtons');
   return (
@@ -34,21 +34,21 @@ const TabButtons = () => {
         iconComponent={<AddIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
-        onClick={safeRemoveJobAllCheckedState}
+        onClick={removeAssetAllCheckedState}
       />
       <ButtonIcon
         text="삭제"
         iconComponent={<DeleteIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
-        onClick={safeRemoveJobAllCheckedState}
+        onClick={removeAssetAllCheckedState}
       />
       <ButtonIcon
         text="메뉴등록"
         iconComponent={<ArrowUpwardIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
-        onClick={safeRemoveJobAllCheckedState}
+        onClick={removeAssetAllCheckedState}
       />
     </ButtonContainer>
 

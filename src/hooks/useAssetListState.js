@@ -10,8 +10,10 @@ import {
   setAssets,
   removeAsset,
   updateAsset,
+  toggleChecked,
+  setAllAssetChecked,
+  setAllAssetUnChecked,
   updateAllAssets,
-  updateCheckedAsset,
   // startMediainfoQueue,
 } from 'Components/Pages/MainTab/assetSlice';
 
@@ -20,7 +22,14 @@ const { LOG_LEVEL } = constants;
 
 export default function useAssetListState() {
   const dispatch = useDispatch();
-  const assetList = useSelector((state) => state.asset.assetList);
+  const assetListInState = useSelector((state) => state.asset.assetList);
+  const assetChecked = useSelector((state) => state.asset.assetChecked);
+  const assetList = assetListInState.map(asset => {
+    if(assetChecked.includes(asset.id)){
+      return {...asset, checked: true}
+    }
+    return {...asset, checked: false}
+  })
   const assetListRef = React.useRef([]);
   assetListRef.current = assetList;
   const allChecked = React.useMemo(() => {
@@ -44,9 +53,15 @@ export default function useAssetListState() {
     [dispatch]
   );
 
+  const toggleCheckedState = React.useCallback((id) => {
+    dispatch(toggleChecked({assetId: id}));
+  },[dispatch])
+
   const toggleAllCheckedState = React.useCallback(
     (checked) => {
-      dispatch(updateAllAssets({ key: 'checked', value: checked }));
+      // dispatch(updateAllAssets({ key: 'checked', value: checked }));
+      checked && dispatch(setAllAssetChecked());
+      !checked && dispatch(setAllAssetUnChecked());
     },
     [dispatch]
   );
@@ -61,26 +76,27 @@ export default function useAssetListState() {
     .then(result => {
       setAssetsState(result.assetList);
     })
-    // const newAssetList = assetList.filter(asset => asset.id !== id);
-    // dispatch(setAssets({assetList: newAssetList}));
-  },[assetList, dispatch])
+  },[setAssetsState])
 
   const removeAssetAllCheckedState = React.useCallback(() => {
-    const checkedAssets = assetListRef.current.filter(
-      (asset) => asset.checked === true
-    );
-    checkedAssets.forEach((asset) => {
-      dispatch(removeAsset({ assetId: asset.id }));
-    });
-  }, [dispatch]);
+    const delPromises = assetChecked.map(assetId => axiosWithAuth.delAsset({id: assetId}))
+    Promise.all(delPromises)
+    .then(result => {
+      return axiosWithAuth.getAssetList();
+    })
+    .then(result => {
+      setAssetsState(result.assetList);
+    })
+  }, [assetChecked, setAssetsState]);
 
   return {
     assetList,
     allChecked,
     addAssetsState,
+    toggleCheckedState,
+    toggleAllCheckedState,
     removeAssetState,
     setAssetsState,
-    toggleAllCheckedState,
     removeAssetAllCheckedState,
   };
 }

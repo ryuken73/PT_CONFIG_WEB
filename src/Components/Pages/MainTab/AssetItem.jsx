@@ -69,6 +69,7 @@ const AssetItem = (props) => {
     id,
     title,
     type,
+    checked,
     sources,
     created,
     updated
@@ -76,11 +77,13 @@ const AssetItem = (props) => {
 
   const {
     removeAssetState,
+    toggleCheckedState
   } = useAssetListState();
 
 
-  const checked = false;
-  const updateJobCheckState = () => {};
+  const updateJobCheckState = React.useCallback(() => {
+    toggleCheckedState(id);
+  },[id, toggleCheckedState])
   const onClickEdit = () => {};
   const onClickRemove = React.useCallback(() => {
     removeAssetState(id)
