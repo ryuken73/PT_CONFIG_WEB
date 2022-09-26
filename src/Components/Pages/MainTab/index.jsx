@@ -52,11 +52,6 @@ const MainTab = (props) => {
 
   const handleDrop = React.useCallback(
     (drops) => {
-      // if(drops.length > 1){
-      //   alert('only one file can be dropped!')
-      //   return;
-      // }
-      // const dropped = drops[0];
       setFilesToUpload(files => [...files, ...drops]);
       setDialogAssetState(drops)
       setDialogOpenState(true)

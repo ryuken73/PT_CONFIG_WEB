@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ButtonIcon from 'Components/Common/ButtonIcon';
 import useAssetListState from 'hooks/useAssetListState';
 
@@ -28,10 +30,24 @@ const TabButtons = () => {
   return (
     <ButtonContainer>
       <ButtonIcon
+        text="추가"
+        iconComponent={<AddIcon />}
+        border="2px solid rgba(255, 255, 255, .5)"
+        hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
+        onClick={safeRemoveJobAllCheckedState}
+      />
+      <ButtonIcon
         text="삭제"
         iconComponent={<DeleteIcon />}
-        border="1px solid rgba(255, 255, 255, .5)"
-        hoverBorder="1px solid rgba(255, 255, 255, 0.8)"
+        border="2px solid rgba(255, 255, 255, .5)"
+        hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
+        onClick={safeRemoveJobAllCheckedState}
+      />
+      <ButtonIcon
+        text="메뉴추가"
+        iconComponent={<ArrowUpwardIcon />}
+        border="2px solid rgba(255, 255, 255, .5)"
+        hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
         onClick={safeRemoveJobAllCheckedState}
       />
     </ButtonContainer>
