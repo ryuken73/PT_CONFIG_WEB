@@ -19,7 +19,7 @@ export const dialogSlice = createSlice({
     addSource: (state, action) => {
       const { payload } = action;
       const { src, size, id } = payload;
-      state.sources.push({src, size, id, progress:0});
+      state.sources.push({src, size, id, progress:'0%'});
     },
     removeSource: (state, action) => {
       const { payload } = action;
