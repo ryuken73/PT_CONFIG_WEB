@@ -86,8 +86,9 @@ export default function useAssetListState() {
     })
     .then(result => {
       setAssetsState(result.assetList);
+      dispatch(setAllAssetUnChecked);
     })
-  }, [assetChecked, setAssetsState]);
+  }, [assetChecked, dispatch, setAssetsState]);
 
   return {
     assetList,
