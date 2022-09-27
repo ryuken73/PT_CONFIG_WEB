@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
   addSource, 
+  removeSource,
   setSources,
   setSourceProgress, 
   setTitle,
@@ -42,6 +43,10 @@ export default function useDialogState() {
     dispatch(addSource({src, size, id}));
   },[dispatch])
 
+  const removeSourceState = React.useCallback((id) => {
+    dispatch(removeSource({id}));
+  },[dispatch])
+
   const updateProgressState = React.useCallback((sourceId) => {
     return (progress) => {
       dispatch(setSourceProgress({id: sourceId, progress}));
@@ -53,6 +58,7 @@ export default function useDialogState() {
     setDialogAssetState,
     setSourcesState,
     addSourceState,
+    removeSourceState,
     updateProgressState,
   };
 }

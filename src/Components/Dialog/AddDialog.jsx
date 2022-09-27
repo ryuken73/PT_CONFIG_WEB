@@ -152,8 +152,8 @@ const AddDialog = props => {
     console.log(files, filesArray);
     const now = Date.now();
     setFilesToUpload(filesToUpload => [...filesToUpload, ...filesArray]);
-    filesArray.forEach(file => {
-      const id = now + 1;
+    filesArray.forEach((file, index) => {
+      const id = now + index;
       const {name, size} = file;
       addSourceState({src: name, size, id});
     })
@@ -203,6 +203,7 @@ const AddDialog = props => {
               )}
               {sources.map(source => (
                 <DialogAsset
+                  id={source.id}
                   name={source.src}
                   size={source.size}
                   progress={source.progress}
