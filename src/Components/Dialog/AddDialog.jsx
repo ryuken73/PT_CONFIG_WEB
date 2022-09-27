@@ -12,8 +12,8 @@ import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogAsset from 'Components/Dialog/DialogAsset';
 import WebAsset from 'Components/Dialog/WebAsset';
 import useDialogState from 'hooks/useDialogState';
-import useSourcesState from 'hooks/useSourcesState';
-import useWebSourcesState from 'hooks/useWebSourcesState';
+import useDialogSourcesState from 'hooks/useDialogSourcesState';
+import useDialogWebSourcesState from 'hooks/useDialogWebSourcesState';
 import useAssetListState from 'hooks/useAssetListState';
 import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
@@ -90,11 +90,11 @@ const AddDialog = props => {
     sources,
     addSourceState,
     updateProgressState,    
-  } = useSourcesState();
+  } = useDialogSourcesState();
 
   const {
     webSources,
-  } = useWebSourcesState();
+  } = useDialogWebSourcesState();
 
   const { setAssetsState } = useAssetListState();
 
