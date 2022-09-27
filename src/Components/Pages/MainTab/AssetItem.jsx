@@ -32,22 +32,22 @@ const IconContainer = styled(Container)`
   margin-left: 20px;
 `
 const TinyBox = styled(Box)`
-  flex: 1;
+  /* flex: 1; */
   min-width: 60px;
   max-width: 100px;
 `
 const SmallBox = styled(Box)`
-  flex: 2;
-  min-width: 150px;
-  max-width: 200px;
+  /* flex: 2; */
+  min-width: 180px;
+  max-width: 180px;
 `
 const MediumBox = styled(Box)`
-  flex: 3;
-  min-width: 150px;
+  /* flex: 3; */
+  min-width: 200px;
   max-width: 200px;
 `
 const BigBox = styled(Box)`
-  flex: 4;
+  /* flex: 4; */
   width: 100%;
   min-width: 200px;
   /* max-width: 400px; */
@@ -118,7 +118,7 @@ const AssetItem = (props) => {
     removeAssetState(id)
   },[id, removeAssetState]);
 
-  const firstSource = sources[0].src;
+  const firstSource = basename(sources[0].src);
 
 
   return (
