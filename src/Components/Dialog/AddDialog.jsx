@@ -48,6 +48,26 @@ const handleDragOver = (event) => {
   event.preventDefault();
 };
 
+const saveFiles = (sources, filesToUpload, reqAborters, updateProgress) => {
+  return sources.map((source, index) => {
+    const blob = filesToUpload[index];
+    const params = { fname: source.src, size: source.size };
+    const progressHandler = updateProgress(source.id);
+    const [axiosRequestWithAuth, aborter] = axiosRequest();
+    reqAborters.current.push(aborter);
+    return axiosRequestWithAuth.putAttach(params, blob, progressHandler)
+  });
+};
+
+const saveAsset = (title, type, results) => {
+  const sourcesWithFullPath = results.map(result => {
+    return {src:result.saved, httpPath:result.httpPath, size: parseInt(result.size)};
+  });
+  const [axiosRequestWithAuth, ] = axiosRequest();
+  const params = {title, type, sources: sourcesWithFullPath};
+  return axiosRequestWithAuth.putAsset(params)
+}
+
 const toArray = obj => {
   return Object.values(obj);
 }
@@ -75,7 +95,6 @@ const AddDialog = props => {
 
   const reqAborters = React.useRef([]);
 
-
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
     reqAborters.current.forEach(aborter => aborter.cancel());
@@ -92,14 +111,7 @@ const AddDialog = props => {
   const handleAddAsset = React.useCallback(() => {
     console.log(title, type, sources, filesToUpload);
     reqAborters.current = [];
-    const sendFilePromise = sources.map((source, index) => {
-      const blob = filesToUpload[index];
-      const params = { fname: source.src, size: source.size };
-      const progressHandler = updateProgressState(source.id);
-      const [axiosRequestWithAuth, aborter] = axiosRequest();
-      reqAborters.current.push(aborter);
-      return axiosRequestWithAuth.putAttach(params, blob, progressHandler)
-    });
+    const sendFilePromise = saveFiles( sources, filesToUpload, reqAborters, updateProgressState);
     Promise.all(sendFilePromise)
     .then(async results => {
       console.log('$$$$',results);
@@ -107,12 +119,7 @@ const AddDialog = props => {
         alert('cacnceled!');
         return;
       }
-      const sourcesWithFullPath = results.map(result => {
-        return {src:result.saved, httpPath:result.httpPath, size: parseInt(result.size)};
-      });
-      const [axiosRequestWithAuth, ] = axiosRequest();
-      const params = {title, type, sources: sourcesWithFullPath};
-      await axiosRequestWithAuth.putAsset(params)
+      await saveAsset(title, type, results);
       handleClose();
     })
     .catch(err => {
@@ -141,18 +148,6 @@ const AddDialog = props => {
       addSourceState({src: name, size, id});
     })
   },[addSourceState, setFilesToUpload])
-
-  // const onChangeOption = React.useCallback((event, idOfRadiioButton) => {
-  //     const key = event.target.id !== '' ? event.target.id : idOfRadiioButton;
-  //     const { value } = event.target;
-  //     console.log(key, value)
-  //     setAsset({
-  //       ...asset,
-  //       [key]: value
-  //     })
-  //   },
-  //   [setAsset, asset]
-  // );
 
   return (
     <div>
