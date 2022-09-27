@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -32,7 +33,11 @@ const CustomDialog = styled(Dialog)`
 `
 const DialogAssets = styled.div`
   width: 100%;
-  background: black;
+  background: maroon;
+  opacity: 0.5;
+  min-height: 2em;
+  border-radius: 10px;
+  margin-top: 5px;
 `
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -89,7 +94,7 @@ const AddDialog = props => {
     reqAborters.current = [];
     const sendFilePromise = sources.map((source, index) => {
       const blob = filesToUpload[index];
-      const params = { fname: source.src };
+      const params = { fname: source.src, size: source.size };
       const progressHandler = updateProgressState(source.id);
       const [axiosRequestWithAuth, aborter] = axiosRequest();
       reqAborters.current.push(aborter);
@@ -98,7 +103,13 @@ const AddDialog = props => {
     Promise.all(sendFilePromise)
     .then(async results => {
       console.log('$$$$',results);
-      const sourcesWithFullPath = results.map(result => result.saved);
+      if(results.some(result => result.success === false)){
+        alert('cacnceled!');
+        return;
+      }
+      const sourcesWithFullPath = results.map(result => {
+        return {src:result.saved, httpPath:result.httpPath, size: parseInt(result.size)};
+      });
       const [axiosRequestWithAuth, ] = axiosRequest();
       const params = {title, type, sources: sourcesWithFullPath};
       await axiosRequestWithAuth.putAsset(params)
@@ -114,8 +125,8 @@ const AddDialog = props => {
     setTitleState(event.target.value);
   },[setTitleState])
 
-  const onChangeType = React.useCallback((event) => {
-    setTypeState(event.target.value);
+  const onChangeType = React.useCallback((type) => {
+    setTypeState(type);
   },[setTypeState])
 
   const handleDrop = React.useCallback((event) => {
@@ -152,25 +163,25 @@ const AddDialog = props => {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
         onDrop={handleDrop} 
-        onDragOver={handleDragOver}>
-      >
-        <DialogTitle>{"Add Asset"}</DialogTitle>
+        onDragOver={handleDragOver}
+        >
+        <DialogTitle>{"Add Source"}</DialogTitle>
         <DialogContent>
           <OptionItemText
             autoFocus
             onChange={onChangeTitle}
-            title="TITLE"
+            title="Title"
             id="title"
             value={title}
           />
           <OptionItemRadio
             onChange={onChangeType}
-            title="TYPE"
+            title="Type"
             id="assetType"
             selected={type}
             formItems={assetTypeFormItems}
           />
-          <div>ASSETS</div>
+          <Box sx={{marginTop: '10px'}}>Sources</Box>
           <DialogAssets>
             {sources.map(source => (
               <DialogAsset
