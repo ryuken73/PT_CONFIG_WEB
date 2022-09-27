@@ -10,7 +10,10 @@ import Slide from '@mui/material/Slide';
 import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogAsset from 'Components/Dialog/DialogAsset';
+import WebAsset from 'Components/Dialog/WebAsset';
 import useDialogState from 'hooks/useDialogState';
+import useSourcesState from 'hooks/useSourcesState';
+import useWebSourcesState from 'hooks/useWebSourcesState';
 import useAssetListState from 'hooks/useAssetListState';
 import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
@@ -35,7 +38,7 @@ const DialogAssets = styled.div`
   width: 100%;
   background: maroon;
   opacity: 0.5;
-  min-height: 2em;
+  min-height: 35px;
   border-radius: 10px;
   margin-top: 5px;
 `
@@ -79,12 +82,19 @@ const AddDialog = props => {
     clearDialogState,
     setTitleState,
     setTypeState,
-    addSourceState,
-    updateProgressState,
     title,
     type,
-    sources
   } = useDialogState();
+
+  const {
+    sources,
+    addSourceState,
+    updateProgressState,    
+  } = useSourcesState();
+
+  const {
+    webSources,
+  } = useWebSourcesState();
 
   const { setAssetsState } = useAssetListState();
 
@@ -177,15 +187,29 @@ const AddDialog = props => {
             formItems={assetTypeFormItems}
           />
           <Box sx={{marginTop: '10px'}}>Sources</Box>
-          <DialogAssets>
-            {sources.map(source => (
-              <DialogAsset
-                name={source.src}
-                size={source.size}
-                progress={source.progress}
-              ></DialogAsset>
-            ))}
-          </DialogAssets>
+          {type === 'web' && (
+            <DialogAssets>
+              {webSources.map(webSource => (
+                <input
+                  name={webSource.src}
+                ></input>
+              ))}
+            </DialogAssets>
+          )}
+          {(type === 'video' || type === 'image') && (
+            <DialogAssets>
+              {sources.length === 0 && (
+                <Box sx={{padding:'5px',color:'aliceblue', textAlign: 'center'}}>Drop Files.</Box>
+              )}
+              {sources.map(source => (
+                <DialogAsset
+                  name={source.src}
+                  size={source.size}
+                  progress={source.progress}
+                ></DialogAsset>
+              ))}
+            </DialogAssets>
+          )}
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: 'black' }} onClick={handleClose}>

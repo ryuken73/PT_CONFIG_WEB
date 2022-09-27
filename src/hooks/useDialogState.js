@@ -3,9 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { 
   setDialogOpen, 
   clearDialog, 
-  addSource, 
-  setSources,
-  setSourceProgress, 
   setId, 
   setTitle, 
   setType 
@@ -16,28 +13,6 @@ export default function useDialogState() {
   const dialogOpen = useSelector((state) => state.dialog.dialogOpen);
   const title = useSelector((state) => state.dialog.title);
   const type = useSelector((state) => state.dialog.type);
-  const sources = useSelector((state) => state.dialog.sources);
-  console.log('###', sources);
-
-  const setDialogAssetState = React.useCallback(
-    (drops) => {
-      const id = Date.now();
-      const {name, size, type} = drops[0];
-      const [mainType, ] = type.split('/');
-      const assetType = mainType === 'video' ?  'video' 
-      : mainType === 'image' ? 'image' 
-      : 'web';
-      drops.forEach((drop,index) => {
-        dispatch(addSource({ 
-          src: drop.name, 
-          size: drop.size, 
-          id: id + index }));
-      })
-      dispatch(setTitle({title: name}))
-      dispatch(setType({type: assetType}))
-    },
-    [dispatch]
-  );
 
   const setDialogOpenState = React.useCallback(
     (open) => {
@@ -45,10 +20,6 @@ export default function useDialogState() {
     },
     [dispatch]
   );
-
-  const setSourcesState = React.useCallback((sources) => {
-    dispatch(setSources({sources}));
-  },[dispatch])
 
   const setIdState = React.useCallback((id) => {
     dispatch(setId({id}));
@@ -62,17 +33,6 @@ export default function useDialogState() {
     dispatch(setType({type}));
   },[dispatch])
 
-  const addSourceState = React.useCallback((source) => {
-    const {src, size, id} = source;
-    dispatch(addSource({src, size, id}));
-  },[dispatch])
-
-  const updateProgressState = React.useCallback((sourceId) => {
-    return (progress) => {
-      dispatch(setSourceProgress({id: sourceId, progress}));
-    }
-  },[dispatch])
-
   const clearDialogState = React.useCallback(() => {
     dispatch(clearDialog())
   },[dispatch])
@@ -81,15 +41,10 @@ export default function useDialogState() {
     dialogOpen,
     title,
     type,
-    sources,
     setDialogOpenState,
-    setDialogAssetState,
-    setSourcesState,
     setIdState,
     setTitleState,
     setTypeState,
-    addSourceState,
-    updateProgressState,
     clearDialogState
   };
 }

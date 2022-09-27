@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import colors from 'config/colors';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
+import useSourcesState from 'hooks/useSourcesState';
 
 const basename = path => path.substring(path.lastIndexOf('\\') + 1);
 
@@ -87,11 +88,13 @@ const AssetItem = (props) => {
     setIdState,
     setTitleState,
     setTypeState,
-    setSourcesState,
-    updateProgressState,
     setDialogOpenState,
   } = useDialogState();
 
+  const {
+    setSourcesState,
+    updateProgressState,
+  } = useSourcesState();
 
   const updateJobCheckState = React.useCallback(() => {
     toggleCheckedState(id);
