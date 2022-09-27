@@ -21,12 +21,12 @@ const StyledButtonSmall = styled(ButtonSmall)`
 `;
 
 const ButtonIcon = (props) => {
-  const { iconComponent = <DeleteIcon />, text = 'Click' } = props;
+  const { iconcomponent = <DeleteIcon />, text = 'Click' } = props;
   return (
     <Container>
       <Stack direction="row">
-        <StyledButtonSmall startIcon={iconComponent} {...props}>
-          <TextBox clickable fontSize="11px" text={text} />
+        <StyledButtonSmall startIcon={iconcomponent} {...props}>
+          <TextBox clickable="true"  fontSize="11px" text={text} />
         </StyledButtonSmall>
       </Stack>
     </Container>

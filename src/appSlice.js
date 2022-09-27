@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import CONSTANTS from 'config/constants';
 
 // initialize application log (log file name, format etc..)
+const date = (new Date()).toLocaleDateString();
 const { LOG_LEVEL } = CONSTANTS;
 const initialState = {
   modalOpen: false,
@@ -10,7 +11,7 @@ const initialState = {
   messageBoxLevel: 'success',
   appLog: {
     level: LOG_LEVEL.INFO,
-    date: new Date(),
+    date,
     message: 'App Started',
   },
 };
@@ -32,9 +33,10 @@ export const appSlice = createSlice({
     setAppLog: (state, action) => {
       const { payload } = action;
       const { level = LOG_LEVEL.INFO, message } = payload;
+      const date = (new Date()).toLocaleDateString();
       state.appLog = {
         level,
-        date: new Date(),
+        date,
         message,
       };
     },

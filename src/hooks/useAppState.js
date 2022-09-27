@@ -4,6 +4,7 @@ import { setModalOpen, setStateValue } from 'appSlice';
 import constants from 'config/constants';
 
 const { LOG_LEVEL } = constants;
+const date = (new Date()).toLocaleDateString();
 
 export default function useAppState() {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ export default function useAppState() {
           value: {
             level: logLevel,
             message: logMessage,
-            date: new Date()
+            date
           },
         })
       );

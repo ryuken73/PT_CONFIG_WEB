@@ -35,21 +35,21 @@ const TabButtons = () => {
     <ButtonContainer>
       <ButtonIcon
         text="추가"
-        iconComponent={<AddIcon />}
+        iconcomponent={<AddIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
         onClick={setDialogOpen}
       />
       <ButtonIcon
         text="삭제"
-        iconComponent={<DeleteIcon />}
+        iconcomponent={<DeleteIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
         onClick={removeAssetAllCheckedState}
       />
       <ButtonIcon
         text="메뉴등록"
-        iconComponent={<ArrowUpwardIcon />}
+        iconcomponent={<ArrowUpwardIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
         onClick={removeAssetAllCheckedState}
