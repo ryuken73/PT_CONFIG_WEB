@@ -5,7 +5,7 @@ const { SERVER_URL } = Constants;
 
 const axiosRequest = {
     async putAttach(params, blob, updateProgress) {
-        const {fname} = params;
+        const {fname, size} = params;
         try {
             const options = {
                 ...this.options,
@@ -20,7 +20,7 @@ const axiosRequest = {
                 }
             }
 
-            const putUrl = `${SERVER_URL}/attach?fname=${fname}`
+            const putUrl = `${SERVER_URL}/attach?fname=${fname}&size=${size}`
             const response = await axios.put(putUrl, blob, options);
 
             if(response.status === 200 && response.data.success){
