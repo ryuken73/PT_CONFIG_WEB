@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import TextBox from 'Components/Common/TextBox';
-import prettyBytes from 'pretty-bytes';
+import CustomInput from 'Components/Common/CustomInput';
 
 const Container = styled.div`
     display: flex;
@@ -10,24 +10,15 @@ const Container = styled.div`
     justify-content: flex-start;
     width: 50%;
 `
-const LightTextBox = styled(TextBox)`
-    text-align: right;
-    opacity: 1;
-    margin-left: 5px;
-    margin-right: 5px;
-    padding: 5px;
-    min-width: 50px;
-`
-
-const AssetItem = (props) => {
-    const {name, size, progress} = props
+const WebAsset = (props) => {
+    const {name} = props
     return (
         <Container>
-            <LightTextBox text={`${progress}`}></LightTextBox>
-            <LightTextBox text={prettyBytes(size)}></LightTextBox>
-            <LightTextBox text={name}></LightTextBox>
+            <CustomInput
+                value={name}
+            ></CustomInput>
         </Container>
     )
 }
 
-export default React.memo(AssetItem);
+export default React.memo(WebAsset);

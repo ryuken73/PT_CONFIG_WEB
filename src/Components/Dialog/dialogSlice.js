@@ -6,7 +6,10 @@ const initialState = {
   type: 'video',
   sources: [],
   id:'',
-  webSources: []
+  webSources: [
+    {src: 'http://cctvmap.sbs.co.kr/map'},
+    {src: 'https://www.naver.com'}
+  ]
 };
 
 export const dialogSlice = createSlice({

@@ -190,9 +190,9 @@ const AddDialog = props => {
           {type === 'web' && (
             <DialogAssets>
               {webSources.map(webSource => (
-                <input
+                <WebAsset
                   name={webSource.src}
-                ></input>
+                ></WebAsset>
               ))}
             </DialogAssets>
           )}

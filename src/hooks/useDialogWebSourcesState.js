@@ -21,6 +21,7 @@ export default function useDialogState() {
   },[dispatch])
 
   return {
+    webSources,
     setWebSourcesState,
     addWebSourceState,
     removeWebSource
