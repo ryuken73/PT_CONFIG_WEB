@@ -3,8 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   dialogOpen: false,
   title: '',
-  type: '',
+  type: 'video',
   sources: [],
+  id:''
 };
 
 export const dialogSlice = createSlice({
@@ -50,9 +51,14 @@ export const dialogSlice = createSlice({
       const { type } = payload;
       state.type = type;
     },
+    setId: (state, action) => {
+      const { payload } = action;
+      const { id } = payload;
+      state.id = id;
+    },
     clearDialog: (state, action) => {
       state.title = '';
-      state.type = '';
+      state.type = 'video';
       state.sources = [];
     },
   },
@@ -60,8 +66,9 @@ export const dialogSlice = createSlice({
 
 export const { 
   setDialogOpen, 
-  setTitle, 
+  setId, 
   setType, 
+  setTitle, 
   addSource, 
   setSourceProgress, 
   removeSource, 

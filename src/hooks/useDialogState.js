@@ -1,6 +1,15 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setDialogOpen, clearDialog, addSource, setSourceProgress, setTitle, setType } from 'Components/Dialog/dialogSlice'
+import { 
+  setDialogOpen, 
+  clearDialog, 
+  addSource, 
+  setSources,
+  setSourceProgress, 
+  setId, 
+  setTitle, 
+  setType 
+} from 'Components/Dialog/dialogSlice'
 
 export default function useDialogState() {
   const dispatch = useDispatch();
@@ -37,12 +46,20 @@ export default function useDialogState() {
     [dispatch]
   );
 
+  const setSourcesState = React.useCallback((sources) => {
+    dispatch(setSources({sources}));
+  },[dispatch])
+
+  const setIdState = React.useCallback((id) => {
+    dispatch(setId({id}));
+  },[dispatch])
+
   const setTitleState = React.useCallback((title) => {
     dispatch(setTitle({title}));
   },[dispatch])
 
   const setTypeState = React.useCallback((type) => {
-    dispatch(setTitle({type}));
+    dispatch(setType({type}));
   },[dispatch])
 
   const addSourceState = React.useCallback((source) => {
@@ -67,6 +84,8 @@ export default function useDialogState() {
     sources,
     setDialogOpenState,
     setDialogAssetState,
+    setSourcesState,
+    setIdState,
     setTitleState,
     setTypeState,
     addSourceState,

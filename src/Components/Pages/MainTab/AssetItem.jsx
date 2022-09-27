@@ -8,6 +8,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import colors from 'config/colors';
 import useAssetListState from 'hooks/useAssetListState';
+import useDialogState from 'hooks/useDialogState';
+
+const basename = path => path.substring(path.lastIndexOf('\\') + 1);
 
 const Container = styled(Box)`
   && {
@@ -80,16 +83,42 @@ const AssetItem = (props) => {
     toggleCheckedState
   } = useAssetListState();
 
+  const {
+    setIdState,
+    setTitleState,
+    setTypeState,
+    setSourcesState,
+    updateProgressState,
+    setDialogOpenState,
+  } = useDialogState();
+
 
   const updateJobCheckState = React.useCallback(() => {
     toggleCheckedState(id);
   },[id, toggleCheckedState])
-  const onClickEdit = () => {};
+
+  const onClickEdit = React.useCallback(() => {
+    setIdState(id);
+    setTitleState(title);
+    setTypeState(type);
+    const sourcesBasename = sources.map(source => {
+      return {
+        ...source,
+        src:basename(source.src)
+      }
+    });
+    setSourcesState(sourcesBasename);
+    sources.forEach(source => {
+      updateProgressState(source.id)('100%');
+    })
+    setDialogOpenState(true)
+  },[id, setDialogOpenState, setIdState, setSourcesState, setTitleState, setTypeState, sources, title, type, updateProgressState]);
+
   const onClickRemove = React.useCallback(() => {
     removeAssetState(id)
   },[id, removeAssetState]);
 
-  const firstSource = sources[0];
+  const firstSource = sources[0].src;
 
 
   return (
@@ -98,6 +127,9 @@ const AssetItem = (props) => {
         <CheckBox checked={checked} setChecked={updateJobCheckState}/>
         <TinyBox>
           <LightTextBox text={rownum} />
+        </TinyBox>
+        <TinyBox>
+          <LightTextBox text={type.toUpperCase()} />
         </TinyBox>
         <MediumBox>
           <LightTextBox textAlign="left" text={title} />
