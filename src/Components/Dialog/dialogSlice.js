@@ -7,8 +7,6 @@ const initialState = {
   sources: [],
   assetId:'',
   webSources: [
-    {src: 'http://cctvmap.sbs.co.kr/map'},
-    {src: 'https://www.naver.com'}
   ]
 };
 

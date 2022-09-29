@@ -9,8 +9,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
-import DialogAsset from 'Components/Dialog/DialogAsset';
-import WebAsset from 'Components/Dialog/WebAsset';
+import DialogFiles from 'Components/Dialog/DialogFiles';
+import DialogUrls from 'Components/Dialog/DialogUrls';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useDialogWebSourcesState from 'hooks/useDialogWebSourcesState';
@@ -104,6 +104,7 @@ const AddDialog = props => {
   } = props
 
   const reqAborters = React.useRef([]);
+  const [currentUrl, setCurrentUrl] = React.useState('');
 
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
@@ -146,6 +147,10 @@ const AddDialog = props => {
     setTypeState(type);
   },[setTypeState])
 
+  const onChangeUrl = React.useCallback((event) => {
+    setCurrentUrl(event.type.url);
+  },[])
+
   const handleDrop = React.useCallback((event) => {
     const {files} = event.dataTransfer;
     const filesArray = toArray(files);
@@ -186,31 +191,32 @@ const AddDialog = props => {
             selected={type}
             formItems={assetTypeFormItems}
           />
-          <Box sx={{marginTop: '10px'}}>Sources</Box>
-          {type === 'web' && (
-            <DialogAssets>
-              {webSources.map(webSource => (
-                <WebAsset
-                  name={webSource.src}
-                ></WebAsset>
-              ))}
-            </DialogAssets>
-          )}
-          {(type === 'video' || type === 'image') && (
-            <DialogAssets>
-              {sources.length === 0 && (
-                <Box sx={{padding:'5px',color:'aliceblue', textAlign: 'center'}}>Drop Files.</Box>
-              )}
-              {sources.map(source => (
-                <DialogAsset
-                  id={source.id}
-                  name={source.src}
-                  size={source.size}
-                  progress={source.progress}
-                ></DialogAsset>
-              ))}
-            </DialogAssets>
-          )}
+          <Box sx={{marginTop: '10px'}}>Files</Box>
+          <DialogAssets>
+            {sources.length === 0 && (
+              <Box sx={{padding:'5px',color:'aliceblue', textAlign: 'center'}}>Drop Files.</Box>
+            )}
+            {sources.map(source => (
+              <DialogFiles
+                id={source.id}
+                name={source.src}
+                size={source.size}
+                progress={source.progress}
+              ></DialogFiles>
+            ))}
+          </DialogAssets>
+          <Box sx={{marginTop: '10px'}}>Urls</Box>
+          <DialogAssets>
+            <DialogUrls
+              value={currentUrl}
+              onChange={onChangeUrl}
+            ></DialogUrls>
+            {webSources.map(webSource => (
+              <DialogUrls
+                value={webSource.src}
+              ></DialogUrls>
+            ))}
+          </DialogAssets>
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: 'black' }} onClick={handleClose}>

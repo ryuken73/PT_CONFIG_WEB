@@ -10,7 +10,8 @@ const Input = styled.input`
     background: transparent;
     border: 0px;
     color: aliceblue;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 400;
     width: 100%;
     box-sizing: border-box;
     &:focus {

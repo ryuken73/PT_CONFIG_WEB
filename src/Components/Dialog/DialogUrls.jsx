@@ -8,14 +8,15 @@ const Container = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    width: 50%;
+    width: 100%;
 `
 const WebAsset = (props) => {
-    const {name} = props
+    const {value, onChange} = props
     return (
         <Container>
             <CustomInput
-                value={name}
+                value={value}
+                onChange={onChange}
             ></CustomInput>
         </Container>
     )
