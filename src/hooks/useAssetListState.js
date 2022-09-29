@@ -25,7 +25,7 @@ export default function useAssetListState() {
   const assetListInState = useSelector((state) => state.asset.assetList);
   const assetChecked = useSelector((state) => state.asset.assetChecked);
   const assetList = assetListInState.map(asset => {
-    if(assetChecked.includes(asset.id)){
+    if(assetChecked.includes(asset.assetId)){
       return {...asset, checked: true}
     }
     return {...asset, checked: false}
@@ -53,8 +53,8 @@ export default function useAssetListState() {
     [dispatch]
   );
 
-  const toggleCheckedState = React.useCallback((id) => {
-    dispatch(toggleChecked({assetId: id}));
+  const toggleCheckedState = React.useCallback((assetId) => {
+    dispatch(toggleChecked({assetId}));
   },[dispatch])
 
   const toggleAllCheckedState = React.useCallback(
@@ -66,10 +66,10 @@ export default function useAssetListState() {
     [dispatch]
   );
 
-  const removeAssetState = React.useCallback((id) => {
+  const removeAssetState = React.useCallback((assetId) => {
     // run axios.del and get new assets 
     // and then dispatch setAssets
-    axiosWithAuth.delAsset({id})
+    axiosWithAuth.delAsset({assetId})
     .then(result => {
       return axiosWithAuth.getAssetList();
     })
@@ -79,7 +79,7 @@ export default function useAssetListState() {
   },[setAssetsState])
 
   const removeAssetAllCheckedState = React.useCallback(() => {
-    const delPromises = assetChecked.map(assetId => axiosWithAuth.delAsset({id: assetId}))
+    const delPromises = assetChecked.map(assetId => axiosWithAuth.delAsset({assetId}))
     Promise.all(delPromises)
     .then(result => {
       return axiosWithAuth.getAssetList();

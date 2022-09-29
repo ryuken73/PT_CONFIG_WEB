@@ -5,7 +5,7 @@ const initialState = {
   title: '',
   type: 'video',
   sources: [],
-  id:'',
+  assetId:'',
   webSources: [
     {src: 'http://cctvmap.sbs.co.kr/map'},
     {src: 'https://www.naver.com'}
@@ -23,23 +23,23 @@ export const dialogSlice = createSlice({
     },
     addSource: (state, action) => {
       const { payload } = action;
-      const { src, size, id } = payload;
-      state.sources.push({src, size, id, progress:'0%'});
+      const { src, size, assetId } = payload;
+      state.sources.push({src, size, assetId, progress:'0%'});
     },
     addWebSource: (state, action) => {
       const { payload } = action;
-      const { src, id } = payload;
-      state.webSources.push({src, id});
+      const { src, assetId } = payload;
+      state.webSources.push({src, assetId});
     },
     removeSource: (state, action) => {
       const { payload } = action;
-      const { id } = payload;
-      state.sources = state.sources.filter(source => source.id !== id);
+      const { assetId } = payload;
+      state.sources = state.sources.filter(source => source.assetId !== assetId);
     },
     removeWebSource: (state, action) => {
       const { payload } = action;
-      const { id } = payload;
-      state.webSources = state.webSources.filter(source => source.id !== id);
+      const { assetId } = payload;
+      state.webSources = state.webSources.filter(source => source.assetId !== assetId);
     },
     setSources: (state, action) => {
       const { payload } = action;
@@ -53,9 +53,9 @@ export const dialogSlice = createSlice({
     },
     setSourceProgress: (state, action) => {
       const { payload } = action;
-      const { id, progress } = payload;
+      const { assetId, progress } = payload;
       state.sources.forEach(source => {
-        if(source.id === id){
+        if(source.assetId === assetId){
           source.progress = progress
         }
       })
@@ -70,10 +70,10 @@ export const dialogSlice = createSlice({
       const { type } = payload;
       state.type = type;
     },
-    setId: (state, action) => {
+    setAssetId: (state, action) => {
       const { payload } = action;
-      const { id } = payload;
-      state.id = id;
+      const { assetId } = payload;
+      state.assetId = assetId;
     },
     clearDialog: (state, action) => {
       state.title = '';
@@ -85,7 +85,7 @@ export const dialogSlice = createSlice({
 
 export const { 
   setDialogOpen, 
-  setId, 
+  setAssetId, 
   setType, 
   setTitle, 
   addSource, 

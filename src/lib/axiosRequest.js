@@ -89,12 +89,12 @@ const axiosRequest = {
     },  
 
     async delAsset(params) {
-        const {id} = params;
+        const {assetId} = params;
         try {
             const options = {
                 ...this.options
             }
-            const url = `${SERVER_URL}/asset/${id}`;
+            const url = `${SERVER_URL}/asset/${assetId}`;
             const response = await axios.delete(url, '', options);
             if(response.status === 200 && response.data.success){
                     return response.data;

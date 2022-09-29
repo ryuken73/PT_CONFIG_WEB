@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { 
   setDialogOpen, 
   clearDialog, 
-  setId, 
+  setAssetId, 
   setTitle, 
   setType 
 } from 'Components/Dialog/dialogSlice'
@@ -22,7 +22,7 @@ export default function useDialogState() {
   );
 
   const setIdState = React.useCallback((id) => {
-    dispatch(setId({id}));
+    dispatch(setAssetId({id}));
   },[dispatch])
 
   const setTitleState = React.useCallback((title) => {
