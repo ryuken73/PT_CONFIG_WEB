@@ -11,6 +11,8 @@ import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogFiles from 'Components/Dialog/DialogFiles';
 import DialogUrls from 'Components/Dialog/DialogUrls';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useDialogWebSourcesState from 'hooks/useDialogWebSourcesState';
@@ -41,6 +43,26 @@ const DialogAssets = styled.div`
   min-height: 35px;
   border-radius: 10px;
   margin-top: 5px;
+`
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-contents: flex-start;
+`
+const TinyBox = styled(Box)`
+  /* flex: 1; */
+  min-width: 60px;
+  max-width: 100px;
+`
+const CustomIconButton = styled(IconButton)`
+  && {
+    color: ${(props) => props.disabled ? 'grey !important' : 'white !important'};
+    padding: 5px;
+    background: ${(props) =>
+      props.disabled ? 'transparent !important' : 'transparent'};
+    opacity: 0.6;
+  }
 `
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -104,7 +126,7 @@ const AddDialog = props => {
   } = props
 
   const reqAborters = React.useRef([]);
-  const [currentUrl, setCurrentUrl] = React.useState('');
+  const [currentUrl, setCurrentUrl] = React.useState('http://');
 
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
@@ -151,6 +173,10 @@ const AddDialog = props => {
     setCurrentUrl(event.type.url);
   },[])
 
+  const onClickAddUrl = React.useCallback((event) => {
+    console.log(currentUrl)
+  },[currentUrl])
+
   const handleDrop = React.useCallback((event) => {
     const {files} = event.dataTransfer;
     const filesArray = toArray(files);
@@ -160,7 +186,7 @@ const AddDialog = props => {
     filesArray.forEach((file, index) => {
       const id = now + index;
       const {name, size} = file;
-      addSourceState({src: name, size, id});
+      addSourceState({src: name, size, srcId: id});
     })
   },[addSourceState, setFilesToUpload])
 
@@ -198,7 +224,7 @@ const AddDialog = props => {
             )}
             {sources.map(source => (
               <DialogFiles
-                id={source.id}
+                id={source.srcId}
                 name={source.src}
                 size={source.size}
                 progress={source.progress}
@@ -207,10 +233,17 @@ const AddDialog = props => {
           </DialogAssets>
           <Box sx={{marginTop: '10px'}}>Urls</Box>
           <DialogAssets>
-            <DialogUrls
-              value={currentUrl}
-              onChange={onChangeUrl}
-            ></DialogUrls>
+            <InputContainer>
+              <DialogUrls
+                value={currentUrl}
+                onChange={onChangeUrl}
+              ></DialogUrls>
+              <TinyBox>
+                <CustomIconButton onClick={onClickAddUrl}>
+                  <AddIcon fontSize="small" />
+                </CustomIconButton>
+              </TinyBox>
+            </InputContainer>
             {webSources.map(webSource => (
               <DialogUrls
                 value={webSource.src}
