@@ -11,7 +11,7 @@ const Container = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    width: 50%;
+    width: 100%;
 `
 const LightTextBox = styled(TextBox)`
     text-align: right;
@@ -19,10 +19,10 @@ const LightTextBox = styled(TextBox)`
     margin-left: 5px;
     margin-right: 5px;
     padding: 5px;
-    min-width: 50px;
+    min-width: 20px;
 `
 const StyledButtonSmall = styled(ButtonSmall)`
-  padding: 1px 2px !important;
+  padding: 1px 20px !important;
   span {
     margin-left: 0px;
     margin-right: 0px;
@@ -40,10 +40,10 @@ const AssetItem = (props) => {
     },[id, removeSourceState])
     return (
         <Container>
-            <LightTextBox text={`${progress}`}></LightTextBox>
-            <LightTextBox text={prettyBytes(size)}></LightTextBox>
-            <LightTextBox text={name}></LightTextBox>
-            <StyledButtonSmall onClick={onClickDelete} startIcon={<CloseIcon />} minWidth="20px" />
+          <StyledButtonSmall onClick={onClickDelete} startIcon={<CloseIcon />} minWidth="20px" />
+          <LightTextBox text={`${progress}`}></LightTextBox>
+          <LightTextBox text={prettyBytes(size)}></LightTextBox>
+          <LightTextBox text={name}></LightTextBox>
         </Container>
     )
 }

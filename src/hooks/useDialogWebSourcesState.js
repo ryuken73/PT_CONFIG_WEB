@@ -15,15 +15,19 @@ export default function useDialogState() {
     dispatch(setWebSources({webSources}));
   },[dispatch])
 
-  const addWebSourceState = React.useCallback((webSource) => {
-    const {src, id} = webSource;
-    dispatch(addWebSource({src, id}));
+  const addWebSourceState = React.useCallback((src) => {
+    const srcId = Date.now();
+    dispatch(addWebSource({srcId, src}));
+  },[dispatch])
+
+  const removeWebSourceState = React.useCallback((srcId) => {
+    dispatch(removeWebSource({srcId}));
   },[dispatch])
 
   return {
     webSources,
     setWebSourcesState,
     addWebSourceState,
-    removeWebSource
+    removeWebSourceState,
   };
 }

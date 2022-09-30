@@ -112,7 +112,7 @@ const AssetItem = (props) => {
     });
     setSourcesState(sourcesBasename);
     sources.forEach(source => {
-      updateProgressState(source.id)('100%');
+      updateProgressState(source.srcId)('100%');
     })
     setDialogOpenState(true)
   },[id, setDialogOpenState, setIdState, setSourcesState, setTitleState, setTypeState, sources, title, type, updateProgressState]);
@@ -121,8 +121,7 @@ const AssetItem = (props) => {
     removeAssetState(id)
   },[id, removeAssetState]);
 
-  const firstSource = basename(sources[0].src);
-
+  const firstSource = sources.length === 0 ? 'none' : basename(sources[0].src);
 
   return (
     <Container>

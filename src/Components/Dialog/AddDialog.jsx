@@ -11,8 +11,6 @@ import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogFiles from 'Components/Dialog/DialogFiles';
 import DialogUrls from 'Components/Dialog/DialogUrls';
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/Add';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useDialogWebSourcesState from 'hooks/useDialogWebSourcesState';
@@ -50,20 +48,7 @@ const InputContainer = styled.div`
   align-items: center;
   justify-contents: flex-start;
 `
-const TinyBox = styled(Box)`
-  /* flex: 1; */
-  min-width: 60px;
-  max-width: 100px;
-`
-const CustomIconButton = styled(IconButton)`
-  && {
-    color: ${(props) => props.disabled ? 'grey !important' : 'white !important'};
-    padding: 5px;
-    background: ${(props) =>
-      props.disabled ? 'transparent !important' : 'transparent'};
-    opacity: 0.6;
-  }
-`
+;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -77,7 +62,7 @@ const saveFiles = (sources, filesToUpload, reqAborters, updateProgress) => {
   return sources.map((source, index) => {
     const blob = filesToUpload[index];
     const params = { fname: source.src, size: source.size };
-    const progressHandler = updateProgress(source.id);
+    const progressHandler = updateProgress(source.srcId);
     const [axiosRequestWithAuth, aborter] = axiosRequest();
     reqAborters.current.push(aborter);
     return axiosRequestWithAuth.putAttach(params, blob, progressHandler)
@@ -170,12 +155,8 @@ const AddDialog = props => {
   },[setTypeState])
 
   const onChangeUrl = React.useCallback((event) => {
-    setCurrentUrl(event.type.url);
+    setCurrentUrl(event.target.value);
   },[])
-
-  const onClickAddUrl = React.useCallback((event) => {
-    console.log(currentUrl)
-  },[currentUrl])
 
   const handleDrop = React.useCallback((event) => {
     const {files} = event.dataTransfer;
@@ -233,19 +214,15 @@ const AddDialog = props => {
           </DialogAssets>
           <Box sx={{marginTop: '10px'}}>Urls</Box>
           <DialogAssets>
-            <InputContainer>
-              <DialogUrls
-                value={currentUrl}
-                onChange={onChangeUrl}
-              ></DialogUrls>
-              <TinyBox>
-                <CustomIconButton onClick={onClickAddUrl}>
-                  <AddIcon fontSize="small" />
-                </CustomIconButton>
-              </TinyBox>
-            </InputContainer>
+            <DialogUrls
+              value={currentUrl}
+              setCurrentUrl={setCurrentUrl}
+              onChange={onChangeUrl}
+            ></DialogUrls>
             {webSources.map(webSource => (
               <DialogUrls
+                key={webSource.srcId}
+                id={webSource.srcId}
                 value={webSource.src}
               ></DialogUrls>
             ))}
