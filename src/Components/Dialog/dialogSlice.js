@@ -21,23 +21,23 @@ export const dialogSlice = createSlice({
     },
     addSource: (state, action) => {
       const { payload } = action;
-      const { src, size, assetId } = payload;
-      state.sources.push({src, size, assetId, progress:'0%'});
+      const { src, size, srcId } = payload;
+      state.sources.push({src, size, srcId, progress:'0%'});
     },
     addWebSource: (state, action) => {
       const { payload } = action;
-      const { src, assetId } = payload;
-      state.webSources.push({src, assetId});
+      const { src, srcId } = payload;
+      state.webSources.push({src, srcId});
     },
     removeSource: (state, action) => {
       const { payload } = action;
-      const { assetId } = payload;
-      state.sources = state.sources.filter(source => source.assetId !== assetId);
+      const { srcId } = payload;
+      state.sources = state.sources.filter(source => source.srcId !== srcId);
     },
     removeWebSource: (state, action) => {
       const { payload } = action;
-      const { assetId } = payload;
-      state.webSources = state.webSources.filter(source => source.assetId !== assetId);
+      const { srcId } = payload;
+      state.webSources = state.webSources.filter(source => source.srcId !== srcId);
     },
     setSources: (state, action) => {
       const { payload } = action;
@@ -51,9 +51,9 @@ export const dialogSlice = createSlice({
     },
     setSourceProgress: (state, action) => {
       const { payload } = action;
-      const { assetId, progress } = payload;
+      const { srcId, progress } = payload;
       state.sources.forEach(source => {
-        if(source.assetId === assetId){
+        if(source.srcId === srcId){
           source.progress = progress
         }
       })

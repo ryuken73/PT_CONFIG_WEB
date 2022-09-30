@@ -26,7 +26,7 @@ export default function useDialogState() {
         dispatch(addSource({ 
           src: drop.name, 
           size: drop.size, 
-          id: id + index }));
+          srcId: id + index }));
       })
       dispatch(setTitle({title: name}))
       dispatch(setType({type: assetType}))
@@ -39,17 +39,17 @@ export default function useDialogState() {
   },[dispatch])
 
   const addSourceState = React.useCallback((source) => {
-    const {src, size, id} = source;
-    dispatch(addSource({src, size, id}));
+    const {src, size, srcId} = source;
+    dispatch(addSource({src, size, srcId}));
   },[dispatch])
 
   const removeSourceState = React.useCallback((id) => {
-    dispatch(removeSource({id}));
+    dispatch(removeSource({srcId: id}));
   },[dispatch])
 
-  const updateProgressState = React.useCallback((sourceId) => {
+  const updateProgressState = React.useCallback((id) => {
     return (progress) => {
-      dispatch(setSourceProgress({id: sourceId, progress}));
+      dispatch(setSourceProgress({srcId: id, progress}));
     }
   },[dispatch])
 

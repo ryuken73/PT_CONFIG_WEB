@@ -22,7 +22,7 @@ export default function useDialogState() {
   );
 
   const setIdState = React.useCallback((id) => {
-    dispatch(setAssetId({id}));
+    dispatch(setAssetId({assetId:id}));
   },[dispatch])
 
   const setTitleState = React.useCallback((title) => {
