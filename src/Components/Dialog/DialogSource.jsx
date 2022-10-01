@@ -19,7 +19,7 @@ const LightTextBox = styled(TextBox)`
     margin-left: 5px;
     margin-right: 5px;
     padding: 5px;
-    min-width: 20px;
+    min-width: ${props => props.minWidth ? props.minWidth : '20px'};
 `
 const StyledButtonSmall = styled(ButtonSmall)`
   padding: 1px 20px !important;
@@ -32,20 +32,22 @@ const StyledButtonSmall = styled(ButtonSmall)`
   }
 `;
 
-const AssetItem = (props) => {
-    const { id, name, size, progress } = props
+const DialogSource = (props) => {
+    const { id, srcText, size, progress, isHttpUrl } = props
     const { removeSourceState } = useDialogSourcesState();
     const onClickDelete = React.useCallback(() => {
         removeSourceState(id);
     },[id, removeSourceState])
+    const prorgressToPrint = isHttpUrl ? '-' : progress;
+    const sizeToPrint = isHttpUrl ? '-' : prettyBytes(size);
     return (
         <Container>
           <StyledButtonSmall onClick={onClickDelete} startIcon={<CloseIcon />} minWidth="20px" />
-          <LightTextBox text={`${progress}`}></LightTextBox>
-          <LightTextBox text={prettyBytes(size)}></LightTextBox>
-          <LightTextBox text={name}></LightTextBox>
+          <LightTextBox text={prorgressToPrint}></LightTextBox>
+          <LightTextBox text={sizeToPrint} minWidth="60px"></LightTextBox>
+          <LightTextBox text={srcText}></LightTextBox>
         </Container>
     )
 }
 
-export default React.memo(AssetItem);
+export default React.memo(DialogSource);

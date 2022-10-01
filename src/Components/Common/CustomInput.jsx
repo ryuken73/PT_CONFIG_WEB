@@ -9,8 +9,8 @@ const Container = styled.div`
 const Input = styled.input`
     background: transparent;
     border: 0px;
-    color: aliceblue;
-    font-size: 14px;
+    color: ${props => props.color ? props.color : 'black'};
+    font-size: ${props => props.fontSize ? props.fontSize : '14px'};
     font-weight: 400;
     width: 100%;
     padding: 5px;
@@ -25,10 +25,10 @@ const Input = styled.input`
 `;
 
 const CustomInput = props => {
-    const {onChange, value} = props;
+    const {onChange, onKeyUp, value, color, fontSize} = props;
     return (
         // <Container>
-            <Input onChange={onChange} value={value} size="small"></Input>
+            <Input onChange={onChange} onKeyUp={onKeyUp} color={color} value={value} fontSize={fontSize}></Input>
         // </Container>
     )
 }

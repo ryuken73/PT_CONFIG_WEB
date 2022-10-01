@@ -9,8 +9,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
-import DialogFiles from 'Components/Dialog/DialogFiles';
-import DialogUrls from 'Components/Dialog/DialogUrls';
+import DialogAddUrl from 'Components/Dialog/DialogAddUrl';
+import DialogSources from 'Components/Dialog/DialogSources';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useDialogWebSourcesState from 'hooks/useDialogWebSourcesState';
@@ -34,22 +34,22 @@ const CustomDialog = styled(Dialog)`
     }
   }
 `
-const DialogAssets = styled.div`
+const AddUrlContainer = styled.div`
   width: 100%;
-  background: maroon;
-  opacity: 0.5;
+  background: transparent;
+  opacity: 0.8;
   min-height: 35px;
   border-radius: 10px;
   margin-top: 5px;
 `
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-contents: flex-start;
+const DialogAssets = styled.div`
+  width: 100%;
+  background: deeppink;
+  opacity: 1;
+  min-height: 35px;
+  border-radius: 5px;
+  margin-top: 5px;
 `
-;
-
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
@@ -154,6 +154,13 @@ const AddDialog = props => {
     setTypeState(type);
   },[setTypeState])
 
+  const onKeyUpUrl = React.useCallback((event) => {
+    if(event.keyCode === 13){
+      const srcId = Date.now();
+      addSourceState({src: currentUrl, size: null, srcType:'web', srcId});
+    }
+  },[addSourceState, currentUrl])
+
   const onChangeUrl = React.useCallback((event) => {
     setCurrentUrl(event.target.value);
   },[])
@@ -191,48 +198,35 @@ const AddDialog = props => {
             id="title"
             value={title}
           />
-          <OptionItemRadio
-            onChange={onChangeType}
-            title="Type"
-            id="assetType"
-            selected={type}
-            formItems={assetTypeFormItems}
-          />
-          <Box sx={{marginTop: '10px'}}>Files</Box>
-          <DialogAssets>
-            {sources.length === 0 && (
-              <Box sx={{padding:'5px',color:'aliceblue', textAlign: 'center'}}>Drop Files.</Box>
-            )}
-            {sources.map(source => (
-              <DialogFiles
-                id={source.srcId}
-                name={source.src}
-                size={source.size}
-                progress={source.progress}
-              ></DialogFiles>
-            ))}
-          </DialogAssets>
-          <Box sx={{marginTop: '10px'}}>Urls</Box>
-          <DialogAssets>
-            <DialogUrls
+          {sources.length > 1 && (
+            <OptionItemRadio
+              onChange={onChangeType}
+              title="Mode"
+              id="assetType"
+              selected={type}
+              formItems={assetTypeFormItems}
+            />
+          )}
+          <Box sx={{marginTop: '10px'}}>Sources (Type url or Drop files)</Box>
+          <AddUrlContainer>
+            <DialogAddUrl
               value={currentUrl}
               setCurrentUrl={setCurrentUrl}
               onChange={onChangeUrl}
-            ></DialogUrls>
-            {webSources.map(webSource => (
-              <DialogUrls
-                key={webSource.srcId}
-                id={webSource.srcId}
-                value={webSource.src}
-              ></DialogUrls>
-            ))}
+              onKeyUp={onKeyUpUrl}
+            ></DialogAddUrl>
+          </AddUrlContainer>
+          <DialogAssets>
+            <DialogSources
+              sources={sources}
+            ></DialogSources>
           </DialogAssets>
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: 'black' }} onClick={handleClose}>
             Cancel
           </Button>
-          <Button sx={{ color: 'black' }} onClick={handleAddAsset}>
+          <Button disabled={sources.length === 0} sx={{ color: 'black' }} onClick={handleAddAsset}>
             Add
           </Button>
         </DialogActions>
