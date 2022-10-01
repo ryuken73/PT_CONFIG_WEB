@@ -13,11 +13,11 @@ import DialogAddUrl from 'Components/Dialog/DialogAddUrl';
 import DialogSources from 'Components/Dialog/DialogSources';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
-import useDialogWebSourcesState from 'hooks/useDialogWebSourcesState';
 import useAssetListState from 'hooks/useAssetListState';
 import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
 
+const isHttpUrl = src => src.startsWith('http');
 
 const assetTypeFormItems = [
   {label: 'video', value: 'video'},
@@ -46,7 +46,7 @@ const DialogAssets = styled.div`
   width: 100%;
   background: deeppink;
   opacity: 1;
-  min-height: 35px;
+  /* min-height: 35px; */
   border-radius: 5px;
   margin-top: 5px;
 `
@@ -61,7 +61,8 @@ const handleDragOver = (event) => {
 const saveFiles = (sources, filesToUpload, reqAborters, updateProgress) => {
   return sources.map((source, index) => {
     const blob = filesToUpload[index];
-    const params = { fname: source.src, size: source.size };
+    const {src, size, srcId} = source;
+    const params = { fname: src, size, srcId };
     const progressHandler = updateProgress(source.srcId);
     const [axiosRequestWithAuth, aborter] = axiosRequest();
     reqAborters.current.push(aborter);
@@ -69,12 +70,25 @@ const saveFiles = (sources, filesToUpload, reqAborters, updateProgress) => {
   });
 };
 
-const saveAsset = (title, type, results) => {
-  const sourcesWithFullPath = results.map(result => {
-    return {src:result.saved, httpPath:result.httpPath, size: parseInt(result.size)};
-  });
+const mergeResults = (sources, results) => {
+  return sources.map(source => {
+    return {
+      ...source,
+      ...results.find(result => result.srcId === source.srcId),
+      progress: '100%'
+    }
+  })
+}
+
+const saveAsset = (assetTitle, type, sources, results) => {
+  console.log('$$$1', assetTitle, type, sources, results);
+  const merged = mergeResults(sources, results);
+  console.log('$$$2', assetTitle, type, sources, results, merged);
+  // const sourcesWithFullPath = results.map(result => {
+  //   return {src:result.saved, httpPath:result.httpPath, size: parseInt(result.size)};
+  // });
   const [axiosRequestWithAuth, ] = axiosRequest();
-  const params = {title, type, sources: sourcesWithFullPath};
+  const params = {assetTitle, type, sources: merged};
   return axiosRequestWithAuth.putAsset(params)
 }
 
@@ -87,9 +101,9 @@ const AddDialog = props => {
     dialogOpen: open,
     setDialogOpenState: setOpen,
     clearDialogState,
-    setTitleState,
+    setAssetTitleState,
     setTypeState,
-    title,
+    assetTitle,
     type,
   } = useDialogState();
 
@@ -98,10 +112,6 @@ const AddDialog = props => {
     addSourceState,
     updateProgressState,    
   } = useDialogSourcesState();
-
-  const {
-    webSources,
-  } = useDialogWebSourcesState();
 
   const { setAssetsState } = useAssetListState();
 
@@ -127,9 +137,10 @@ const AddDialog = props => {
   },[clearDialogState, setAssetsState, setFilesToUpload, setOpen]);
 
   const handleAddAsset = React.useCallback(() => {
-    console.log(title, type, sources, filesToUpload);
+    console.log('$$$', assetTitle, type, sources, filesToUpload);
+    const fileSources = sources.filter(source => !isHttpUrl(source.src));
     reqAborters.current = [];
-    const sendFilePromise = saveFiles( sources, filesToUpload, reqAborters, updateProgressState);
+    const sendFilePromise = saveFiles(fileSources, filesToUpload, reqAborters, updateProgressState);
     Promise.all(sendFilePromise)
     .then(async results => {
       console.log('$$$$',results);
@@ -137,18 +148,25 @@ const AddDialog = props => {
         alert('cacnceled!');
         return;
       }
-      await saveAsset(title, type, results);
+      const resultsParsed = results.map(result => {
+        return {
+          ...result,
+          srcId: parseInt(result.srcId),
+          size: parseInt(result.size)
+        }
+      })
+      await saveAsset(assetTitle, type, sources, resultsParsed);
       handleClose();
     })
     .catch(err => {
       console.error(err);
       reqAborters.current.forEach(aborter => aborter.cancel());
     })
-  }, [filesToUpload, handleClose, sources, title, type, updateProgressState]);
+  }, [filesToUpload, handleClose, sources, assetTitle, type, updateProgressState]);
 
-  const onChangeTitle = React.useCallback((event) => {
-    setTitleState(event.target.value);
-  },[setTitleState])
+  const onChangeAssetTitle = React.useCallback((event) => {
+    setAssetTitleState(event.target.value);
+  },[setAssetTitleState])
 
   const onChangeType = React.useCallback((type) => {
     setTypeState(type);
@@ -156,6 +174,10 @@ const AddDialog = props => {
 
   const onKeyUpUrl = React.useCallback((event) => {
     if(event.keyCode === 13){
+      if(currentUrl.length < 8){
+          alert('url too small. enter valid url.');
+          return;
+      }
       const srcId = Date.now();
       addSourceState({src: currentUrl, size: null, srcType:'web', srcId});
     }
@@ -193,10 +215,10 @@ const AddDialog = props => {
         <DialogContent>
           <OptionItemText
             autoFocus
-            onChange={onChangeTitle}
+            onChange={onChangeAssetTitle}
             title="Title"
-            id="title"
-            value={title}
+            id="assetTitle"
+            value={assetTitle}
           />
           {sources.length > 1 && (
             <OptionItemRadio
@@ -207,7 +229,7 @@ const AddDialog = props => {
               formItems={assetTypeFormItems}
             />
           )}
-          <Box sx={{marginTop: '10px'}}>Sources (Type url or Drop files)</Box>
+          <Box sx={{marginTop: '10px', marginBottom: '10px'}}>Sources</Box>
           <AddUrlContainer>
             <DialogAddUrl
               value={currentUrl}
