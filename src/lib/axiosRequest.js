@@ -5,7 +5,7 @@ const { SERVER_URL } = Constants;
 
 const axiosRequest = {
     async putAttach(params, blob, updateProgress) {
-        const {fname, size} = params;
+        const {fname, size, srcId} = params;
         try {
             const options = {
                 ...this.options,
@@ -20,7 +20,7 @@ const axiosRequest = {
                 }
             }
 
-            const putUrl = `${SERVER_URL}/attach?fname=${fname}&size=${size}`
+            const putUrl = `${SERVER_URL}/attach?fname=${fname}&size=${size}&srcId=${srcId}`
             const response = await axios.put(putUrl, blob, options);
 
             if(response.status === 200 && response.data.success){
@@ -36,13 +36,13 @@ const axiosRequest = {
     },
 
     async putAsset(params) {
-        const {title, type, sources} = params;
+        const {assetTitle, type, sources} = params;
         try {
             const options = {
                 ...this.options
             }
             const putUrl = `${SERVER_URL}/asset`;
-            const postParams = { title, type, sources };
+            const postParams = { assetTitle, type, sources };
             const response = await axios.put(putUrl, postParams, options);
             if(response.status === 200 && response.data.success){
                     return response.data;

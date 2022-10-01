@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   dialogOpen: false,
-  title: '',
+  assetTitle: '',
   type: 'video',
   sources: [],
   assetId:'',
@@ -58,10 +58,10 @@ export const dialogSlice = createSlice({
         }
       })
     },
-    setTitle: (state, action) => {
+    setAssetTitle: (state, action) => {
       const { payload } = action;
-      const { title } = payload;
-      state.title = title;
+      const { assetTitle } = payload;
+      state.assetTitle = assetTitle;
     },
     setType: (state, action) => {
       const { payload } = action;
@@ -74,8 +74,7 @@ export const dialogSlice = createSlice({
       state.assetId = assetId;
     },
     clearDialog: (state, action) => {
-      state.title = '';
-      state.type = 'video';
+      state.assetTitle = '';
       state.sources = [];
     },
   },
@@ -84,8 +83,8 @@ export const dialogSlice = createSlice({
 export const { 
   setDialogOpen, 
   setAssetId, 
+  setAssetTitle, 
   setType, 
-  setTitle, 
   addSource, 
   addWebSource,
   setSourceProgress, 

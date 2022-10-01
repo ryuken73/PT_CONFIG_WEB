@@ -4,14 +4,14 @@ import {
   setDialogOpen, 
   clearDialog, 
   setAssetId, 
-  setTitle, 
+  setAssetTitle, 
   setType 
 } from 'Components/Dialog/dialogSlice'
 
 export default function useDialogState() {
   const dispatch = useDispatch();
   const dialogOpen = useSelector((state) => state.dialog.dialogOpen);
-  const title = useSelector((state) => state.dialog.title);
+  const assetTitle = useSelector((state) => state.dialog.assetTitle);
   const type = useSelector((state) => state.dialog.type);
 
   const setDialogOpenState = React.useCallback(
@@ -25,8 +25,8 @@ export default function useDialogState() {
     dispatch(setAssetId({assetId:id}));
   },[dispatch])
 
-  const setTitleState = React.useCallback((title) => {
-    dispatch(setTitle({title}));
+  const setAssetTitleState = React.useCallback((assetTitle) => {
+    dispatch(setAssetTitle({assetTitle}));
   },[dispatch])
 
   const setTypeState = React.useCallback((type) => {
@@ -39,11 +39,11 @@ export default function useDialogState() {
 
   return {
     dialogOpen,
-    title,
+    assetTitle,
     type,
     setDialogOpenState,
     setIdState,
-    setTitleState,
+    setAssetTitleState,
     setTypeState,
     clearDialogState
   };

@@ -5,7 +5,7 @@ import {
   removeSource,
   setSources,
   setSourceProgress, 
-  setTitle,
+  setAssetTitle,
   setType
 } from 'Components/Dialog/dialogSlice'
 
@@ -28,7 +28,7 @@ export default function useDialogState() {
           size: drop.size, 
           srcId: id + index }));
       })
-      dispatch(setTitle({title: name}))
+      dispatch(setAssetTitle({assetTitle: name}))
       dispatch(setType({type: assetType}))
     },
     [dispatch]

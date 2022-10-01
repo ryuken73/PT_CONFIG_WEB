@@ -70,8 +70,8 @@ const CustomIconButton = styled(IconButton)`
 const AssetItem = (props) => {
   const { asset, rownum } = props;
   const {
-    id,
-    title,
+    assetId,
+    assetTitle,
     type,
     checked,
     sources,
@@ -86,7 +86,7 @@ const AssetItem = (props) => {
 
   const {
     setIdState,
-    setTitleState,
+    setAssetTitleState,
     setTypeState,
     setDialogOpenState,
   } = useDialogState();
@@ -97,12 +97,12 @@ const AssetItem = (props) => {
   } = useDialogSourcesState();
 
   const updateJobCheckState = React.useCallback(() => {
-    toggleCheckedState(id);
-  },[id, toggleCheckedState])
+    toggleCheckedState(assetId);
+  },[assetId, toggleCheckedState])
 
   const onClickEdit = React.useCallback(() => {
-    setIdState(id);
-    setTitleState(title);
+    setIdState(assetId);
+    setAssetTitleState(assetTitle);
     setTypeState(type);
     const sourcesBasename = sources.map(source => {
       return {
@@ -115,11 +115,11 @@ const AssetItem = (props) => {
       updateProgressState(source.srcId)('100%');
     })
     setDialogOpenState(true)
-  },[id, setDialogOpenState, setIdState, setSourcesState, setTitleState, setTypeState, sources, title, type, updateProgressState]);
+  },[assetId, setDialogOpenState, setIdState, setSourcesState, setAssetTitleState, setTypeState, sources, assetTitle, type, updateProgressState]);
 
   const onClickRemove = React.useCallback(() => {
-    removeAssetState(id)
-  },[id, removeAssetState]);
+    removeAssetState(assetId)
+  },[assetId, removeAssetState]);
 
   const firstSource = sources.length === 0 ? 'none' : basename(sources[0].src);
 
@@ -131,10 +131,10 @@ const AssetItem = (props) => {
           <LightTextBox text={rownum} />
         </TinyBox>
         <TinyBox>
-          <LightTextBox text={type.toUpperCase()} />
+          <LightTextBox text={'displaymode'} />
         </TinyBox>
         <MediumBox>
-          <LightTextBox textAlign="left" text={title} />
+          <LightTextBox textAlign="left" text={assetTitle} />
         </MediumBox>
         <BigBox>
           <LightTextBox textAlign="left" text={firstSource} />
