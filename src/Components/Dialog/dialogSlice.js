@@ -6,8 +6,6 @@ const initialState = {
   type: 'video',
   sources: [],
   assetId:'',
-  webSources: [
-  ]
 };
 
 export const dialogSlice = createSlice({
@@ -24,30 +22,15 @@ export const dialogSlice = createSlice({
       const { src, size, srcId } = payload;
       state.sources.push({src, size, srcId, progress:'0%'});
     },
-    addWebSource: (state, action) => {
-      const { payload } = action;
-      const { src, srcId } = payload;
-      state.webSources.push({src, srcId});
-    },
     removeSource: (state, action) => {
       const { payload } = action;
       const { srcId } = payload;
       state.sources = state.sources.filter(source => source.srcId !== srcId);
     },
-    removeWebSource: (state, action) => {
-      const { payload } = action;
-      const { srcId } = payload;
-      state.webSources = state.webSources.filter(source => source.srcId !== srcId);
-    },
     setSources: (state, action) => {
       const { payload } = action;
       const { sources } = payload;
       state.sources = sources
-    },
-    setWebSources: (state, action) => {
-      const { payload } = action;
-      const { webSources } = payload;
-      state.webSources = webSources
     },
     setSourceProgress: (state, action) => {
       const { payload } = action;
@@ -86,12 +69,9 @@ export const {
   setAssetTitle, 
   setType, 
   addSource, 
-  addWebSource,
   setSourceProgress, 
   removeSource, 
-  removeWebSource,
   setSources, 
-  setWebSources,
   clearDialog 
 } = dialogSlice.actions;
 
