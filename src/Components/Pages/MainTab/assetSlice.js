@@ -55,7 +55,7 @@ export const assetSlice = createSlice({
       }
     },
     setAllAssetChecked: (state, action) => {
-      state.assetChecked = state.assetList.map(asset => asset.id);
+      state.assetChecked = state.assetList.map(asset => asset.assetId);
     },
     setAllAssetUnChecked: (state, action) => {
       state.assetChecked = [];
