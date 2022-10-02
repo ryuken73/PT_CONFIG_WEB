@@ -33,25 +33,29 @@ const IconContainer = styled(Container)`
   margin-left: 20px;
 `
 const TinyBox = styled(Box)`
+  flex: 0;
   /* flex: 1; */
   min-width: 60px;
-  max-width: 100px;
+  /* max-width: 100px; */
 `
 const SmallBox = styled(Box)`
+  flex: 0;
   /* flex: 2; */
-  min-width: 180px;
-  max-width: 180px;
+  min-width: 120px;
+  /* max-width: 180px; */
 `
 const MediumBox = styled(Box)`
+  flex: 0;
   /* flex: 3; */
   min-width: 200px;
-  max-width: 200px;
+  /* max-width: 200px; */
 `
 const BigBox = styled(Box)`
+  flex: 1;
   /* flex: 4; */
-  width: 100%;
-  min-width: 200px;
-  /* max-width: 400px; */
+  /* width: 100%; */
+  min-width: 600px;
+  // max-width: 600px;
 `
 const LightTextBox = styled(TextBox)`
   text-align: center;
@@ -72,7 +76,7 @@ const AssetItem = (props) => {
   const {
     assetId,
     assetTitle,
-    type,
+    displayMode,
     checked,
     sources,
     created,
@@ -87,7 +91,7 @@ const AssetItem = (props) => {
   const {
     setIdState,
     setAssetTitleState,
-    setTypeState,
+    setDisplayModeState,
     setDialogOpenState,
   } = useDialogState();
 
@@ -103,11 +107,11 @@ const AssetItem = (props) => {
   const onClickEdit = React.useCallback(() => {
     setIdState(assetId);
     setAssetTitleState(assetTitle);
-    setTypeState(type);
+    setDisplayModeState(displayMode);
     const sourcesBasename = sources.map(source => {
       return {
         ...source,
-        src:basename(source.src)
+        src:basename(source.srcLocal)
       }
     });
     setSourcesState(sourcesBasename);
@@ -115,13 +119,13 @@ const AssetItem = (props) => {
       updateProgressState(source.srcId)('100%');
     })
     setDialogOpenState(true)
-  },[assetId, setDialogOpenState, setIdState, setSourcesState, setAssetTitleState, setTypeState, sources, assetTitle, type, updateProgressState]);
+  },[assetId, setDialogOpenState, setIdState, setSourcesState, setAssetTitleState, setDisplayModeState, sources, assetTitle, displayMode, updateProgressState]);
 
   const onClickRemove = React.useCallback(() => {
     removeAssetState(assetId)
   },[assetId, removeAssetState]);
 
-  const firstSource = sources.length === 0 ? 'none' : basename(sources[0].src);
+  const firstSource = sources.length === 0 ? 'none' : basename(sources[0].srcLocal);
 
   return (
     <Container>
@@ -130,12 +134,12 @@ const AssetItem = (props) => {
         <TinyBox>
           <LightTextBox text={rownum} />
         </TinyBox>
-        <TinyBox>
+        <SmallBox>
           <LightTextBox text={'displaymode'} />
-        </TinyBox>
-        <MediumBox>
+        </SmallBox>
+        <SmallBox>
           <LightTextBox textAlign="left" text={assetTitle} />
-        </MediumBox>
+        </SmallBox>
         <BigBox>
           <LightTextBox textAlign="left" text={firstSource} />
         </BigBox>

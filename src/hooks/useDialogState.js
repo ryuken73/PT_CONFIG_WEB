@@ -5,14 +5,14 @@ import {
   clearDialog, 
   setAssetId, 
   setAssetTitle, 
-  setType 
+  setDisplayMode 
 } from 'Components/Dialog/dialogSlice'
 
 export default function useDialogState() {
   const dispatch = useDispatch();
   const dialogOpen = useSelector((state) => state.dialog.dialogOpen);
   const assetTitle = useSelector((state) => state.dialog.assetTitle);
-  const type = useSelector((state) => state.dialog.type);
+  const displayMode = useSelector((state) => state.dialog.displayMode);
 
   const setDialogOpenState = React.useCallback(
     (open) => {
@@ -29,8 +29,8 @@ export default function useDialogState() {
     dispatch(setAssetTitle({assetTitle}));
   },[dispatch])
 
-  const setTypeState = React.useCallback((type) => {
-    dispatch(setType({type}));
+  const setDisplayModeState = React.useCallback((displayMode) => {
+    dispatch(setDisplayMode({displayMode}));
   },[dispatch])
 
   const clearDialogState = React.useCallback(() => {
@@ -40,11 +40,11 @@ export default function useDialogState() {
   return {
     dialogOpen,
     assetTitle,
-    type,
+    displayMode,
     setDialogOpenState,
     setIdState,
     setAssetTitleState,
-    setTypeState,
+    setDisplayModeState,
     clearDialogState
   };
 }

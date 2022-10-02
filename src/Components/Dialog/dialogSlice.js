@@ -2,10 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   dialogOpen: false,
-  assetTitle: '',
-  type: 'video',
-  sources: [],
   assetId:'',
+  assetTitle: '',
+  displayMode: 0,
+  sources: [],
 };
 
 export const dialogSlice = createSlice({
@@ -19,8 +19,8 @@ export const dialogSlice = createSlice({
     },
     addSource: (state, action) => {
       const { payload } = action;
-      const { src, size, srcId } = payload;
-      state.sources.push({src, size, srcId, progress:'0%'});
+      const { src, size, srcId, srcType } = payload;
+      state.sources.push({src, size, srcId, srcType, progress:'0%'});
     },
     removeSource: (state, action) => {
       const { payload } = action;
@@ -46,10 +46,10 @@ export const dialogSlice = createSlice({
       const { assetTitle } = payload;
       state.assetTitle = assetTitle;
     },
-    setType: (state, action) => {
+    setDisplayMode: (state, action) => {
       const { payload } = action;
-      const { type } = payload;
-      state.type = type;
+      const { displayMode } = payload;
+      state.displayMode = displayMode;
     },
     setAssetId: (state, action) => {
       const { payload } = action;
@@ -67,7 +67,7 @@ export const {
   setDialogOpen, 
   setAssetId, 
   setAssetTitle, 
-  setType, 
+  setDisplayMode, 
   addSource, 
   setSourceProgress, 
   removeSource, 

@@ -80,15 +80,15 @@ const mergeResults = (sources, results) => {
   })
 }
 
-const saveAsset = (assetTitle, type, sources, results) => {
-  console.log('$$$1', assetTitle, type, sources, results);
+const saveAsset = (assetTitle, displayMode, sources, results) => {
+  console.log('$$$1', assetTitle, displayMode, sources, results);
   const merged = mergeResults(sources, results);
-  console.log('$$$2', assetTitle, type, sources, results, merged);
+  console.log('$$$2', assetTitle, displayMode, sources, results, merged);
   // const sourcesWithFullPath = results.map(result => {
   //   return {src:result.saved, httpPath:result.httpPath, size: parseInt(result.size)};
   // });
   const [axiosRequestWithAuth, ] = axiosRequest();
-  const params = {assetTitle, type, sources: merged};
+  const params = {assetTitle, displayMode, sources: merged};
   return axiosRequestWithAuth.putAsset(params)
 }
 
@@ -102,9 +102,9 @@ const AddDialog = props => {
     setDialogOpenState: setOpen,
     clearDialogState,
     setAssetTitleState,
-    setTypeState,
+    setDisplayModeState,
     assetTitle,
-    type,
+    displayMode,
   } = useDialogState();
 
   const {
@@ -137,7 +137,7 @@ const AddDialog = props => {
   },[clearDialogState, setAssetsState, setFilesToUpload, setOpen]);
 
   const handleAddAsset = React.useCallback(() => {
-    console.log('$$$', assetTitle, type, sources, filesToUpload);
+    console.log('$$$', assetTitle, displayMode, sources, filesToUpload);
     const fileSources = sources.filter(source => !isHttpUrl(source.src));
     reqAborters.current = [];
     const sendFilePromise = saveFiles(fileSources, filesToUpload, reqAborters, updateProgressState);
@@ -155,22 +155,22 @@ const AddDialog = props => {
           size: parseInt(result.size)
         }
       })
-      await saveAsset(assetTitle, type, sources, resultsParsed);
+      await saveAsset(assetTitle, displayMode, sources, resultsParsed);
       handleClose();
     })
     .catch(err => {
       console.error(err);
       reqAborters.current.forEach(aborter => aborter.cancel());
     })
-  }, [filesToUpload, handleClose, sources, assetTitle, type, updateProgressState]);
+  }, [filesToUpload, handleClose, sources, assetTitle, displayMode, updateProgressState]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
     setAssetTitleState(event.target.value);
   },[setAssetTitleState])
 
-  const onChangeType = React.useCallback((type) => {
-    setTypeState(type);
-  },[setTypeState])
+  const onChangeDisplayMode = React.useCallback((displayMode) => {
+    setDisplayModeState(displayMode);
+  },[setDisplayModeState])
 
   const onKeyUpUrl = React.useCallback((event) => {
     if(event.keyCode === 13){
@@ -222,10 +222,10 @@ const AddDialog = props => {
           />
           {sources.length > 1 && (
             <OptionItemRadio
-              onChange={onChangeType}
+              onChange={onChangeDisplayMode}
               title="Mode"
-              id="assetType"
-              selected={type}
+              id="displayMode"
+              selected={displayMode}
               formItems={assetTypeFormItems}
             />
           )}

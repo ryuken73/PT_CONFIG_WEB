@@ -6,7 +6,6 @@ import {
   setSources,
   setSourceProgress, 
   setAssetTitle,
-  setType
 } from 'Components/Dialog/dialogSlice'
 
 export default function useDialogState() {
@@ -17,19 +16,20 @@ export default function useDialogState() {
   const setDialogAssetState = React.useCallback(
     (drops) => {
       const id = Date.now();
-      const {name, type} = drops[0];
-      const [mainType, ] = type.split('/');
-      const assetType = mainType === 'video' ?  'video' 
-      : mainType === 'image' ? 'image' 
-      : 'web';
       drops.forEach((drop,index) => {
+        const {name, type, size} = drop;
+        const [mimeType, ] = type.split('/');
+        const srcType = mimeType === 'video' ?  'video' 
+        : mimeType === 'image' ? 'image' 
+        : 'web';
         dispatch(addSource({ 
-          src: drop.name, 
-          size: drop.size, 
-          srcId: id + index }));
+          src: name, 
+          size: size, 
+          srcType,
+          srcId: id + index 
+        }));
       })
-      dispatch(setAssetTitle({assetTitle: name}))
-      dispatch(setType({type: assetType}))
+      dispatch(setAssetTitle({assetTitle: drops[0].name}))
     },
     [dispatch]
   );
