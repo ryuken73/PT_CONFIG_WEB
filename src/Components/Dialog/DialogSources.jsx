@@ -12,6 +12,7 @@ const DialogSources = (props) => {
                 id={source.srcId}
                 key={source.srcId}
                 srcText={source.src}
+                srcType={source.srcType}
                 size={source.size}
                 progress={source.progress}
                 isHttpUrl={isHttpUrl(source.src)}

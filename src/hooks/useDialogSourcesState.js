@@ -4,9 +4,15 @@ import {
   addSource, 
   removeSource,
   setSources,
+  setSrcType,
   setSourceProgress, 
   setAssetTitle,
 } from 'Components/Dialog/dialogSlice'
+
+const getNextSrcType = srcType => {
+  const nextType = srcType === 'video' ? 'image' : srcType === 'image' ? 'web' : 'video';
+  return nextType;
+}
 
 export default function useDialogState() {
   const dispatch = useDispatch();
@@ -39,13 +45,19 @@ export default function useDialogState() {
   },[dispatch])
 
   const addSourceState = React.useCallback((source) => {
-    const {src, size, srcId} = source;
-    dispatch(addSource({src, size, srcId}));
+    const {src, size, srcId, srcType} = source;
+    dispatch(addSource({src, size, srcId, srcType}));
   },[dispatch])
 
   const removeSourceState = React.useCallback((id) => {
     dispatch(removeSource({srcId: id}));
   },[dispatch])
+
+  const toggleSrcTypeState = React.useCallback((id) => {
+    const targetSource = sources.find(source => source.srcId === id);
+    const nextSrcType = getNextSrcType(targetSource.srcType);
+    dispatch(setSrcType({srcId: id, srcType: nextSrcType}))
+  },[dispatch, sources])
 
   const updateProgressState = React.useCallback((id) => {
     return (progress) => {
@@ -58,6 +70,7 @@ export default function useDialogState() {
     setDialogAssetState,
     setSourcesState,
     addSourceState,
+    toggleSrcTypeState,
     removeSourceState,
     updateProgressState,
   };

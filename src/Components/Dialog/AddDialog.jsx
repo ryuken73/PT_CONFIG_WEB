@@ -19,6 +19,18 @@ import CONSTANTS from 'config/constants';
 
 const isHttpUrl = src => src.startsWith('http');
 
+const videoExtensions = ['M3M8', 'MP4'];
+const imageExtensions = ['JPG', 'gif', 'png'];
+const typeInfer = name => {
+  const isVideo = videoExtensions.some(extension => {
+    return name.toUpperCase().endsWith(extension)
+  })
+  const isImage = imageExtensions.some(extension => {
+    return name.toUpperCase().endsWith(extension)
+  })
+  return isVideo ? 'video' : isImage ? 'image' : 'web';
+}
+
 const assetTypeFormItems = [
   {label: 'video', value: 'video'},
   {label: 'image', value: 'image'},
@@ -44,7 +56,7 @@ const AddUrlContainer = styled.div`
 `
 const DialogAssets = styled.div`
   width: 100%;
-  background: deeppink;
+  background: indigo;
   opacity: 1;
   /* min-height: 35px; */
   border-radius: 5px;
@@ -197,7 +209,8 @@ const AddDialog = props => {
     filesArray.forEach((file, index) => {
       const id = now + index;
       const {name, size} = file;
-      addSourceState({src: name, size, srcId: id});
+      const srcType = typeInfer(name);
+      addSourceState({src: name, size, srcType, srcId: id});
     })
   },[addSourceState, setFilesToUpload])
 

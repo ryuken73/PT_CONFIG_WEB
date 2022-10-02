@@ -32,6 +32,12 @@ export const dialogSlice = createSlice({
       const { sources } = payload;
       state.sources = sources
     },
+    setSrcType: (state, action) => {
+      const { payload } = action;
+      const { srcId, srcType } = payload;
+      const targetSource = state.sources.find(source => source.srcId === srcId);
+      targetSource.srcType = srcType;
+    },
     setSourceProgress: (state, action) => {
       const { payload } = action;
       const { srcId, progress } = payload;
@@ -72,6 +78,7 @@ export const {
   setSourceProgress, 
   removeSource, 
   setSources, 
+  setSrcType,
   clearDialog 
 } = dialogSlice.actions;
 

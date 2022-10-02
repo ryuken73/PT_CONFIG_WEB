@@ -45,6 +45,6 @@ export default function useDialogState() {
     setIdState,
     setAssetTitleState,
     setDisplayModeState,
-    clearDialogState
+    clearDialogState,
   };
 }

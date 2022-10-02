@@ -33,16 +33,28 @@ const StyledButtonSmall = styled(ButtonSmall)`
 `;
 
 const DialogSource = (props) => {
-    const { id, srcText, size, progress, isHttpUrl } = props
-    const { removeSourceState } = useDialogSourcesState();
+    const { id, srcText, srcType, size, progress, isHttpUrl } = props
+    const { removeSourceState, toggleSrcTypeState } = useDialogSourcesState();
     const onClickDelete = React.useCallback(() => {
-        removeSourceState(id);
+      removeSourceState(id);
     },[id, removeSourceState])
+    const toggleSrcType = React.useCallback(() => {
+      toggleSrcTypeState(id);
+    },[id, toggleSrcTypeState])
     const prorgressToPrint = isHttpUrl ? '-' : progress;
     const sizeToPrint = isHttpUrl ? '-' : prettyBytes(size);
     return (
         <Container>
           <StyledButtonSmall onClick={onClickDelete} startIcon={<CloseIcon />} minWidth="20px" />
+          <ButtonSmall 
+            hoverBackground="darkblue" 
+            hoverBorder="1px solid white" 
+            padding="2px" borderRadius="6px" 
+            border="1px solid" 
+            fontSize="5px"
+            onClick={toggleSrcType}
+          >{srcType}
+          </ButtonSmall>
           <LightTextBox text={prorgressToPrint}></LightTextBox>
           <LightTextBox text={sizeToPrint} minWidth="60px"></LightTextBox>
           <LightTextBox text={srcText}></LightTextBox>
