@@ -40,6 +40,7 @@ export default function useAssetListState() {
   })
   const assetListRef = React.useRef([]);
   assetListRef.current = assetList;
+  const assetListChecked = assetList.filter(asset => asset.checked);
 
   const allChecked = React.useMemo(() => {
     return assetList.length === 0
@@ -108,6 +109,7 @@ export default function useAssetListState() {
 
   return {
     assetList,
+    assetListChecked,
     allChecked,
     loadAssetListState,
     addAssetsState,

@@ -8,6 +8,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ButtonIcon from 'Components/Common/ButtonIcon';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
+import useHeaderState from 'hooks/useHeaderState';
 
 const Container = styled.div`
   display: flex;
@@ -25,11 +26,23 @@ const ButtonContainer = styled(Box)`
 `;
 
 const TabButtons = () => {
-  const { removeAssetAllCheckedState, resetToDefaultState } = useAssetListState();
+  const { 
+    assetListChecked, 
+    removeAssetAllCheckedState, 
+    resetToDefaultState 
+  } = useAssetListState();
   const { setDialogOpenState } = useDialogState();
+  const { addAssetActiveState } = useHeaderState();
+
   const setDialogOpen = React.useCallback(() => {
     setDialogOpenState(true);
   },[setDialogOpenState])
+
+  const addAssetsActive = React.useCallback(() => {
+    assetListChecked.forEach(asset => {
+      addAssetActiveState(asset);
+    })
+  },[addAssetActiveState, assetListChecked])
 
   // console.log('re-render TabButtons');
   return (
@@ -53,7 +66,7 @@ const TabButtons = () => {
         iconcomponent={<ArrowUpwardIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
-        onClick={removeAssetAllCheckedState}
+        onClick={addAssetsActive}
       />
       <ButtonIcon
         text="초기화"

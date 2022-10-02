@@ -50,10 +50,15 @@ export default function useHeaderState() {
   );
 
   const addAssetActiveState = React.useCallback(
-    (asset) => {
+    async (asset) => {
+      // first, set assetsActive value in state, and then loadAssetsActive again.
       dispatch(addAssetActive({ asset }));
+      const result = await putAssetsActive([...assetsActive, asset])
+      if(result.success){
+        loadAssetsActiveState();
+      }
     },
-    [dispatch]
+    [assetsActive, dispatch, loadAssetsActiveState]
   );
   const removeAssetActiveState = React.useCallback(
     (assetId) => {
