@@ -71,12 +71,12 @@ const axiosRequest = {
         }
     },  
 
-    async getMenuList(){
+    async getAssetsActive(){
         try {
             const options = {
                 ...this.options,
             }
-            const url = `${SERVER_URL}/menuList`
+            const url = `${SERVER_URL}/assetsActive`
             const response = await axios.get(url, options);
             if(response.status === 200){
                 return response.data;
@@ -87,6 +87,25 @@ const axiosRequest = {
             return null;
         }
     },  
+
+    async putAssetsActive(params) {
+        const {assetsActive} = params;
+        try {
+            const options = {
+                ...this.options
+            }
+            const putUrl = `${SERVER_URL}/assetsActive`;
+            const postParams = { assetsActive };
+            const response = await axios.put(putUrl, postParams, options);
+            if(response.status === 200 && response.data.success){
+                    return response.data;
+            }
+            return {success:false};
+        } catch(err) { 
+            console.error(err)
+            return {success:false};
+        }
+    },
 
     async delAsset(params) {
         const {assetId} = params;

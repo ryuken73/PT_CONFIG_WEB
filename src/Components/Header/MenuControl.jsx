@@ -2,6 +2,7 @@ import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import useHeaderState from 'hooks/useHeaderState';
 import axiosRequest from 'lib/axiosRequest';
+import { blue } from '@mui/material/colors';
 
 // fake data generator
 const getItems = count =>
@@ -28,10 +29,11 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   margin: `0 ${grid}px 0 0`,
 
   // change background colour if dragging
-  background: isDragging ? 'indigo':'darkblue',
+  background: isDragging ? 'indigo':'midnightblue',
   borderRadius: '5px',
   opacity: '0.8',
-
+  border: '1px solid darkgrey',
+  
   // styles we need to apply on draggables
   ...draggableStyle,
 });
@@ -46,27 +48,25 @@ const getListStyle = isDraggingOver => ({
 
 const MenuControl = (props) => {
     // const [items, setItems] = React.useState(getItems(6));
-    const { menued, setMenuedState } = useHeaderState();
-    const [ axiosWithAuth ] = axiosRequest();
+    const { assetsActive, loadAssetsActiveState, setAssetsActiveState } = useHeaderState();
     React.useEffect(() => {
-        axiosWithAuth.getMenuList()
-        .then(result => {
-            setMenuedState(result.menuList);
-        })
-    },[axiosWithAuth, setMenuedState])
+      loadAssetsActiveState();
+    },[loadAssetsActiveState])
     const onDragEnd = React.useCallback((result) => {
         // dropped outside the list
         if (!result.destination) {
             return;
         }
 
-        const newMenued = reorder(
-            menued,
+        const newAssetsActive = reorder(
+            assetsActive,
             result.source.index,
             result.destination.index
         );
-        setMenuedState(newMenued)
-    },[menued, setMenuedState])
+        setAssetsActiveState(newAssetsActive)
+    },[assetsActive, setAssetsActiveState])
+
+    console.log(')))', assetsActive)
 
     return (
       <DragDropContext onDragEnd={onDragEnd}>
@@ -77,10 +77,10 @@ const MenuControl = (props) => {
               style={getListStyle(snapshot.isDraggingOver)}
               {...provided.droppableProps}
             >
-              {menued.length === 0 && (
+              {assetsActive.length === 0 && (
                   <div>No Menu Selected</div>
               )}
-              {menued.map((item, index) => (
+              {assetsActive.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided, snapshot) => (
                     <div
@@ -92,7 +92,7 @@ const MenuControl = (props) => {
                         provided.draggableProps.style
                       )}
                     >
-                      {item.content}
+                      {item.assetTitle}
                     </div>
                   )}
                 </Draggable>
