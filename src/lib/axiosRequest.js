@@ -107,6 +107,23 @@ const axiosRequest = {
         }
     },
 
+    async resetToDefault() {
+        try {
+            const options = {
+                ...this.options
+            }
+            const putUrl = `${SERVER_URL}/assetList/default`;
+            const response = await axios.put(putUrl, {} , options);
+            if(response.status === 200 && response.data.success){
+                    return response.data;
+            }
+            return {success:false};
+        } catch(err) { 
+            console.error(err)
+            return {success:false};
+        }
+    },
+
     async delAsset(params) {
         const {assetId} = params;
         try {

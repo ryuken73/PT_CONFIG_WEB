@@ -81,12 +81,9 @@ const mergeResults = (sources, results) => {
 }
 
 const saveAsset = (assetTitle, displayMode, sources, results) => {
-  console.log('$$$1', assetTitle, displayMode, sources, results);
+  // console.log('$$$1', assetTitle, displayMode, sources, results);
   const merged = mergeResults(sources, results);
-  console.log('$$$2', assetTitle, displayMode, sources, results, merged);
-  // const sourcesWithFullPath = results.map(result => {
-  //   return {src:result.saved, httpPath:result.httpPath, size: parseInt(result.size)};
-  // });
+  // console.log('$$$2', assetTitle, displayMode, sources, results, merged);
   const [axiosRequestWithAuth, ] = axiosRequest();
   const params = {assetTitle, displayMode, sources: merged};
   return axiosRequestWithAuth.putAsset(params)
@@ -113,7 +110,10 @@ const AddDialog = props => {
     updateProgressState,    
   } = useDialogSourcesState();
 
-  const { setAssetsState } = useAssetListState();
+  const { 
+    loadAssetListState, 
+    // setAssetsState 
+  } = useAssetListState();
 
   const {
     filesToUpload,
@@ -126,15 +126,16 @@ const AddDialog = props => {
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
     reqAborters.current.forEach(aborter => aborter.cancel());
-    const [axiosWithAuth] = axiosRequest();
-    axiosWithAuth.getAssetList()
-    .then(result => {
-      setAssetsState(result.assetList);
-    })    
+    loadAssetListState();
+    // const [axiosWithAuth] = axiosRequest();
+    // axiosWithAuth.getAssetList()
+    // .then(result => {
+    //   setAssetsState(result.assetList);
+    // })    
     setOpen(false);
     clearDialogState();
     setFilesToUpload([]);
-  },[clearDialogState, setAssetsState, setFilesToUpload, setOpen]);
+  },[clearDialogState, loadAssetListState, setFilesToUpload, setOpen]);
 
   const handleAddAsset = React.useCallback(() => {
     console.log('$$$', assetTitle, displayMode, sources, filesToUpload);

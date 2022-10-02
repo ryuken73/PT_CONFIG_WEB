@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ButtonIcon from 'Components/Common/ButtonIcon';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
@@ -24,7 +25,7 @@ const ButtonContainer = styled(Box)`
 `;
 
 const TabButtons = () => {
-  const { removeAssetAllCheckedState } = useAssetListState();
+  const { removeAssetAllCheckedState, resetToDefaultState } = useAssetListState();
   const { setDialogOpenState } = useDialogState();
   const setDialogOpen = React.useCallback(() => {
     setDialogOpenState(true);
@@ -53,6 +54,14 @@ const TabButtons = () => {
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
         onClick={removeAssetAllCheckedState}
+      />
+      <ButtonIcon
+        text="초기화"
+        iconcomponent={<RestartAltIcon />}
+        border="2px solid rgba(255, 255, 255, .5)"
+        hoverBackground="maroon"
+        hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
+        onClick={resetToDefaultState}
       />
     </ButtonContainer>
 

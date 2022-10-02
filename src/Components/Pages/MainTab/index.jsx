@@ -8,7 +8,6 @@ import ScrollbarSmooth from 'Components/Common/ScrollBarSmooth';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
-import axiosRequest from 'lib/axiosRequest';
 
 // const { JOB_STATUS, TASK_STATUS, TASK_DEFAULT, Q_WORKER_EVENTS } = bullConstants;
 
@@ -34,21 +33,15 @@ const getAssets = () => {
   }])
 }
 
-const [axiosWithAuth] = axiosRequest();
-
 const MainTab = (props) => {
   const { setFilesToUpload } = props;
-  const { assetList, setAssetsState } = useAssetListState();
+  const { assetList, loadAssetListState } = useAssetListState();
   const { setDialogOpenState } = useDialogState();
   const { setDialogAssetState } = useDialogSourcesState();
 
   React.useEffect(() => {
-    axiosWithAuth.getAssetList()
-    .then(result => {
-      console.log('#####', result)
-      setAssetsState(result.assetList);
-    })
-  },[setAssetsState])
+    loadAssetListState();
+  },[loadAssetListState])
 
   console.log('####', assetList)
 

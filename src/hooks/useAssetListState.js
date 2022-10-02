@@ -20,6 +20,14 @@ import {
 const [axiosWithAuth] = axiosRequest();
 const { LOG_LEVEL } = constants;
 
+const getAssetList = async () => {
+  const [ axiosWithAuth ] = axiosRequest();
+  return axiosWithAuth.getAssetList()
+          .then(result => {
+          return result.assetList;
+  });
+}
+
 export default function useAssetListState() {
   const dispatch = useDispatch();
   const assetListInState = useSelector((state) => state.asset.assetList);
@@ -32,11 +40,17 @@ export default function useAssetListState() {
   })
   const assetListRef = React.useRef([]);
   assetListRef.current = assetList;
+
   const allChecked = React.useMemo(() => {
     return assetList.length === 0
       ? false
       : assetList.every((asset) => asset.checked === true);
   }, [assetList]);
+
+  const loadAssetListState = React.useCallback(async () => {
+    const assetList = await getAssetList();
+    dispatch(setAssets({ assetList }));
+  },[dispatch])  
 
   const setAssetsState = React.useCallback((assets) => {
     dispatch(setAssets({assetList: assets}))
@@ -78,26 +92,30 @@ export default function useAssetListState() {
     })
   },[setAssetsState])
 
-  const removeAssetAllCheckedState = React.useCallback(() => {
+  const removeAssetAllCheckedState = React.useCallback( async () => {
     const delPromises = assetChecked.map(assetId => axiosWithAuth.delAsset({assetId}))
-    Promise.all(delPromises)
-    .then(result => {
-      return axiosWithAuth.getAssetList();
-    })
-    .then(result => {
-      setAssetsState(result.assetList);
-      dispatch(setAllAssetUnChecked);
-    })
+    Promise.all(delPromises);
+    const assetList = await getAssetList();
+    setAssetsState(assetList);
+    dispatch(setAllAssetUnChecked);
   }, [assetChecked, dispatch, setAssetsState]);
+
+  const resetToDefaultState = React.useCallback(async () => {
+    await axiosWithAuth.resetToDefault();
+    const assetList =await getAssetList();
+    setAssetsState(assetList);
+  },[setAssetsState])
 
   return {
     assetList,
     allChecked,
+    loadAssetListState,
     addAssetsState,
     toggleCheckedState,
     toggleAllCheckedState,
     removeAssetState,
     setAssetsState,
     removeAssetAllCheckedState,
+    resetToDefaultState
   };
 }
