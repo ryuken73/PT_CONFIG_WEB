@@ -41,11 +41,8 @@ export const dialogSlice = createSlice({
     setSourceProgress: (state, action) => {
       const { payload } = action;
       const { srcId, progress } = payload;
-      state.sources.forEach(source => {
-        if(source.srcId === srcId){
-          source.progress = progress
-        }
-      })
+      const targetSource = state.sources.find(source => source.srcId === srcId);
+      targetSource.progress = progress;
     },
     setAssetTitle: (state, action) => {
       const { payload } = action;
