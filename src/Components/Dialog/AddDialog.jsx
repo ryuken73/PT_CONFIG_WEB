@@ -152,6 +152,7 @@ const AddDialog = props => {
   const handleAddAsset = React.useCallback(() => {
     console.log('$$$', assetTitle, displayMode, sources, filesToUpload);
     const fileSources = sources.filter(source => !isHttpUrl(source.src));
+    const httpSources = sources.filter(source => isHttpUrl(source.src));
     reqAborters.current = [];
     const sendFilePromise = saveFiles(fileSources, filesToUpload, reqAborters, updateProgressState);
     Promise.all(sendFilePromise)
@@ -168,7 +169,16 @@ const AddDialog = props => {
           size: parseInt(result.size)
         }
       })
-      await saveAsset(assetTitle, displayMode, sources, resultsParsed);
+      const httpSrcFakeResults = httpSources.map(source => {
+        return {
+          ...source,
+          srcLocal: source.src,
+          srcRemote: source.src,
+          success: true
+        }
+      })
+      const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
+      await saveAsset(assetTitle, displayMode, sources, sourceUploadResults);
       handleClose();
     })
     .catch(err => {
