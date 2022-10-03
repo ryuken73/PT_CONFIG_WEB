@@ -11,23 +11,23 @@ export default function useSocketClient(props) {
     const sockClient = socketClient.connect(hostAddress);
     // const {hostname, ipAddresses} = window.electron.util.getHostInfo();
     // console.log(hostname, ipAddresses)
-    // sockClient.on('connect', () => {
-    //   console.log('connected');
-    //   setSocketConnected(true)
-    //   setSocket(sockClient);
-    //   sockClient.emit('join', { hostname, ipAddresses });
-    //   sockClient.emit('put:connect', 'client')
-    // });
-    // sockClient.on('disconnect', (reason) => {
-    //   console.log('disconnected: ', reason)
-    //   setSocketConnected(false)
-    // })
-    // sockClient.onAny((eventName, ...args) => {
-    //   console.log(`event: [${eventName}],`, args);
-    // })
+    sockClient.on('connect', () => {
+      console.log('connected');
+      setSocketConnected(true)
+      setSocket(sockClient);
+      // sockClient.emit('join', { hostname, ipAddresses });
+      sockClient.emit('put:connect', 'client')
+    });
+    sockClient.on('disconnect', (reason) => {
+      console.log('disconnected: ', reason)
+      setSocketConnected(false)
+    })
+    sockClient.onAny((eventName, ...args) => {
+      console.log(`event: [${eventName}],`, args);
+    })
     return () => {
       sockClient.disconnect();
     };
-  }, [hostAddress]);
+  }, [hostAddress, setSocketConnected]);
   return { socket };
 }

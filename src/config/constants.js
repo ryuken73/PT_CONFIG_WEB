@@ -1,4 +1,5 @@
 const dev =  {
+  TOUCH_WEB_SERVER_URL: 'http://127.0.0.1',
   SERVER_URL: 'http://localhost',
   LOG_LEVEL: {
     DEBUG: 'DEBUG',
@@ -16,6 +17,7 @@ const dev =  {
 
 const prd = {
   ...dev,
+  TOUCH_WEB_SERVER_URL: 'http://10.10.104.246',
   SERVER_URL: 'http://localhost',
 };
 

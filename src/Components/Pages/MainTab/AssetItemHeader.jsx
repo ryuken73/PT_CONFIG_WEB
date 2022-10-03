@@ -48,7 +48,7 @@ const BigBox = styled(Box)`
   flex: 1;
   /* flex: 4; */
   /* width: 100%; */
-  min-width: 600px;
+  min-width: 500px;
   // max-width: 600px;
 `
 const CustomTextBox = styled(TextBox)`

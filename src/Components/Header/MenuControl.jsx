@@ -1,8 +1,10 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import useHeaderState from 'hooks/useHeaderState';
-import axiosRequest from 'lib/axiosRequest';
-import { blue } from '@mui/material/colors';
+import useSocketIO from 'hooks/useSocketIO';
+import constants from 'config/constants';
+
+const { TOUCH_WEB_SERVER_URL } = constants;
 
 // fake data generator
 const getItems = count =>
@@ -50,6 +52,17 @@ const MenuControl = (props) => {
     // const [items, setItems] = React.useState(getItems(6));
     const { assetsActive, loadAssetsActiveState, setAssetsActiveState } = useHeaderState();
     const { children } = props;
+
+    const [connected, setSocketConnected] = React.useState(false);
+    const { socket } = useSocketIO({
+      hostAddress: TOUCH_WEB_SERVER_URL,
+      setSocketConnected,
+    });
+
+    React.useEffect(() => {
+      if(socket === null) return;
+      socket.emit('active assets changed!', assetsActive);
+    },[assetsActive, socket])
 
     React.useEffect(() => {
       loadAssetsActiveState();

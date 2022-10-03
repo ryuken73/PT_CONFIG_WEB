@@ -10,6 +10,7 @@ import colors from 'config/colors';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
+import useHeaderState from 'hooks/useHeaderState';
 
 const basename = path => path.substring(path.lastIndexOf('\\') + 1);
 
@@ -54,7 +55,7 @@ const BigBox = styled(Box)`
   flex: 1;
   /* flex: 4; */
   /* width: 100%; */
-  min-width: 600px;
+  min-width: 500px;
   // max-width: 600px;
 `
 const LightTextBox = styled(TextBox)`
@@ -101,11 +102,19 @@ const AssetItem = (props) => {
     updateProgressState,
   } = useDialogSourcesState();
 
+  const { assetsActive } = useHeaderState();
+  
+  const isAssetActive = assetsActive.some(asset => asset.assetId === assetId)
+
   const updateJobCheckState = React.useCallback(() => {
     toggleCheckedState(assetId);
   },[assetId, toggleCheckedState])
 
   const onClickEdit = React.useCallback(() => {
+    if(isAssetActive){
+      alert('Remove asset from active list first.')
+      return
+    }
     setIdState(assetId);
     setAssetTitleState(assetTitle);
     setDisplayModeState(displayMode);
@@ -121,11 +130,28 @@ const AssetItem = (props) => {
     })
     setIsEditModeState(true);
     setDialogOpenState(true);
-  },[assetId, setDialogOpenState, setIdState, setSourcesState, setAssetTitleState, setDisplayModeState, sources, assetTitle, displayMode, updateProgressState]);
+  },[
+    isAssetActive, 
+    setIdState, 
+    assetId, 
+    setAssetTitleState, 
+    assetTitle, 
+    setDisplayModeState, 
+    displayMode, 
+    sources, 
+    setSourcesState, 
+    setIsEditModeState, 
+    setDialogOpenState, 
+    updateProgressState
+  ]);
 
   const onClickRemove = React.useCallback(() => {
+    if(isAssetActive){
+      alert('Remove asset from active list first.')
+      return
+    }
     removeAssetState(assetId)
-  },[assetId, removeAssetState]);
+  },[assetId, isAssetActive, removeAssetState]);
 
   const firstSource = sources.length === 0 ? 'none' : basename(sources[0].srcLocal);
   const displayModeMap = {
@@ -146,7 +172,7 @@ const AssetItem = (props) => {
           <LightTextBox text={displayModeText} />
         </SmallBox>
         <SmallBox>
-          <LightTextBox textAlign="left" text={assetTitle} />
+          <LightTextBox color={isAssetActive && 'yellow'} textAlign="left" text={assetTitle} />
         </SmallBox>
         <BigBox>
           <LightTextBox textAlign="left" text={firstSource} />
