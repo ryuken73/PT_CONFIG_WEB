@@ -107,6 +107,24 @@ const axiosRequest = {
         }
     },
 
+    async deleteAssetActive(params) {
+        const {assetId} = params;
+        try {
+            const options = {
+                ...this.options
+            }
+            const url = `${SERVER_URL}/assetsActive/${assetId}`;
+            const response = await axios.delete(url, '', options);
+            if(response.status === 200 && response.data.success){
+                    return response.data;
+            }
+            return {success:false};
+        } catch(err) { 
+            console.error(err)
+            return {success:false};
+        }
+    },
+
     async resetToDefault() {
         try {
             const options = {

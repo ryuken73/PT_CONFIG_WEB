@@ -28,6 +28,14 @@ const putAssetsActive = async (assetsActive) => {
   })
 }
 
+const delAssetActive = async (id) => {
+  const [ axiosWithAuth ] = axiosRequest();
+  return axiosWithAuth.deleteAssetActive({assetId: id})
+  .then(result => {
+    return result;
+  })
+}
+
 export default function useHeaderState() {
   const dispatch = useDispatch();
   const assetsActive = useSelector((state) => state.header.assetsActive);
@@ -61,10 +69,14 @@ export default function useHeaderState() {
     [assetsActive, dispatch, loadAssetsActiveState]
   );
   const removeAssetActiveState = React.useCallback(
-    (assetId) => {
-      dispatch(addAssetActive({ assetId }));
+    async (assetId) => {
+      dispatch(removeAssetActive({ assetId }));
+      const result = await delAssetActive(assetId);
+      if(result.success){
+        loadAssetsActiveState();
+      }
     },
-    [dispatch]
+    [dispatch, loadAssetsActiveState]
   );
   return { 
     assetsActive, 

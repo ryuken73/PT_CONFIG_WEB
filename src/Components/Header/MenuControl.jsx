@@ -49,10 +49,13 @@ const getListStyle = isDraggingOver => ({
 const MenuControl = (props) => {
     // const [items, setItems] = React.useState(getItems(6));
     const { assetsActive, loadAssetsActiveState, setAssetsActiveState } = useHeaderState();
+    const { children } = props;
+
     React.useEffect(() => {
       loadAssetsActiveState();
     },[loadAssetsActiveState])
     const onDragEnd = React.useCallback((result) => {
+
         // dropped outside the list
         if (!result.destination) {
             return;
@@ -92,7 +95,10 @@ const MenuControl = (props) => {
                         provided.draggableProps.style
                       )}
                     >
-                      {item.assetTitle}
+                      {React.cloneElement(children, {
+                        id: item.assetId,
+                        title: item.assetTitle
+                      })}
                     </div>
                   )}
                 </Draggable>

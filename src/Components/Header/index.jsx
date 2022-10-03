@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import MenuItem from 'Components/Header/MenuItem';
 import MenuControl from 'Components/Header/MenuControl';
 import Box from '@mui/material/Box';
 import TextBox from 'Components/Common/TextBox';
@@ -16,7 +17,9 @@ const Container = styled.div`
 const Header = () => {
   return (
     <Container>
-      <MenuControl></MenuControl>
+      <MenuControl>
+        <MenuItem />
+      </MenuControl>
     </Container>
   );
 };
