@@ -32,7 +32,10 @@ const TabButtons = () => {
     resetToDefaultState 
   } = useAssetListState();
   const { setDialogOpenState } = useDialogState();
-  const { addAssetActiveState } = useHeaderState();
+  const { 
+    assetsActive,
+    addAssetActiveState 
+  } = useHeaderState();
 
   const setDialogOpen = React.useCallback(() => {
     setDialogOpenState(true);
@@ -40,9 +43,13 @@ const TabButtons = () => {
 
   const addAssetsActive = React.useCallback(() => {
     assetListChecked.forEach(asset => {
+      if(assetsActive.some(activeAsset => activeAsset.assetId === asset.assetId )){
+        alert('Alreay Exists!');
+        return;
+      }
       addAssetActiveState(asset);
     })
-  },[addAssetActiveState, assetListChecked])
+  },[addAssetActiveState, assetsActive, assetListChecked])
 
   // console.log('re-render TabButtons');
   return (
