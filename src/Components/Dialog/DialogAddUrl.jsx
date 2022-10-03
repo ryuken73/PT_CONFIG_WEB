@@ -43,7 +43,7 @@ const DialogAddUrl = (props) => {
                 onClick={onClickAddUrl} 
                 startIcon={<AddIcon />} 
                 minWidth="20px" 
-                background="black"
+                background="transparent"
             />
             <CustomInput
                 value={value}
