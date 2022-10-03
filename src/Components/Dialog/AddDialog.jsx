@@ -101,6 +101,13 @@ const saveAsset = (assetTitle, displayMode, sources, results) => {
   return axiosRequestWithAuth.putAsset(params)
 }
 
+const changeAsset = (assetId, assetTitle, displayMode, sources, results) => {
+  const merged = mergeResults(sources, results);
+  const [axiosRequestWithAuth, ] = axiosRequest();
+  const params = {assetId, assetTitle, displayMode, sources: merged};
+  return axiosRequestWithAuth.postAsset(params)
+}
+
 const toArray = obj => {
   return Object.values(obj);
 }
@@ -108,10 +115,13 @@ const toArray = obj => {
 const AddDialog = props => {
   const {
     dialogOpen: open,
+    isEditMode,
     setDialogOpenState: setOpen,
     clearDialogState,
     setAssetTitleState,
     setDisplayModeState,
+    setIsEditModeState,
+    assetId,
     assetTitle,
     displayMode,
   } = useDialogState();
@@ -144,10 +154,49 @@ const AddDialog = props => {
     // .then(result => {
     //   setAssetsState(result.assetList);
     // })    
+    setIsEditModeState(false);
     setOpen(false);
     clearDialogState();
     setFilesToUpload([]);
-  },[clearDialogState, loadAssetListState, setFilesToUpload, setOpen]);
+  },[clearDialogState, loadAssetListState, setFilesToUpload, setIsEditModeState, setOpen]);
+
+  const handleChangeAsset = React.useCallback(() => {
+    console.log('$$$', assetId, assetTitle, displayMode, sources, filesToUpload);
+    const fileSources = sources.filter(source => !isHttpUrl(source.src) && source.progress === '0%');
+    const httpSources = sources.filter(source => isHttpUrl(source.src) && source.progress === '0%');
+    reqAborters.current = [];
+    const sendFilePromise = saveFiles(fileSources, filesToUpload, reqAborters, updateProgressState);
+    Promise.all(sendFilePromise)
+    .then(async results => {
+      console.log('$$$$',results);
+      if(results.some(result => result.success === false)){
+        alert('cacnceled!');
+        return;
+      }
+      const resultsParsed = results.map(result => {
+        return {
+          ...result,
+          srcId: parseInt(result.srcId),
+          size: parseInt(result.size)
+        }
+      })
+      const httpSrcFakeResults = httpSources.map(source => {
+        return {
+          ...source,
+          srcLocal: source.src,
+          srcRemote: source.src,
+          success: true
+        }
+      })
+      const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
+      await changeAsset(assetId, assetTitle, displayMode, sources, sourceUploadResults);
+      handleClose();
+    })
+    .catch(err => {
+      console.error(err);
+      reqAborters.current.forEach(aborter => aborter.cancel());
+    })
+  },[assetId, assetTitle, displayMode, filesToUpload, handleClose, sources, updateProgressState])
 
   const handleAddAsset = React.useCallback(() => {
     console.log('$$$', assetTitle, displayMode, sources, filesToUpload);
@@ -224,6 +273,9 @@ const AddDialog = props => {
     })
   },[addSourceState, setFilesToUpload])
 
+  const titleText = isEditMode ? 'Edit Source' : 'Add Source';
+  const addBtnText = isEditMode ? 'Apply' : 'Add';
+
   return (
     <div>
       <CustomDialog
@@ -235,7 +287,7 @@ const AddDialog = props => {
         onDrop={handleDrop} 
         onDragOver={handleDragOver}
         >
-        <DialogTitle>{"Add Source"}</DialogTitle>
+        <DialogTitle>{titleText}</DialogTitle>
         <DialogContent>
           <OptionItemText
             autoFocus
@@ -272,8 +324,12 @@ const AddDialog = props => {
           <Button sx={{ color: 'black' }} onClick={handleClose}>
             Cancel
           </Button>
-          <Button disabled={sources.length === 0} sx={{ color: 'black' }} onClick={handleAddAsset}>
-            Add
+          <Button 
+            disabled={sources.length === 0} 
+            sx={{ color: 'black' }} 
+            onClick={isEditMode ? handleChangeAsset : handleAddAsset}
+          >
+            {addBtnText}
           </Button>
         </DialogActions>
       </CustomDialog>

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   dialogOpen: false,
+  isEditMode: false,
   assetId:'',
   assetTitle: '',
   displayMode: 0,
@@ -16,6 +17,11 @@ export const dialogSlice = createSlice({
       const { payload } = action;
       const { dialogOpen } = payload;
       state.dialogOpen = dialogOpen;
+    },
+    setIsEditMode: (state, action) => {
+      const { payload } = action;
+      const { isEditMode } = payload;
+      state.isEditMode = isEditMode;
     },
     addSource: (state, action) => {
       const { payload } = action;
@@ -68,6 +74,7 @@ export const dialogSlice = createSlice({
 
 export const { 
   setDialogOpen, 
+  setIsEditMode,
   setAssetId, 
   setAssetTitle, 
   setDisplayMode, 

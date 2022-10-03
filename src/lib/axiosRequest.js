@@ -36,14 +36,33 @@ const axiosRequest = {
     },
 
     async putAsset(params) {
-        const {assetTitle, type, sources} = params;
+        const {assetTitle, displayMode, sources} = params;
         try {
             const options = {
                 ...this.options
             }
             const putUrl = `${SERVER_URL}/asset`;
-            const postParams = { assetTitle, type, sources };
+            const postParams = { assetTitle, displayMode, sources };
             const response = await axios.put(putUrl, postParams, options);
+            if(response.status === 200 && response.data.success){
+                    return response.data;
+            }
+            return {success:false};
+        } catch(err) { 
+            console.error(err)
+            return {success:false};
+        }
+    },
+
+    async postAsset(params) {
+        const {assetId, assetTitle, displayMode, sources} = params;
+        try {
+            const options = {
+                ...this.options
+            }
+            const postUrl = `${SERVER_URL}/asset/${assetId}`;
+            const postParams = { assetTitle, displayMode, sources };
+            const response = await axios.post(postUrl, postParams, options);
             if(response.status === 200 && response.data.success){
                     return response.data;
             }

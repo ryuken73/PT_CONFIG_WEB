@@ -93,6 +93,7 @@ const AssetItem = (props) => {
     setAssetTitleState,
     setDisplayModeState,
     setDialogOpenState,
+    setIsEditModeState,
   } = useDialogState();
 
   const {
@@ -118,7 +119,8 @@ const AssetItem = (props) => {
     sources.forEach(source => {
       updateProgressState(source.srcId)('100%');
     })
-    setDialogOpenState(true)
+    setIsEditModeState(true);
+    setDialogOpenState(true);
   },[assetId, setDialogOpenState, setIdState, setSourcesState, setAssetTitleState, setDisplayModeState, sources, assetTitle, displayMode, updateProgressState]);
 
   const onClickRemove = React.useCallback(() => {
