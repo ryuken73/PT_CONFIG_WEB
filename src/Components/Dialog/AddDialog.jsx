@@ -31,10 +31,10 @@ const typeInfer = name => {
   return isVideo ? 'video' : isImage ? 'image' : 'web';
 }
 
-const assetTypeFormItems = [
-  {label: 'video', value: 'video'},
-  {label: 'image', value: 'image'},
-  {label: 'web', value: 'web'}
+const formItems = [
+  {label: 'Row', value: 'flexRow'},
+  {label: 'Column', value: 'flexColumn'},
+  {label: 'Swipe', value: 'swipe'}
 ];
 
 const CustomDialog = styled(Dialog)`
@@ -250,7 +250,7 @@ const AddDialog = props => {
               title="Mode"
               id="displayMode"
               selected={displayMode}
-              formItems={assetTypeFormItems}
+              formItems={formItems}
             />
           )}
           <Box sx={{marginTop: '10px', marginBottom: '10px'}}>Sources</Box>
