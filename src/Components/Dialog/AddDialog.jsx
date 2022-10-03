@@ -275,6 +275,8 @@ const AddDialog = props => {
 
   const titleText = isEditMode ? 'Edit Source' : 'Add Source';
   const addBtnText = isEditMode ? 'Apply' : 'Add';
+  const displayModeDefault = displayMode || 'flexRow';
+  const displayModeSelected = sources.length > 1 && displayModeDefault;
 
   return (
     <div>
@@ -301,7 +303,7 @@ const AddDialog = props => {
               onChange={onChangeDisplayMode}
               title="Mode"
               id="displayMode"
-              selected={displayMode}
+              selected={displayModeSelected}
               formItems={formItems}
             />
           )}
