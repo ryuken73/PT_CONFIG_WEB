@@ -128,6 +128,12 @@ const AssetItem = (props) => {
   },[assetId, removeAssetState]);
 
   const firstSource = sources.length === 0 ? 'none' : basename(sources[0].srcLocal);
+  const displayModeMap = {
+    'flexRow': 'Row',
+    'flexColumn': 'Column',
+    'swipe': 'Swipe'
+  };
+  const displayModeText = displayModeMap[displayMode] || '-';
 
   return (
     <Container>
@@ -137,7 +143,7 @@ const AssetItem = (props) => {
           <LightTextBox text={rownum} />
         </TinyBox>
         <SmallBox>
-          <LightTextBox text={'displaymode'} />
+          <LightTextBox text={displayModeText} />
         </SmallBox>
         <SmallBox>
           <LightTextBox textAlign="left" text={assetTitle} />
@@ -148,12 +154,12 @@ const AssetItem = (props) => {
         <TinyBox>
           <LightTextBox text={sources.length} />
         </TinyBox>
-        <SmallBox>
+        <MediumBox>
           <LightTextBox text={created} />
-        </SmallBox>
-        <SmallBox>
+        </MediumBox>
+        <MediumBox>
           <LightTextBox text={updated} />
-        </SmallBox>
+        </MediumBox>
       </TextContainer>
       <IconContainer>
         <TinyBox>

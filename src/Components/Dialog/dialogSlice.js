@@ -5,7 +5,7 @@ const initialState = {
   isEditMode: false,
   assetId:'',
   assetTitle: '',
-  displayMode: 0,
+  displayMode: 'flexRow',
   sources: [],
 };
 

@@ -27,24 +27,29 @@ const IconContainer = styled(Container)`
   margin-left: 20px;
 `
 const TinyBox = styled(Box)`
+  flex: 0;
   /* flex: 1; */
   min-width: 60px;
-  max-width: 100px;
+  /* max-width: 100px; */
 `
 const SmallBox = styled(Box)`
+  flex: 0;
   /* flex: 2; */
-  min-width: 180px;
-  max-width: 180px;
+  min-width: 120px;
+  /* max-width: 180px; */
 `
 const MediumBox = styled(Box)`
+  flex: 0;
   /* flex: 3; */
   min-width: 200px;
-  max-width: 200px;
+  /* max-width: 200px; */
 `
 const BigBox = styled(Box)`
+  flex: 1;
   /* flex: 4; */
-  width: 100%;
-  min-width: 200px;
+  /* width: 100%; */
+  min-width: 600px;
+  // max-width: 600px;
 `
 const CustomTextBox = styled(TextBox)`
   text-align: center;
@@ -67,24 +72,24 @@ const JobItem = () => {
         <TinyBox>
           <CustomTextBox text="순번" />
         </TinyBox>
-        <TinyBox>
+        <SmallBox>
           <CustomTextBox text="모드" />
-        </TinyBox>
-        <MediumBox>
+        </SmallBox>
+        <SmallBox>
           <CustomTextBox textAlign="left" text="타이틀" />
-        </MediumBox>
+        </SmallBox>
         <BigBox>
           <CustomTextBox textAlign="left" text="대표소스" />
         </BigBox>
         <TinyBox>
           <CustomTextBox text="소스갯수" />
         </TinyBox>
-        <SmallBox>
+        <MediumBox>
           <CustomTextBox text="생성일" />
-        </SmallBox>
-        <SmallBox>
+        </MediumBox>
+        <MediumBox>
           <CustomTextBox text="수정일" />
-        </SmallBox>
+        </MediumBox>
       </TextContainer>
       <IconContainer>
         <TinyBox>
