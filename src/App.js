@@ -8,6 +8,8 @@ import styled from 'styled-components';
 import constants from 'config/constants';
 import colors from 'config/colors';
 
+const {TOUCH_WEB_SERVER_URL, SERVER_URL} = constants;
+
 
 const BasicBox = styled.div`
   display: flex;
@@ -63,7 +65,7 @@ const NotFound = () => {
   return <div>not found</div>;
 };
 export default function App() {
-  console.log('re-render App')
+  console.log('re-render App:', TOUCH_WEB_SERVER_URL, SERVER_URL);
   const [filesToUpload, setFilesToUpload] = React.useState([])
   console.log(filesToUpload)
   // const [connected, setSocketConnected] = React.useState(false);

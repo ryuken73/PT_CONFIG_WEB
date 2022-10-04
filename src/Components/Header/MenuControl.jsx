@@ -61,7 +61,7 @@ const MenuControl = (props) => {
 
     React.useEffect(() => {
       if(socket === null) return;
-      socket.emit('active assets changed!', assetsActive);
+      socket.emit('ASSET_CHANGE', assetsActive);
     },[assetsActive, socket])
 
     React.useEffect(() => {
