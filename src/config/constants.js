@@ -18,7 +18,7 @@ const dev =  {
 const prd = {
   ...dev,
   TOUCH_WEB_SERVER_URL: 'http://10.10.104.246',
-  SERVER_URL: 'http://localhost',
+  SERVER_URL: 'http://10.10.104.246',
 };
 
 export default process.env.NODE_ENV === 'development' ? dev:prd;
