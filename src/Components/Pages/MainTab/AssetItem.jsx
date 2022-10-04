@@ -6,6 +6,8 @@ import TextBox from 'Components/Common/TextBox';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import colors from 'config/colors';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
@@ -46,17 +48,17 @@ const SmallBox = styled(Box)`
   /* max-width: 180px; */
 `
 const MediumBox = styled(Box)`
-  flex: 0;
+  flex: 1;
   /* flex: 3; */
   min-width: 200px;
   /* max-width: 200px; */
 `
 const BigBox = styled(Box)`
-  flex: 1;
+  flex: 2;
   /* flex: 4; */
   /* width: 100%; */
-  min-width: 500px;
-  // max-width: 600px;
+  min-width: 300px;
+  /* max-width: 400px; */
 `
 const LightTextBox = styled(TextBox)`
   text-align: center;
@@ -102,9 +104,15 @@ const AssetItem = (props) => {
     updateProgressState,
   } = useDialogSourcesState();
 
-  const { assetsActive } = useHeaderState();
+  const { 
+    assetsActive, 
+    addAssetActiveState, 
+    removeAssetActiveState 
+  } = useHeaderState();
   
   const isAssetActive = assetsActive.some(asset => asset.assetId === assetId)
+
+  const CheckIcon = isAssetActive ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
 
   const updateJobCheckState = React.useCallback(() => {
     toggleCheckedState(assetId);
@@ -145,6 +153,14 @@ const AssetItem = (props) => {
     updateProgressState
   ]);
 
+  const toggleActive = React.useCallback(() => {
+    if(isAssetActive){
+      removeAssetActiveState(assetId);
+    } else {
+      addAssetActiveState(asset);
+    }
+  }, [addAssetActiveState, asset, assetId, isAssetActive, removeAssetActiveState])
+
   const onClickRemove = React.useCallback(() => {
     if(isAssetActive){
       alert('Remove asset from active list first.')
@@ -171,11 +187,11 @@ const AssetItem = (props) => {
         <SmallBox>
           <LightTextBox text={displayModeText} />
         </SmallBox>
-        <SmallBox>
+        <MediumBox>
           <LightTextBox color={isAssetActive && 'yellow'} textAlign="left" text={assetTitle} />
-        </SmallBox>
+        </MediumBox>
         <BigBox>
-          <LightTextBox textAlign="left" text={firstSource} />
+          <LightTextBox textAlign="left" maxWidth="300px" text={firstSource} />
         </BigBox>
         <TinyBox>
           <LightTextBox text={sources.length} />
@@ -188,6 +204,11 @@ const AssetItem = (props) => {
         </MediumBox>
       </TextContainer>
       <IconContainer>
+        <TinyBox>
+          <CustomIconButton onClick={toggleActive}>
+            <CheckIcon fontSize="small" />
+          </CustomIconButton>
+        </TinyBox>
         <TinyBox>
           <CustomIconButton onClick={onClickEdit}>
             <EditIcon fontSize="small" />

@@ -39,17 +39,17 @@ const SmallBox = styled(Box)`
   /* max-width: 180px; */
 `
 const MediumBox = styled(Box)`
-  flex: 0;
+  flex: 1;
   /* flex: 3; */
   min-width: 200px;
   /* max-width: 200px; */
 `
 const BigBox = styled(Box)`
-  flex: 1;
+  flex: 2;
   /* flex: 4; */
   /* width: 100%; */
-  min-width: 500px;
-  // max-width: 600px;
+  min-width: 300px;
+  /* max-width: 400px; */
 `
 const CustomTextBox = styled(TextBox)`
   text-align: center;
@@ -75,9 +75,9 @@ const JobItem = () => {
         <SmallBox>
           <CustomTextBox text="모드" />
         </SmallBox>
-        <SmallBox>
+        <MediumBox>
           <CustomTextBox textAlign="left" text="타이틀" />
-        </SmallBox>
+        </MediumBox>
         <BigBox>
           <CustomTextBox textAlign="left" text="대표소스" />
         </BigBox>
@@ -92,6 +92,9 @@ const JobItem = () => {
         </MediumBox>
       </TextContainer>
       <IconContainer>
+        <TinyBox>
+          <CustomIconTextBox text="등록" />
+        </TinyBox>
         <TinyBox>
           <CustomIconTextBox text="수정" />
         </TinyBox>
