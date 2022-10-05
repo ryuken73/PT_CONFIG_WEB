@@ -34,7 +34,9 @@ const TabButtons = () => {
   const { setDialogOpenState } = useDialogState();
   const { 
     assetsActive,
-    addAssetActiveState 
+    setAssetsActiveState,
+    addAssetActiveState,
+    loadAssetsActiveState,
   } = useHeaderState();
 
   const setDialogOpen = React.useCallback(() => {
@@ -42,14 +44,30 @@ const TabButtons = () => {
   },[setDialogOpenState])
 
   const addAssetsActive = React.useCallback(() => {
-    assetListChecked.forEach(asset => {
+    const assetsFiltered = assetListChecked.filter(asset => {
       if(assetsActive.some(activeAsset => activeAsset.assetId === asset.assetId )){
         alert('Alreay Exists!');
-        return;
+        return false;
       }
-      addAssetActiveState(asset);
+      return true
     })
-  },[addAssetActiveState, assetsActive, assetListChecked])
+    setAssetsActiveState([...assetsActive, ...assetsFiltered]);
+    
+    // const addPromises = assetListChecked.map(asset => {
+    //   if(assetsActive.some(activeAsset => activeAsset.assetId === asset.assetId )){
+    //     alert('Alreay Exists!');
+    //     return Promise.resolve({succes: true});
+    //   }
+    //   return addAssetActiveState(asset);
+    // })
+    // Promise.all(addPromises)
+    // .then(results => {
+    //   loadAssetsActiveState();
+    // })
+    // .catch(err => {
+    //   console.error(err);
+    // })
+  }, [assetListChecked, assetsActive, setAssetsActiveState])
 
   // console.log('re-render TabButtons');
   return (
