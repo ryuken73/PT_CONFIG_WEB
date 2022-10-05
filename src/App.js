@@ -41,10 +41,10 @@ const BodyContainer = styled.div`
   box-sizing: border-box;
   border-collapse: collapse;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 2vmin - 65px);
 `;
 const CenterPane = styled(BasicBox)`
-  flex-direction: column;
+  /* flex-direction: column; */
   font-size: calc(1px + 2vmin);
   padding: 8px;
   border-right: none;

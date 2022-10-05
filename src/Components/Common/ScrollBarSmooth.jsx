@@ -6,7 +6,7 @@ const StyledScrollbar = styled(Scrollbar)`
   height: ${(props) => props.height};
   width: ${(props) => props.width};
   .scroll-content {
-    margin-right: 10px;
+    margin-right: 5px;
   };
   .scrollbar-track-y {
     .scrollbar-thumb-y {
