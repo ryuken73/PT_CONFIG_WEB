@@ -74,7 +74,7 @@ const saveFiles = (sources, filesToUpload, reqAborters, updateProgress) => {
   return sources.map((source, index) => {
     const blob = filesToUpload[index];
     const {src, size, srcId} = source;
-    const params = { fname: src, size, srcId };
+    const params = { fname: `${Date.now()}_${src}`, size, srcId };
     const progressHandler = updateProgress(source.srcId);
     const [axiosRequestWithAuth, aborter] = axiosRequest();
     reqAborters.current.push(aborter);
