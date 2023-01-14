@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
+import ButtonSmall from 'Components/Common/ButtonSmall';
 import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogAddUrl from 'Components/Dialog/DialogAddUrl';
@@ -20,7 +21,7 @@ import CONSTANTS from 'config/constants';
 const isHttpUrl = src => src.startsWith('http');
 
 const videoExtensions = ['M3M8', 'MP4'];
-const imageExtensions = ['JPG', 'gif', 'png'];
+const imageExtensions = ['JPG', 'GIF', 'PNG', 'ICO', 'BMP'];
 const typeInfer = name => {
   const isVideo = videoExtensions.some(extension => {
     return name.toUpperCase().endsWith(extension)
@@ -278,6 +279,29 @@ const AddDialog = props => {
   const displayModeDefault = displayMode || 'flexRow';
   const displayModeSelected = sources.length > 1 && displayModeDefault;
 
+  const TypeButton = () => {
+    return (
+      <ButtonSmall 
+        background="indigo" 
+        hoverBackground="darkblue" 
+        hoverBorder="1px solid white" 
+        padding="2px" borderRadius="6px" 
+        border="1px solid" 
+        fontSize="5px"
+      >type
+      </ButtonSmall>
+    )
+  }
+
+  const GuideText = styled.div`
+    color: darkblue;
+    padding: 7px;
+    margin-top: 10px;
+  `
+  const GuideMessage = sources.length === 0 ?
+    ":  Drag & Drop Images or Videos. / Type URL of Page and click +" : 
+    "";
+
   return (
     <div>
       <CustomDialog
@@ -307,7 +331,7 @@ const AddDialog = props => {
               formItems={formItems}
             />
           )}
-          <Box sx={{marginTop: '10px', marginBottom: '10px'}}>Sources</Box>
+          <Box sx={{marginTop: '10px', marginBottom: '10px'}}>Sources {GuideMessage}</Box>
           <AddUrlContainer>
             <DialogAddUrl
               value={currentUrl}
@@ -321,6 +345,11 @@ const AddDialog = props => {
               sources={sources}
             ></DialogSources>
           </DialogAssets>
+          {sources.length > 0 && (
+            <GuideText>
+              <div>* click <span><TypeButton /></span> button to change type of source.</div>
+            </GuideText>
+          )}
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: 'black' }} onClick={handleClose}>
