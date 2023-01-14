@@ -24,7 +24,10 @@ const TextContainer = styled(Container)`
   }
 `;
 const IconContainer = styled(Container)`
-  margin-left: 20px;
+  margin-right: 20px;
+`
+const IconBox = styled(Box)`
+  min-width: 40px;
 `
 const TinyBox = styled(Box)`
   flex: 0;
@@ -78,6 +81,19 @@ const JobItem = () => {
         <MediumBox>
           <CustomTextBox textAlign="left" text="타이틀" />
         </MediumBox>
+        <IconContainer>
+          <IconBox>
+            <CustomIconTextBox text="등록" />
+          </IconBox>
+          <IconBox>
+            <CustomIconTextBox text="수정" />
+          </IconBox>
+          <IconBox>
+            <CustomIconTextBox text="삭제" />
+          </IconBox>
+          <PaddingBox />
+          {/* <Box width="50%" marginRight="20px" /> */}
+        </IconContainer>
         <BigBox>
           <CustomTextBox textAlign="left" text="대표소스" />
         </BigBox>
@@ -91,19 +107,6 @@ const JobItem = () => {
           <CustomTextBox text="수정일" />
         </MediumBox>
       </TextContainer>
-      <IconContainer>
-        <TinyBox>
-          <CustomIconTextBox text="등록" />
-        </TinyBox>
-        <TinyBox>
-          <CustomIconTextBox text="수정" />
-        </TinyBox>
-        <TinyBox>
-          <CustomIconTextBox text="삭제" />
-        </TinyBox>
-        <PaddingBox />
-        {/* <Box width="50%" marginRight="20px" /> */}
-      </IconContainer>
     </Container>
   )
 };

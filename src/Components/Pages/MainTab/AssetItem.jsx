@@ -33,7 +33,11 @@ const TextContainer = styled(Container)`
   }
 `;
 const IconContainer = styled(Container)`
-  margin-left: 20px;
+  /* margin-left: 20px; */
+  margin-right: 30px;
+`
+const IconBox = styled(Box)`
+  min-width: 40px;
 `
 const TinyBox = styled(Box)`
   flex: 0;
@@ -190,6 +194,23 @@ const AssetItem = (props) => {
         <MediumBox>
           <LightTextBox color={isAssetActive && 'yellow'} textAlign="left" text={assetTitle} />
         </MediumBox>
+        <IconContainer>
+          <IconBox>
+            <CustomIconButton onClick={toggleActive}>
+              <CheckIcon fontSize="small" />
+            </CustomIconButton>
+          </IconBox>
+          <IconBox>
+            <CustomIconButton onClick={onClickEdit}>
+              <EditIcon fontSize="small" />
+            </CustomIconButton>
+          </IconBox>
+          <IconBox>
+            <CustomIconButton onClick={onClickRemove}>
+              <DeleteIcon fontSize="small" />
+            </CustomIconButton>
+          </IconBox>
+        </IconContainer>
         <BigBox>
           <LightTextBox textAlign="left" maxWidth="300px" text={firstSource} />
         </BigBox>
@@ -203,23 +224,6 @@ const AssetItem = (props) => {
           <LightTextBox text={updated} />
         </MediumBox>
       </TextContainer>
-      <IconContainer>
-        <TinyBox>
-          <CustomIconButton onClick={toggleActive}>
-            <CheckIcon fontSize="small" />
-          </CustomIconButton>
-        </TinyBox>
-        <TinyBox>
-          <CustomIconButton onClick={onClickEdit}>
-            <EditIcon fontSize="small" />
-          </CustomIconButton>
-        </TinyBox>
-        <TinyBox>
-          <CustomIconButton onClick={onClickRemove}>
-            <DeleteIcon fontSize="small" />
-          </CustomIconButton>
-        </TinyBox>
-      </IconContainer>
     </Container>
   )
 };
