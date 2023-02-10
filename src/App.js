@@ -35,6 +35,7 @@ const HeaderContainer = styled(BasicBox)`
   /* height: 10%; */
 `;
 const BodyContainer = styled.div`
+  display: flex;
   margin-left: -1px;
   margin-right: -1px;
   border: grey 1px solid;
@@ -42,6 +43,15 @@ const BodyContainer = styled.div`
   border-collapse: collapse;
   width: 100%;
   height: calc(100% - 2vmin - 65px);
+`;
+const LeftPane = styled(BasicBox)`
+  font-size: calc(1px + 2vmin);
+  padding: 8px;
+  border-right: none;
+  margin-right: -1px;
+  margin-left: -1px;
+  height: 100%;
+  width: 10%;
 `;
 const CenterPane = styled(BasicBox)`
   /* flex-direction: column; */
@@ -51,6 +61,7 @@ const CenterPane = styled(BasicBox)`
   margin-right: -1px;
   margin-left: -1px;
   height: 100%;
+  width: 90%;
 `;
 const FooterContainer = styled(BasicBox)`
   height: 40px;
@@ -82,6 +93,8 @@ export default function App() {
         <Header />
       </HeaderContainer>
       <BodyContainer>
+        <LeftPane>123
+        </LeftPane>
         <CenterPane>
           <MainTab setFilesToUpload={setFilesToUpload} />
         </CenterPane>

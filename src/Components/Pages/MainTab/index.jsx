@@ -61,15 +61,17 @@ const MainTab = (props) => {
       <TabButtons />
       <AssetItemHeader />
       <DnD onDrop={handleDrop} showPlaceholder={showInfoText}>
-        <ScrollbarSmooth>
-          {assetList.map((asset, index) => (
-            <AssetItem
-              asset={asset}
-              key={asset.id}
-              checked={asset.checked}
-              rownum={index+1}
-            />
-          ))}
+        <ScrollbarSmooth direction='y'>
+          <ScrollbarSmooth direction='x' show={true}>
+            {assetList.map((asset, index) => (
+              <AssetItem
+                asset={asset}
+                key={asset.id}
+                checked={asset.checked}
+                rownum={index+1}
+              />
+            ))}
+          </ScrollbarSmooth>
         </ScrollbarSmooth>
       </DnD>
     </Container>

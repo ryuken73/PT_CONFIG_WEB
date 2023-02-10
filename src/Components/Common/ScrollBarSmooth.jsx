@@ -3,10 +3,16 @@ import styled from 'styled-components';
 import Scrollbar from 'react-smooth-scrollbar';
 
 const StyledScrollbar = styled(Scrollbar)`
-  height: ${(props) => props.height};
+  display: fixed;
+  bottom: 1px;
+  height: 100%;
   width: ${(props) => props.width};
   .scroll-content {
     margin-right: 5px;
+    height: 100%;
+    div {
+      height: ${(props) => props.vScroll && '100%'};
+    }
   };
   .scrollbar-track-y {
     .scrollbar-thumb-y {
@@ -16,7 +22,7 @@ const StyledScrollbar = styled(Scrollbar)`
 `;
 
 const ScrollBarSmooth = (props, ref) => {
-  const { height = '100%', width = '100%' } = props;
+  const { height = '100%', width = '100%', direction='y', show=false } = props;
   const { getMoreItem = () => {}, refreshRefByTime = () => {} } = props;
   const scrollbar = React.useRef(null);
   const [parentRef, setParentRef] = React.useState(ref);
@@ -41,13 +47,17 @@ const ScrollBarSmooth = (props, ref) => {
       getMoreItem();
     }
   }, []);
+  const vScroll = direction === 'y';
+  alert(`vScroll=${vScroll}&show=${show}`)
   return (
     <StyledScrollbar
       height={height}
       width={width}
-      alwaysShowTracks={false}
+      alwaysShowTracks={show}
       onScroll={handleScroll}
       ref={scrollbar}
+      direction={direction}
+      vScroll={direction === 'y'}
     >
       {props.children}
     </StyledScrollbar>
