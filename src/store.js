@@ -3,6 +3,7 @@ import { createLogger } from 'redux-logger';
 import appReducer from 'appSlice';
 import configReducer from 'Components/Header/configSlice';
 import assetReducer from 'Components/Pages/MainTab/assetSlice';
+import typeReducer from 'Components/Pages/LeftTab/typeSlice';
 import dialogReducer from 'Components/Dialog/dialogSlice';
 import headerReducer from 'Components/Header/headerSlice';
 import CONSTANTS from 'config/constants';
@@ -17,6 +18,7 @@ export const store = configureStore({
   reducer: {
     app: appReducer,
     asset: assetReducer,
+    type: typeReducer,
     config: configReducer,
     dialog: dialogReducer,
     header: headerReducer,
