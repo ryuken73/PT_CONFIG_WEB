@@ -65,7 +65,7 @@ const MainTab = (props) => {
           {assetList.map((asset, index) => (
             <AssetItem
               asset={asset}
-              key={asset.id}
+              key={asset.assetId}
               checked={asset.checked}
               rownum={index+1}
             />
