@@ -19,6 +19,11 @@ const StyledScrollbar = styled(Scrollbar)`
       border-radius: 0px;
     }
   }
+  .scrollbar-track-x {
+    .scrollbar-thumb-x {
+      border-radius: 0px;
+    }
+  }
 `;
 
 const ScrollBarSmooth = (props, ref) => {
@@ -48,7 +53,7 @@ const ScrollBarSmooth = (props, ref) => {
     }
   }, []);
   const vScroll = direction === 'y';
-  alert(`vScroll=${vScroll}&show=${show}`)
+  // alert(`vScroll=${vScroll}&show=${show}`)
   return (
     <StyledScrollbar
       height={height}
