@@ -63,6 +63,11 @@ const DialogAssets = styled.div`
   border-radius: 5px;
   margin-top: 5px;
 `
+const GuideText = styled.div`
+  color: darkblue;
+  padding: 7px;
+  margin-top: 10px;
+`
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
@@ -293,11 +298,6 @@ const AddDialog = props => {
     )
   }
 
-  const GuideText = styled.div`
-    color: darkblue;
-    padding: 7px;
-    margin-top: 10px;
-  `
   const GuideMessage = sources.length === 0 ?
     ":  Drag & Drop Images or Videos. / Type URL of Page and click +" : 
     "";
