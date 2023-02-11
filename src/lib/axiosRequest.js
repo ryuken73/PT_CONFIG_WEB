@@ -55,13 +55,13 @@ const axiosRequest = {
     },
 
     async postAsset(params) {
-        const {assetId, assetTitle, displayMode, sources} = params;
+        const {assetId, assetTitle, displayMode, sources, isFavorate} = params;
         try {
             const options = {
                 ...this.options
             }
             const postUrl = `${SERVER_URL}/asset/${assetId}`;
-            const postParams = { assetTitle, displayMode, sources };
+            const postParams = { assetTitle, displayMode, sources, isFavorate };
             const response = await axios.post(postUrl, postParams, options);
             if(response.status === 200 && response.data.success){
                     return response.data;
@@ -178,6 +178,44 @@ const axiosRequest = {
             return {success:false};
         }
     },
+
+    async getTypeList(){
+        try {
+            const options = {
+                ...this.options,
+            }
+            const url = `${SERVER_URL}/typeList`
+            const response = await axios.get(url, options);
+            if(response.status === 200 && response.data.success){
+                console.log('$$$ axios typeList', response, response.data)
+                return response.data;
+            }
+            return null;            
+        } catch (err) { 
+            console.error(err);
+            return null;
+        }
+    },  
+
+    async putType(params) {
+        const {typeId} = params;
+        try {
+            const options = {
+                ...this.options
+            }
+            const putUrl = `${SERVER_URL}/type`;
+            const postParams = { typeId };
+            const response = await axios.put(putUrl, postParams, options);
+            if(response.status === 200 && response.data.success){
+                    return response.data;
+            }
+            return {success:false};
+        } catch(err) { 
+            console.error(err)
+            return {success:false};
+        }
+    },
+
 
     // old code
     async requestVerifySecret(url, params){

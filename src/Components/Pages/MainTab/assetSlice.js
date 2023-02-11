@@ -31,12 +31,24 @@ export const assetSlice = createSlice({
     removeAsset: (state, action) => {
       const { payload } = action;
       const { assetId } = payload;
-      state.assetList = state.assetList.filter(asset => asset.id !== assetId);
+      state.assetList = state.assetList.filter(asset => asset.assetId !== assetId);
+    },
+    setAsset: (state, action) => {
+      const { payload } = action;
+      const { assetId, asset  } = payload;
+      // state.assetList = state.assetList.map(asset => {
+      //   if(asset.assetId === assetId){
+      //     return newAsset
+      //   }
+      //   return asset;
+      // })
+      const targetIndex = state.assetList.findIndex(asset => asset.assetId === assetId);
+      state.assetList[targetIndex] = asset;
     },
     updateAsset: (state, action) => {
       const { payload } = action;
       const { assetId, key, value } = payload;
-      const asset = state.assetList.find(asset => asset.id === assetId);
+      const asset = state.assetList.find(asset => asset.assetId === assetId);
       if(asset) asset[key] = value;
     },
     updateAllAssets: (state, action) => {
@@ -77,6 +89,7 @@ export const {
   addAssets, 
   setAssets, 
   removeAsset, 
+  setAsset,
   updateAsset, 
   updateAllAssets, 
   toggleChecked,

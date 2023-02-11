@@ -8,6 +8,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import colors from 'config/colors';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
@@ -78,6 +80,9 @@ const CustomIconButton = styled(IconButton)`
   }
 `
 
+const YellowStar = styled(StarIcon)`
+  color: yellow;
+`
 const AssetItem = (props) => {
   const { asset, rownum } = props;
   const {
@@ -87,12 +92,14 @@ const AssetItem = (props) => {
     checked,
     sources,
     created,
-    updated
+    updated,
+    isFavorate
   } = asset;
 
   const {
     removeAssetState,
-    toggleCheckedState
+    toggleCheckedState,
+    toggleIsFavorateState
   } = useAssetListState();
 
   const {
@@ -117,10 +124,15 @@ const AssetItem = (props) => {
   const isAssetActive = assetsActive.some(asset => asset.assetId === assetId)
 
   const CheckIcon = isAssetActive ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
+  const FavorateIcon = isFavorate ? YellowStar : StarBorderIcon;
 
-  const updateJobCheckState = React.useCallback(() => {
+  const updateCheckState = React.useCallback(() => {
     toggleCheckedState(assetId);
   },[assetId, toggleCheckedState])
+
+  const onClickFavorate = React.useCallback(() => {
+    toggleIsFavorateState(assetId, !isFavorate)
+  }, [assetId, isFavorate, toggleIsFavorateState])
 
   const onClickEdit = React.useCallback(() => {
     if(isAssetActive){
@@ -184,7 +196,12 @@ const AssetItem = (props) => {
   return (
     <Container>
       <TextContainer>
-        <CheckBox checked={checked} setChecked={updateJobCheckState}/>
+        <CheckBox checked={checked} setChecked={updateCheckState}/>
+        {/* <TinyBox> */}
+          <CustomIconButton onClick={onClickFavorate}>
+            <FavorateIcon fontSize="small" />
+          </CustomIconButton>
+        {/* </TinyBox> */}
         <TinyBox>
           <LightTextBox text={rownum} />
         </TinyBox>

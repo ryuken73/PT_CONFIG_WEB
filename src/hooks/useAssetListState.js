@@ -9,6 +9,7 @@ import {
   addAssets,
   setAssets,
   removeAsset,
+  setAsset,
   updateAsset,
   toggleChecked,
   setAllAssetChecked,
@@ -21,26 +22,39 @@ const [axiosWithAuth] = axiosRequest();
 const { LOG_LEVEL } = constants;
 
 const getAssetList = async () => {
-  const [ axiosWithAuth ] = axiosRequest();
   return axiosWithAuth.getAssetList()
           .then(result => {
           return result.assetList;
   });
 }
 
+const updateAssetIsFavorate = async (assetId, isFavorate) => {
+  return axiosWithAuth.postAsset({assetId, isFavorate})
+         .then(result => {
+            return result.asset;
+         });
+}
+
 export default function useAssetListState() {
   const dispatch = useDispatch();
   const assetListInState = useSelector((state) => state.asset.assetList);
   const assetChecked = useSelector((state) => state.asset.assetChecked);
-  const assetList = assetListInState.map(asset => {
-    if(assetChecked.includes(asset.assetId)){
-      return {...asset, checked: true}
-    }
-    return {...asset, checked: false}
-  })
+
+  const assetList = React.useMemo(() => {
+      return assetListInState.map(asset => {
+        if(assetChecked.includes(asset.assetId)){
+          return {...asset, checked: true}
+        }
+        return {...asset, checked: false}
+      })
+  }, [assetChecked, assetListInState])
+
   const assetListRef = React.useRef([]);
   assetListRef.current = assetList;
-  const assetListChecked = assetList.filter(asset => asset.checked);
+
+  const assetListChecked = React.useMemo(() => {
+    assetList.filter(asset => asset.checked);
+  }, [assetList])
 
   const allChecked = React.useMemo(() => {
     return assetList.length === 0
@@ -70,6 +84,11 @@ export default function useAssetListState() {
 
   const toggleCheckedState = React.useCallback((assetId) => {
     dispatch(toggleChecked({assetId}));
+  },[dispatch])
+
+  const toggleIsFavorateState = React.useCallback( async (assetId, isFavorate) => {
+    const asset = await updateAssetIsFavorate(assetId, isFavorate)
+    dispatch(setAsset({assetId, asset}))
   },[dispatch])
 
   const toggleAllCheckedState = React.useCallback(
@@ -115,6 +134,7 @@ export default function useAssetListState() {
     addAssetsState,
     toggleCheckedState,
     toggleAllCheckedState,
+    toggleIsFavorateState,
     removeAssetState,
     setAssetsState,
     removeAssetAllCheckedState,
