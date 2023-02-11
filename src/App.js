@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from 'Components/Header';
 import MainTab from 'Components/Pages/MainTab';
+import LeftTab from 'Components/Pages/LeftTab';
 import Loading from 'Components/Common/Loading';
 import MessageBox from 'Components/Common/MessageBox';
 import AddDialog from 'Components/Dialog/AddDialog';
@@ -51,17 +52,20 @@ const LeftPane = styled(BasicBox)`
   margin-right: -1px;
   margin-left: -1px;
   height: 100%;
-  width: 10%;
+  width: 15%;
 `;
 const CenterPane = styled(BasicBox)`
   /* flex-direction: column; */
   font-size: calc(1px + 2vmin);
-  padding: 8px;
+  /* padding: 8px; */
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 3px;
   border-right: none;
   margin-right: -1px;
   margin-left: -1px;
   height: 100%;
-  width: 90%;
+  width: 85%;
 `;
 const FooterContainer = styled(BasicBox)`
   height: 40px;
@@ -93,7 +97,8 @@ export default function App() {
         <Header />
       </HeaderContainer>
       <BodyContainer>
-        <LeftPane>123
+        <LeftPane>
+          <LeftTab></LeftTab>
         </LeftPane>
         <CenterPane>
           <MainTab setFilesToUpload={setFilesToUpload} />
