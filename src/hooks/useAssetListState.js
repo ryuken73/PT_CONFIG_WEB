@@ -28,17 +28,37 @@ const getAssetList = async () => {
   });
 }
 
-const updateAssetIsFavorate = async (assetId, isFavorate) => {
-  return axiosWithAuth.postAsset({assetId, isFavorate})
+const updateAssetIsFavorite = async (assetId, isFavorite) => {
+  return axiosWithAuth.postAsset({assetId, isFavorite})
          .then(result => {
             return result.asset;
          });
+}
+
+const TYPE_ID_FAVORITE = 0;
+const TYPE_ID_ALL = 1;
+
+const filterAssetsByType = (typeId) => {
+  return (asset) => {
+    if (typeId === TYPE_ID_ALL){
+      return true;
+    }
+    if (typeId === TYPE_ID_FAVORITE) {
+      return asset.isFavorite;
+    }
+    return asset.typeId === typeId;
+  }
 }
 
 export default function useAssetListState() {
   const dispatch = useDispatch();
   const assetListInState = useSelector((state) => state.asset.assetList);
   const assetChecked = useSelector((state) => state.asset.assetChecked);
+  const currentTypeId = useSelector((state) => state.type.currentTypeId);
+
+  const filterFunction = React.useMemo(() => {
+    return filterAssetsByType(currentTypeId)
+  }, [currentTypeId])
 
   const assetList = React.useMemo(() => {
       return assetListInState.map(asset => {
@@ -47,7 +67,8 @@ export default function useAssetListState() {
         }
         return {...asset, checked: false}
       })
-  }, [assetChecked, assetListInState])
+      .filter(filterFunction)
+  }, [assetChecked, assetListInState, filterFunction])
 
   const assetListRef = React.useRef([]);
   assetListRef.current = assetList;
@@ -86,8 +107,8 @@ export default function useAssetListState() {
     dispatch(toggleChecked({assetId}));
   },[dispatch])
 
-  const toggleIsFavorateState = React.useCallback( async (assetId, isFavorate) => {
-    const asset = await updateAssetIsFavorate(assetId, isFavorate)
+  const toggleIsFavoriteState = React.useCallback( async (assetId, isFavorite) => {
+    const asset = await updateAssetIsFavorite(assetId, isFavorite)
     dispatch(setAsset({assetId, asset}))
   },[dispatch])
 
@@ -134,7 +155,7 @@ export default function useAssetListState() {
     addAssetsState,
     toggleCheckedState,
     toggleAllCheckedState,
-    toggleIsFavorateState,
+    toggleIsFavoriteState,
     removeAssetState,
     setAssetsState,
     removeAssetAllCheckedState,
