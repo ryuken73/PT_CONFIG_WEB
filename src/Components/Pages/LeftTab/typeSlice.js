@@ -29,7 +29,12 @@ export const typeSlice = createSlice({
       const { typeId, key, value } = payload;
       const type = state.typeList.find(type => type.typeId === typeId);
       if(type) type[key] = value;
-    }
+    },
+    setCurrentTypeId: (state, action) => {
+      const { payload } = action;
+      const { currentTypeId } = payload;
+      state.currentTypeId = currentTypeId
+    },
   },
 })
 
@@ -38,6 +43,7 @@ export const {
   addType, 
   removeType, 
   updateType, 
+  setCurrentTypeId
 } = typeSlice.actions;
 
 export default typeSlice.reducer;

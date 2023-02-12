@@ -9,6 +9,8 @@ const initialState = {
   assetChecked: []
 };
 
+const TYPE_ID_NONE = 2;
+
 export const assetSlice = createSlice({
   name: 'assetSlice',
   initialState,
@@ -26,7 +28,13 @@ export const assetSlice = createSlice({
     setAssets: (state, action) => {
       const { payload } = action;
       const { assetList } = payload;
-      state.assetList = assetList;
+      const processTypeUndefined = assetList.map(asset => {
+        if (asset.typeId === undefined){
+          asset.typeId = TYPE_ID_NONE;
+        }
+        return asset;
+      })
+      state.assetList = processTypeUndefined;
     },
     removeAsset: (state, action) => {
       const { payload } = action;

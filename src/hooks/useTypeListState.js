@@ -7,7 +7,8 @@ import {
   setType,
   addType,
   removeType,
-  updateType
+  updateType,
+  setCurrentTypeId
 } from 'Components/Pages/LeftTab/typeSlice';
 
 const [axiosWithAuth] = axiosRequest();
@@ -21,7 +22,19 @@ const getTypeList = async () => {
 }
 
 const appendType = async (type) => {
-  return axiosWithAuth.putType(type)
+  return axiosWithAuth.putType({type})
+  .then(result => {
+    console.log(result)
+    return result.typeList
+  })
+}
+
+const delType = async (typeId) => {
+  return axiosWithAuth.delType({typeId})
+  .then(result => {
+    console.log(result)
+    return result.typeList
+  })
 }
 
 export default function useAssetListState() {
@@ -31,7 +44,7 @@ export default function useAssetListState() {
 
   const setTypeState = React.useCallback(async () => {
     const typeList = await getTypeList();
-    console.log('$$$', typeList)
+    console.log('$$$', typeList);
     dispatch(setType({ typeList }));
   },[dispatch])  
 
@@ -40,17 +53,14 @@ export default function useAssetListState() {
     dispatch(setType({ typeList: types }));
   }, [dispatch]);
 
-  const removeTypeState = React.useCallback((assetId) => {
-    // run axios.del and get new assets 
-    // and then dispatch setAssets
-    axiosWithAuth.delAsset({assetId})
-    .then(result => {
-      return axiosWithAuth.getAssetList();
-    })
-    .then(result => {
-      removeType(result.assetList);
-    })
-  },[])
+  const removeTypeState = React.useCallback(async (typeId) => {
+    const types = await delType(typeId);
+    dispatch(setType({ typeList: types }));
+  },[dispatch])
+
+  const setCurrentTypeIdState = React.useCallback(async (currentTypeId) => {
+    dispatch(setCurrentTypeId({ currentTypeId }));
+  },[dispatch])
 
   return {
     typeList,
@@ -58,5 +68,6 @@ export default function useAssetListState() {
     setTypeState,
     addTypeState,
     removeTypeState,
+    setCurrentTypeIdState
   };
 }

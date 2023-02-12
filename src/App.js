@@ -46,13 +46,14 @@ const BodyContainer = styled.div`
   height: calc(100% - 2vmin - 65px);
 `;
 const LeftPane = styled(BasicBox)`
-  font-size: calc(1px + 2vmin);
+  font-size: calc(5px + 2vmin);
   padding: 8px;
   border-right: none;
   margin-right: -1px;
   margin-left: -1px;
   height: 100%;
   width: 15%;
+  align-items: flex-start;
 `;
 const CenterPane = styled(BasicBox)`
   /* flex-direction: column; */
