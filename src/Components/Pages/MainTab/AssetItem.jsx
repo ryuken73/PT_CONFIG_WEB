@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Box from '@mui/material/Box';
 import CheckBox from 'Components/Common/CheckBox';
 import TextBox from 'Components/Common/TextBox';
+import TypeSelect from 'Components/Pages/MainTab/TypeSelect';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -211,6 +212,7 @@ const AssetItem = (props) => {
         <MediumBox>
           <LightTextBox color={isAssetActive && 'yellow'} textAlign="left" text={assetTitle} />
         </MediumBox>
+        <TypeSelect></TypeSelect>
         <IconContainer>
           <IconBox>
             <CustomIconButton onClick={toggleActive}>
