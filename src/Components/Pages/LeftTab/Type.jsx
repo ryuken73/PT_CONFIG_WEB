@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import ButtonSmall from 'Components/Common/ButtonSmall';
 import CloseIcon from '@mui/icons-material/Close';
 import useTypeListState from 'hooks/useTypeListState';
+import useAssetListState from 'hooks/useAssetListState';
 
 const Container = styled.div`
   display: flex;
@@ -24,9 +25,23 @@ const StyledButtonSmall = styled(ButtonSmall)`
   }
 `;
 
+const TYPE_ID_FAVORITE = 0;
+const TYPE_ID_ALL = 1;
+
+const getCountFavorite = (assetList) => {
+  return assetList.filter(asset => asset.isFavorite).length;
+}
+
 function Type(props) {
   const { typeName, typeId, irremovable=false, currentTypeId } = props;
   const { removeTypeState, setCurrentTypeIdState } = useTypeListState();
+  const { assetListInState } = useAssetListState();
+
+  // const assetsOfType = assetList.filter(asset => asset.typeId === typeId) || [];
+  const countOfAsset = typeId === TYPE_ID_FAVORITE ?  getCountFavorite(assetListInState) : 
+                       typeId === TYPE_ID_ALL ?  assetListInState.length : 
+                       assetListInState.filter(asset => asset.typeId === typeId).length 
+
 
   const onClickType = React.useCallback(() => {
     setCurrentTypeIdState(typeId);
@@ -41,9 +56,9 @@ function Type(props) {
   return (
     <Container isCurrent={isCurrent} onClick={onClickType}>
       <Box>
-        {typeName}
+        {typeName}[{countOfAsset}]
       </Box>
-      {!irremovable && (
+      {!irremovable && countOfAsset === 0 && (
         <Box sx={{marginLeft: "5px"}}>
           <StyledButtonSmall 
             onClick={onClickClose} 

@@ -163,6 +163,7 @@ export default function useAssetListState() {
     assetList,
     assetListChecked,
     allChecked,
+    assetListInState,
     loadAssetListState,
     addAssetsState,
     toggleCheckedState,

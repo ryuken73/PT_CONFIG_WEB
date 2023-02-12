@@ -24,7 +24,7 @@ const CustomInput = styled.input`
   border-radius: 5px;
   color: white;
   border: 1px solid white;
-  font-size: calc(5px + 2vmin);
+  font-size: calc(10px + 1.1vmin);
   max-width: 50%;
   padding: 5px;
   margin-top: 10px;
@@ -50,12 +50,20 @@ function LeftTab() {
     addTypeState(type);
   }, [addTypeState])
 
+  const onKeyDown = React.useCallback((event) => {
+    const charCode = event.keyCode;
+    if(charCode === 13){
+      onClickAdd();
+    }
+  }, [onClickAdd])
+
   return (
     <Container>
       <InputContainer>
         <CustomInput
           type="text"
           ref={inputRef}
+          onKeyDown={onKeyDown}
         >
         </CustomInput>
         <IconButton onClick={onClickAdd}>
