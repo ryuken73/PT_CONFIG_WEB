@@ -94,7 +94,8 @@ const AssetItem = (props) => {
     sources,
     created,
     updated,
-    isFavorite
+    isFavorite,
+    typeId
   } = asset;
 
   const {
@@ -212,7 +213,7 @@ const AssetItem = (props) => {
         <MediumBox>
           <LightTextBox color={isAssetActive && 'yellow'} textAlign="left" text={assetTitle} />
         </MediumBox>
-        <TypeSelect></TypeSelect>
+        <TypeSelect assetId={assetId} typeId={typeId}></TypeSelect>
         <IconContainer>
           <IconBox>
             <CustomIconButton onClick={toggleActive}>

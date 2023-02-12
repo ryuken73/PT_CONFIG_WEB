@@ -35,6 +35,13 @@ const updateAssetIsFavorite = async (assetId, isFavorite) => {
          });
 }
 
+const updateAssetType = async (assetId, typeId) => {
+  return axiosWithAuth.postAsset({assetId, typeId})
+         .then(result => {
+            return result.asset;
+         });
+}
+
 const TYPE_ID_FAVORITE = 0;
 const TYPE_ID_ALL = 1;
 
@@ -111,6 +118,11 @@ export default function useAssetListState() {
     const asset = await updateAssetIsFavorite(assetId, isFavorite)
     dispatch(setAsset({assetId, asset}))
   },[dispatch])
+  
+  const setAssetTypeState = React.useCallback( async (assetId, typeId) => {
+    const asset = await updateAssetType(assetId, typeId);
+    dispatch(setAsset({assetId, asset}))
+  },[dispatch])
 
   const toggleAllCheckedState = React.useCallback(
     (checked) => {
@@ -156,6 +168,7 @@ export default function useAssetListState() {
     toggleCheckedState,
     toggleAllCheckedState,
     toggleIsFavoriteState,
+    setAssetTypeState,
     removeAssetState,
     setAssetsState,
     removeAssetAllCheckedState,
