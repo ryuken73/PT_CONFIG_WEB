@@ -41,6 +41,11 @@ const SmallBox = styled(Box)`
   min-width: 120px;
   /* max-width: 180px; */
 `
+const SmallMediumBox = styled(Box)`
+  flex: 0;
+  min-width: 80px;
+  text-align: left;
+`
 const MediumBox = styled(Box)`
   flex: 1;
   /* flex: 3; */
@@ -72,6 +77,9 @@ const JobItem = () => {
     <Container>
       <TextContainer>
         <CheckBox checked={allChecked} setChecked={toggleAllCheckedState}/>
+        <IconBox>
+          <CustomTextBox text="" />
+        </IconBox>
         <TinyBox>
           <CustomTextBox text="순번" />
         </TinyBox>
@@ -81,6 +89,9 @@ const JobItem = () => {
         <MediumBox>
           <CustomTextBox textAlign="left" text="타이틀" />
         </MediumBox>
+        <SmallMediumBox>
+          <CustomTextBox textAlign="left" text="분류" />
+        </SmallMediumBox>
         <IconContainer>
           <IconBox>
             <CustomIconTextBox text="등록" />

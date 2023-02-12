@@ -54,6 +54,11 @@ const SmallBox = styled(Box)`
   min-width: 120px;
   /* max-width: 180px; */
 `
+const SmallMediumBox = styled(Box)`
+  flex: 0;
+  min-width: 80px;
+  text-align: left;
+`
 const MediumBox = styled(Box)`
   flex: 1;
   /* flex: 3; */
@@ -199,11 +204,11 @@ const AssetItem = (props) => {
     <Container>
       <TextContainer>
         <CheckBox checked={checked} setChecked={updateCheckState}/>
-        {/* <TinyBox> */}
+        <IconBox>
           <CustomIconButton onClick={onClickFavorite}>
             <FavoriteIcon fontSize="small" />
           </CustomIconButton>
-        {/* </TinyBox> */}
+        </IconBox>
         <TinyBox>
           <LightTextBox text={rownum} />
         </TinyBox>
@@ -213,7 +218,9 @@ const AssetItem = (props) => {
         <MediumBox>
           <LightTextBox color={isAssetActive && 'yellow'} textAlign="left" text={assetTitle} />
         </MediumBox>
-        <TypeSelect assetId={assetId} typeId={typeId}></TypeSelect>
+        <SmallMediumBox>
+          <TypeSelect assetId={assetId} typeId={typeId}></TypeSelect>
+        </SmallMediumBox>
         <IconContainer>
           <IconBox>
             <CustomIconButton onClick={toggleActive}>
