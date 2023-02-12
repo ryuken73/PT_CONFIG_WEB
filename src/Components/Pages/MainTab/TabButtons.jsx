@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ButtonIcon from 'Components/Common/ButtonIcon';
+import ConfirmDialog from 'Components/Dialog/ConfirmDialog';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
 import useHeaderState from 'hooks/useHeaderState';
@@ -26,6 +27,8 @@ const ButtonContainer = styled(Box)`
 `;
 
 const TabButtons = () => {
+  const [ confirmOpen, setConfirmOpen ] = React.useState(false);
+  const [ confirmTitle, setConfirmTitle ] = React.useState('Confirm?');
   const { 
     assetListChecked, 
     removeAssetAllCheckedState, 
@@ -69,6 +72,22 @@ const TabButtons = () => {
     // })
   }, [assetListChecked, assetsActive, setAssetsActiveState])
 
+  const onClickSetDefault = React.useCallback(() => {
+    setConfirmTitle('*[Warning]* Clear All Items?')
+    setConfirmOpen(true);
+  }, [])
+
+  const handleNo = React.useCallback(() => {
+    setConfirmOpen(false);
+    setConfirmTitle('Confirm?');
+  }, [])
+
+  const resetDefault = React.useCallback(() => {
+    resetToDefaultState();
+    setConfirmOpen(false);
+    setConfirmTitle('Confirm?');
+  }, [resetToDefaultState])
+
   // console.log('re-render TabButtons');
   return (
     <ButtonContainer>
@@ -100,9 +119,15 @@ const TabButtons = () => {
           border="2px solid rgba(255, 255, 255, .5)"
           hoverBackground="maroon"
           hoverBorder="2px solid rgba(155, 131, 131, 0.8)"
-          onClick={resetToDefaultState}
+          onClick={onClickSetDefault}
         />
       </Box>
+      <ConfirmDialog 
+        open={confirmOpen} 
+        handleYes={resetDefault} 
+        handleNo={handleNo} 
+        title={confirmTitle}>
+      </ConfirmDialog>
     </ButtonContainer>
 
   );
