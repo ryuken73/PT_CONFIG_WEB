@@ -93,13 +93,13 @@ const AssetItem = (props) => {
     sources,
     created,
     updated,
-    isFavorate
+    isFavorite
   } = asset;
 
   const {
     removeAssetState,
     toggleCheckedState,
-    toggleIsFavorateState
+    toggleIsFavoriteState
   } = useAssetListState();
 
   const {
@@ -124,15 +124,15 @@ const AssetItem = (props) => {
   const isAssetActive = assetsActive.some(asset => asset.assetId === assetId)
 
   const CheckIcon = isAssetActive ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
-  const FavorateIcon = isFavorate ? YellowStar : StarBorderIcon;
+  const FavoriteIcon = isFavorite ? YellowStar : StarBorderIcon;
 
   const updateCheckState = React.useCallback(() => {
     toggleCheckedState(assetId);
   },[assetId, toggleCheckedState])
 
-  const onClickFavorate = React.useCallback(() => {
-    toggleIsFavorateState(assetId, !isFavorate)
-  }, [assetId, isFavorate, toggleIsFavorateState])
+  const onClickFavorite = React.useCallback(() => {
+    toggleIsFavoriteState(assetId, !isFavorite)
+  }, [assetId, isFavorite, toggleIsFavoriteState])
 
   const onClickEdit = React.useCallback(() => {
     if(isAssetActive){
@@ -198,8 +198,8 @@ const AssetItem = (props) => {
       <TextContainer>
         <CheckBox checked={checked} setChecked={updateCheckState}/>
         {/* <TinyBox> */}
-          <CustomIconButton onClick={onClickFavorate}>
-            <FavorateIcon fontSize="small" />
+          <CustomIconButton onClick={onClickFavorite}>
+            <FavoriteIcon fontSize="small" />
           </CustomIconButton>
         {/* </TinyBox> */}
         <TinyBox>
