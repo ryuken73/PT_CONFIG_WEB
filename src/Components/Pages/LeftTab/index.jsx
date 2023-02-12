@@ -54,6 +54,7 @@ function LeftTab() {
     const charCode = event.keyCode;
     if(charCode === 13){
       onClickAdd();
+      inputRef.current.value = "";
     }
   }, [onClickAdd])
 
