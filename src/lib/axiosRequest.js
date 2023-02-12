@@ -198,13 +198,13 @@ const axiosRequest = {
     },  
 
     async putType(params) {
-        const {typeId} = params;
+        const {type} = params;
         try {
             const options = {
                 ...this.options
             }
             const putUrl = `${SERVER_URL}/type`;
-            const postParams = { typeId };
+            const postParams = { type };
             const response = await axios.put(putUrl, postParams, options);
             if(response.status === 200 && response.data.success){
                     return response.data;
@@ -216,6 +216,24 @@ const axiosRequest = {
         }
     },
 
+    async delType(params) {
+        const {typeId} = params;
+        try {
+            const options = {
+                ...this.options
+            }
+            const putUrl = `${SERVER_URL}/type/${typeId}`;
+            const postParams = { typeId };
+            const response = await axios.delete(putUrl, postParams, options);
+            if(response.status === 200 && response.data.success){
+                    return response.data;
+            }
+            return {success:false};
+        } catch(err) { 
+            console.error(err)
+            return {success:false};
+        }
+    },
 
     // old code
     async requestVerifySecret(url, params){
