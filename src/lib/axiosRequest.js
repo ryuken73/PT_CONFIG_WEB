@@ -36,13 +36,13 @@ const axiosRequest = {
     },
 
     async putAsset(params) {
-        const {assetTitle, displayMode, sources} = params;
+        const {assetTitle, displayMode, typeId, isFavorite, sources} = params;
         try {
             const options = {
                 ...this.options
             }
             const putUrl = `${SERVER_URL}/asset`;
-            const postParams = { assetTitle, displayMode, sources };
+            const postParams = { assetTitle, displayMode, typeId, isFavorite, sources };
             const response = await axios.put(putUrl, postParams, options);
             if(response.status === 200 && response.data.success){
                     return response.data;

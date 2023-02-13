@@ -15,6 +15,7 @@ import DialogSources from 'Components/Dialog/DialogSources';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useAssetListState from 'hooks/useAssetListState';
+import useTypeListState from 'hooks/useTypeListState';
 import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
 
@@ -98,25 +99,29 @@ const mergeResults = (sources, results) => {
   })
 }
 
-const saveAsset = (assetTitle, displayMode, sources, results) => {
+const saveAsset = (assetTitle, displayMode, typeId, isFavorite, sources, results) => {
   // console.log('$$$1', assetTitle, displayMode, sources, results);
   const merged = mergeResults(sources, results);
   // console.log('$$$2', assetTitle, displayMode, sources, results, merged);
   const [axiosRequestWithAuth, ] = axiosRequest();
-  const params = {assetTitle, displayMode, sources: merged};
+  const params = {assetTitle, displayMode, typeId, isFavorite, sources: merged};
   return axiosRequestWithAuth.putAsset(params)
 }
 
-const changeAsset = (assetId, assetTitle, displayMode, sources, results) => {
+const changeAsset = (assetId, assetTitle, displayMode, typeId, isFavorite, sources, results) => {
   const merged = mergeResults(sources, results);
   const [axiosRequestWithAuth, ] = axiosRequest();
-  const params = {assetId, assetTitle, displayMode, sources: merged};
+  const params = {assetId, assetTitle, displayMode, typeId, isFavorite, sources: merged};
   return axiosRequestWithAuth.postAsset(params)
 }
 
 const toArray = obj => {
   return Object.values(obj);
 }
+
+const TYPE_ID_FAVORITE = 0;
+const TYPE_ID_ALL = 1;
+const TYPE_ID_NONE = 2;
 
 const AddDialog = props => {
   const {
@@ -143,6 +148,12 @@ const AddDialog = props => {
     // setAssetsState 
   } = useAssetListState();
 
+  const { currentTypeId } = useTypeListState();
+  const typeId = currentTypeId === TYPE_ID_ALL ?  TYPE_ID_NONE :
+                 currentTypeId === TYPE_ID_FAVORITE ? TYPE_ID_NONE :
+                 currentTypeId 
+  const isFavorite = currentTypeId === TYPE_ID_FAVORITE;
+
   const {
     filesToUpload,
     setFilesToUpload
@@ -167,7 +178,7 @@ const AddDialog = props => {
   },[clearDialogState, loadAssetListState, setFilesToUpload, setIsEditModeState, setOpen]);
 
   const handleChangeAsset = React.useCallback(() => {
-    console.log('$$$', assetId, assetTitle, displayMode, sources, filesToUpload);
+    console.log('$$$', assetId, assetTitle, displayMode, typeId, isFavorite, sources, filesToUpload);
     const fileSources = sources.filter(source => !isHttpUrl(source.src) && source.progress === '0%');
     const httpSources = sources.filter(source => isHttpUrl(source.src) && source.progress === '0%');
     reqAborters.current = [];
@@ -195,17 +206,17 @@ const AddDialog = props => {
         }
       })
       const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
-      await changeAsset(assetId, assetTitle, displayMode, sources, sourceUploadResults);
+      await changeAsset(assetId, assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults);
       handleClose();
     })
     .catch(err => {
       console.error(err);
       reqAborters.current.forEach(aborter => aborter.cancel());
     })
-  },[assetId, assetTitle, displayMode, filesToUpload, handleClose, sources, updateProgressState])
+  },[assetId, assetTitle, displayMode, filesToUpload, handleClose, isFavorite, sources, typeId, updateProgressState])
 
   const handleAddAsset = React.useCallback(() => {
-    console.log('$$$', assetTitle, displayMode, sources, filesToUpload);
+    console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite);
     const fileSources = sources.filter(source => !isHttpUrl(source.src));
     const httpSources = sources.filter(source => isHttpUrl(source.src));
     reqAborters.current = [];
@@ -233,14 +244,14 @@ const AddDialog = props => {
         }
       })
       const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
-      await saveAsset(assetTitle, displayMode, sources, sourceUploadResults);
+      await saveAsset(assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults);
       handleClose();
     })
     .catch(err => {
       console.error(err);
       reqAborters.current.forEach(aborter => aborter.cancel());
     })
-  }, [filesToUpload, handleClose, sources, assetTitle, displayMode, updateProgressState]);
+  }, [assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, updateProgressState, handleClose]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
     setAssetTitleState(event.target.value);
