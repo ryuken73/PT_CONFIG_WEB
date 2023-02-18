@@ -2,6 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -12,6 +15,7 @@ import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogAddUrl from 'Components/Dialog/DialogAddUrl';
 import DialogSources from 'Components/Dialog/DialogSources';
+import ScrollVideoOptions from 'Components/Dialog/ScrollVideoOptions';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useAssetListState from 'hooks/useAssetListState';
@@ -20,6 +24,7 @@ import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
 
 const isHttpUrl = src => src.startsWith('http');
+const isSrcTypeVideo = src => src.srcType === 'video';
 
 const videoExtensions = ['M3M8', 'MP4'];
 const imageExtensions = ['JPG', 'GIF', 'PNG', 'ICO', 'BMP'];
@@ -64,10 +69,31 @@ const DialogAssets = styled.div`
   border-radius: 5px;
   margin-top: 5px;
 `
+const GuideContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-contents: flex-start;
+`
 const GuideText = styled.div`
   color: maroon;
   padding: 1px;
   margin-top: 10px;
+`
+const EnableScrollVideo = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: auto;
+`
+const CustomIconButton = styled(IconButton)`
+  && {
+    color: ${(props) => props.disabled ? 'black !important' : '#1976d2 !important'};
+    padding: 5px;
+    margin-top: 5px;
+    background: ${(props) =>
+      props.disabled ? 'transparent !important' : 'transparent'};
+    opacity: 1;
+  }
 `
 const TypeButton = () => {
   return (
@@ -178,6 +204,11 @@ const AddDialog = props => {
 
   const reqAborters = React.useRef([]);
   const [currentUrl, setCurrentUrl] = React.useState('http://');
+  const [isScrollVideoChecked, setIsScrollVideoChecked] = React.useState(false);
+  const [isScrollSmooth, setIsScrollSmooth] = React.useState(false);
+  const [scrollSpeed, setScrollSpeed] = React.useState(500);
+
+  const CheckIcon = isScrollVideoChecked ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
 
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
@@ -194,48 +225,54 @@ const AddDialog = props => {
     setFilesToUpload([]);
   },[clearDialogState, loadAssetListState, setFilesToUpload, setIsEditModeState, setOpen]);
 
-  const handleChangeAsset = React.useCallback(() => {
-    console.log('$$$', assetId, assetTitle, displayMode, typeId, isFavorite, sources, filesToUpload);
-    const fileSources = sources.filter(source => !isHttpUrl(source.src) && source.progress === '0%');
-    const httpSources = sources.filter(source => isHttpUrl(source.src) && source.progress === '0%');
-    reqAborters.current = [];
-    const sendFilePromise = saveFiles(fileSources, filesToUpload, reqAborters, updateProgressState);
-    Promise.all(sendFilePromise)
-    .then(async results => {
-      console.log('$$$$',results);
-      if(results.some(result => result.success === false)){
-        alert('cacnceled!');
-        return;
-      }
-      const resultsParsed = results.map(result => {
-        return {
-          ...result,
-          srcId: parseInt(result.srcId),
-          size: parseInt(result.size)
-        }
-      })
-      const httpSrcFakeResults = httpSources.map(source => {
-        return {
-          ...source,
-          srcLocal: source.src,
-          srcRemote: source.src,
-          success: true
-        }
-      })
-      const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
-      await changeAsset(assetId, assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults);
-      handleClose();
-    })
-    .catch(err => {
-      console.error(err);
-      reqAborters.current.forEach(aborter => aborter.cancel());
-    })
-  },[assetId, assetTitle, displayMode, filesToUpload, handleClose, isFavorite, sources, typeId, updateProgressState])
+  // const handleChangeAsset = React.useCallback(() => {
+  //   console.log('$$$', assetId, assetTitle, displayMode, typeId, isFavorite, sources, filesToUpload);
+  //   const fileSources = sources.filter(source => !isHttpUrl(source.src) && source.progress === '0%');
+  //   const httpSources = sources.filter(source => isHttpUrl(source.src) && source.progress === '0%');
+  //   reqAborters.current = [];
+  //   const sendFilePromise = saveFiles(fileSources, filesToUpload, reqAborters, updateProgressState);
+  //   Promise.all(sendFilePromise)
+  //   .then(async results => {
+  //     console.log('$$$$',results);
+  //     if(results.some(result => result.success === false)){
+  //       alert('cacnceled!');
+  //       return;
+  //     }
+  //     const resultsParsed = results.map(result => {
+  //       return {
+  //         ...result,
+  //         srcId: parseInt(result.srcId),
+  //         size: parseInt(result.size)
+  //       }
+  //     })
+  //     const httpSrcFakeResults = httpSources.map(source => {
+  //       return {
+  //         ...source,
+  //         srcLocal: source.src,
+  //         srcRemote: source.src,
+  //         success: true
+  //       }
+  //     })
+  //     console.log(resultsParsed, httpSrcFakeResults);
+  //     const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
+  //     await changeAsset(assetId, assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults);
+  //     handleClose();
+  //   })
+  //   .catch(err => {
+  //     console.error(err);
+  //     reqAborters.current.forEach(aborter => aborter.cancel());
+  //   })
+  // },[assetId, assetTitle, displayMode, filesToUpload, handleClose, isFavorite, sources, typeId, updateProgressState])
 
   const handleAddAsset = React.useCallback(() => {
-    console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite);
-    const fileSources = sources.filter(source => !isHttpUrl(source.src));
-    const httpSources = sources.filter(source => isHttpUrl(source.src));
+    console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideoChecked);
+    const isChanging = isEditMode;
+    const fileSources = isChanging 
+                        ? sources.filter(source => !isHttpUrl(source.src) && source.progress === '0%')
+                        : sources.filter(source => !isHttpUrl(source.src));
+    const httpSources = isChanging 
+                        ? sources.filter(source => isHttpUrl(source.src) && source.progress === '0%')
+                        : sources.filter(source => isHttpUrl(source.src));
     reqAborters.current = [];
     const sendFilePromise = saveFiles(fileSources, filesToUpload, reqAborters, updateProgressState);
     Promise.all(sendFilePromise)
@@ -261,14 +298,17 @@ const AddDialog = props => {
         }
       })
       const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
-      await saveAsset(assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults);
+      console.log(resultsParsed, httpSrcFakeResults);
+      isChanging 
+      ? await changeAsset(assetId, assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults)
+      : await saveAsset(assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults);
       handleClose();
     })
     .catch(err => {
       console.error(err);
       reqAborters.current.forEach(aborter => aborter.cancel());
     })
-  }, [assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, updateProgressState, handleClose]);
+  }, [assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideoChecked, isEditMode, updateProgressState, assetId, handleClose]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
     setAssetTitleState(event.target.value);
@@ -311,11 +351,21 @@ const AddDialog = props => {
     })
   },[addSourceState, setFilesToUpload])
 
+  const toggleEnableScroll = React.useCallback(() => {
+    setIsScrollVideoChecked(checked => !checked);
+  }, [])
+
   const titleText = isEditMode ? 'Edit Source' : 'Add Source';
   const addBtnText = isEditMode ? 'Apply' : 'Add';
   const displayModeDefault = displayMode || 'flexRow';
   const displayModeSelected = sources.length > 1 && displayModeDefault;
+  const showScrollCheck = sources.length === 1 && isSrcTypeVideo(sources[0]);
 
+  React.useEffect(() => {
+    if(showScrollCheck === false) {
+      setIsScrollVideoChecked(false);
+    }
+  }, [showScrollCheck])
 
   const Guide = sources.length === 0 ?
     "Drag Images or Videos. Or Type URL and click +" : 
@@ -351,23 +401,43 @@ const AddDialog = props => {
             />
           )}
           <GuideMessage>{Guide}</GuideMessage>
-          <AddUrlContainer>
-            <DialogAddUrl
-              value={currentUrl}
-              setCurrentUrl={setCurrentUrl}
-              onChange={onChangeUrl}
-              onKeyUp={onKeyUpUrl}
-            ></DialogAddUrl>
-          </AddUrlContainer>
+          {isScrollVideoChecked ? (
+              <ScrollVideoOptions
+                isScrollSmooth={isScrollSmooth}
+                scrollSpeed={scrollSpeed}
+                setIsScrollSmooth={setIsScrollSmooth}
+                setScrollSpeed={setScrollSpeed}
+              >
+              </ScrollVideoOptions>
+            ) : (
+            <AddUrlContainer>
+              <DialogAddUrl
+                value={currentUrl}
+                setCurrentUrl={setCurrentUrl}
+                onChange={onChangeUrl}
+                onKeyUp={onKeyUpUrl}
+              ></DialogAddUrl>
+            </AddUrlContainer>
+          )}
           <DialogAssets>
             <DialogSources
               sources={sources}
             ></DialogSources>
           </DialogAssets>
           {sources.length > 0 && (
-            <GuideText>
-              <div>* click <span style={{margin:'5px'}}> <TypeButton /> </span> button to change type of source.</div>
-            </GuideText>
+            <GuideContainer>
+              <GuideText>
+                <div>* click <span style={{margin:'5px'}}> <TypeButton /> </span> button to change type of source.</div>
+              </GuideText>
+              {showScrollCheck && (
+                <EnableScrollVideo>
+                  <CustomIconButton onClick={toggleEnableScroll}>
+                    <CheckIcon fontSize="small" />
+                  </CustomIconButton>
+                  <div>scroll-video</div>
+                </EnableScrollVideo>
+              )}
+            </GuideContainer>
           )}
         </DialogContent>
         <DialogActions>
@@ -377,7 +447,8 @@ const AddDialog = props => {
           <Button 
             disabled={sources.length === 0} 
             sx={{ color: 'black' }} 
-            onClick={isEditMode ? handleChangeAsset : handleAddAsset}
+            // onClick={isEditMode ? handleChangeAsset : handleAddAsset}
+            onClick={handleAddAsset}
           >
             {addBtnText}
           </Button>
