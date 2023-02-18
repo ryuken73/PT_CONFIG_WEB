@@ -36,13 +36,13 @@ const axiosRequest = {
     },
 
     async putAsset(params) {
-        const {assetTitle, displayMode, typeId, isFavorite, sources} = params;
+        // const {assetTitle, displayMode, typeId, isFavorite, sources} = params;
+        const postParams = {...params};
         try {
             const options = {
                 ...this.options
             }
             const putUrl = `${SERVER_URL}/asset`;
-            const postParams = { assetTitle, displayMode, typeId, isFavorite, sources };
             const response = await axios.put(putUrl, postParams, options);
             if(response.status === 200 && response.data.success){
                     return response.data;
@@ -55,13 +55,12 @@ const axiosRequest = {
     },
 
     async postAsset(params) {
-        const {assetId, assetTitle, displayMode, sources, isFavorite, typeId} = params;
+        const {assetId, ...postParams} = params;
         try {
             const options = {
                 ...this.options
             }
             const postUrl = `${SERVER_URL}/asset/${assetId}`;
-            const postParams = { assetTitle, displayMode, sources, isFavorite, typeId };
             const response = await axios.post(postUrl, postParams, options);
             if(response.status === 200 && response.data.success){
                     return response.data;

@@ -142,19 +142,15 @@ const mergeResults = (sources, results) => {
   })
 }
 
-const saveAsset = (assetTitle, displayMode, typeId, isFavorite, sources, results) => {
+const saveAsset = (assetDetail) => {
   // console.log('$$$1', assetTitle, displayMode, sources, results);
-  const merged = mergeResults(sources, results);
-  // console.log('$$$2', assetTitle, displayMode, sources, results, merged);
   const [axiosRequestWithAuth, ] = axiosRequest();
-  const params = {assetTitle, displayMode, typeId, isFavorite, sources: merged};
-  return axiosRequestWithAuth.putAsset(params)
+  return axiosRequestWithAuth.putAsset(assetDetail)
 }
 
-const changeAsset = (assetId, assetTitle, displayMode, typeId, isFavorite, sources, results) => {
-  const merged = mergeResults(sources, results);
+const changeAsset = (assetId, assetDetail) => {
   const [axiosRequestWithAuth, ] = axiosRequest();
-  const params = {assetId, assetTitle, displayMode, typeId, isFavorite, sources: merged};
+  const params = {assetId, ...assetDetail};
   return axiosRequestWithAuth.postAsset(params)
 }
 
@@ -255,16 +251,41 @@ const AddDialog = props => {
       })
       const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
       console.log(resultsParsed, httpSrcFakeResults);
+      const merged = mergeResults(sources, sourceUploadResults);
+      const assetDetail = {
+        assetTitle,
+        sources: merged,
+        displayMode,
+        typeId,
+        isFavorite,
+        isScrollVideo: isScrollVideoChecked,
+        isScrollSmooth,
+        scrollSpeed
+      }
       isChanging 
-      ? await changeAsset(assetId, assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults)
-      : await saveAsset(assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults);
+      ? await changeAsset(assetId, assetDetail)
+      : await saveAsset(assetDetail);
       handleClose();
     })
     .catch(err => {
       console.error(err);
       reqAborters.current.forEach(aborter => aborter.cancel());
     })
-  }, [assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideoChecked, isEditMode, updateProgressState, assetId, handleClose]);
+  }, [
+    assetTitle, 
+    displayMode, 
+    sources, 
+    filesToUpload, 
+    typeId, 
+    isFavorite, 
+    isScrollVideoChecked, 
+    isEditMode, 
+    updateProgressState, 
+    isScrollSmooth, 
+    scrollSpeed, 
+    assetId, 
+    handleClose
+  ]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
     setAssetTitleState(event.target.value);
