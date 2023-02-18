@@ -214,55 +214,11 @@ const AddDialog = props => {
     if(reason === 'backdropClick') return;
     reqAborters.current.forEach(aborter => aborter.cancel());
     loadAssetListState();
-    // const [axiosWithAuth] = axiosRequest();
-    // axiosWithAuth.getAssetList()
-    // .then(result => {
-    //   setAssetsState(result.assetList);
-    // })    
     setIsEditModeState(false);
     setOpen(false);
     clearDialogState();
     setFilesToUpload([]);
   },[clearDialogState, loadAssetListState, setFilesToUpload, setIsEditModeState, setOpen]);
-
-  // const handleChangeAsset = React.useCallback(() => {
-  //   console.log('$$$', assetId, assetTitle, displayMode, typeId, isFavorite, sources, filesToUpload);
-  //   const fileSources = sources.filter(source => !isHttpUrl(source.src) && source.progress === '0%');
-  //   const httpSources = sources.filter(source => isHttpUrl(source.src) && source.progress === '0%');
-  //   reqAborters.current = [];
-  //   const sendFilePromise = saveFiles(fileSources, filesToUpload, reqAborters, updateProgressState);
-  //   Promise.all(sendFilePromise)
-  //   .then(async results => {
-  //     console.log('$$$$',results);
-  //     if(results.some(result => result.success === false)){
-  //       alert('cacnceled!');
-  //       return;
-  //     }
-  //     const resultsParsed = results.map(result => {
-  //       return {
-  //         ...result,
-  //         srcId: parseInt(result.srcId),
-  //         size: parseInt(result.size)
-  //       }
-  //     })
-  //     const httpSrcFakeResults = httpSources.map(source => {
-  //       return {
-  //         ...source,
-  //         srcLocal: source.src,
-  //         srcRemote: source.src,
-  //         success: true
-  //       }
-  //     })
-  //     console.log(resultsParsed, httpSrcFakeResults);
-  //     const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
-  //     await changeAsset(assetId, assetTitle, displayMode, typeId, isFavorite, sources, sourceUploadResults);
-  //     handleClose();
-  //   })
-  //   .catch(err => {
-  //     console.error(err);
-  //     reqAborters.current.forEach(aborter => aborter.cancel());
-  //   })
-  // },[assetId, assetTitle, displayMode, filesToUpload, handleClose, isFavorite, sources, typeId, updateProgressState])
 
   const handleAddAsset = React.useCallback(() => {
     console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideoChecked);
