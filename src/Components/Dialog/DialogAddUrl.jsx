@@ -33,6 +33,10 @@ const DialogAddUrl = (props) => {
             alert('url too small. enter valid url.');
             return;
         }
+        if(!(value.startsWith('http://') || value.startsWith('https://'))){
+            alert('not valid url(need to http:// or https://)');
+            return;
+        }
         const srcId = Date.now();
         addSourceState({src: value, size: null, srcType:'web', srcId});
         setCurrentUrl('http://');

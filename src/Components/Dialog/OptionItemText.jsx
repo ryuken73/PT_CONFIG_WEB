@@ -38,12 +38,12 @@ const CustomInput = styled(TextField)`
 `;
 
 const OptionItemText = props => {
-    const {id, title, onChange, value, ...rest} = props;
+    const {id, title, onChange, value, autoFocus, ...rest} = props;
     return (
         <Item>
             <Box width="100px" mr="10px">{title}</Box>
             {/* {value ?  */}
-              <CustomInput fullWidth variant="standard" onChange={onChange} value={value} id={id} size="small"></CustomInput>
+              <CustomInput fullWidth variant="standard" onChange={onChange} value={value} id={id} autoFocus={autoFocus} size="small"></CustomInput>
               {/* <CustomInput fullWidth variant="standard" onChange={onChange} id={id} size="small"></CustomInput> */}
             {/* } */}
         </Item>

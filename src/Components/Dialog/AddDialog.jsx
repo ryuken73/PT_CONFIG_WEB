@@ -65,9 +65,26 @@ const DialogAssets = styled.div`
   margin-top: 5px;
 `
 const GuideText = styled.div`
-  color: darkblue;
-  padding: 7px;
+  color: maroon;
+  padding: 1px;
   margin-top: 10px;
+`
+const TypeButton = () => {
+  return (
+    <ButtonSmall 
+      background="transparent" 
+      hoverBackground="transparent" 
+      hoverBorder="1px solid white" 
+      padding="2px" borderRadius="6px" 
+      border="1px solid" 
+      fontSize="5px"
+    >type
+    </ButtonSmall>
+  )
+}
+
+const GuideMessage = styled.div`
+  color: maroon;
 `
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -267,6 +284,10 @@ const AddDialog = props => {
           alert('url too small. enter valid url.');
           return;
       }
+      if(!(currentUrl.startsWith('http://') || currentUrl.startsWith('https://'))){
+          alert('not valid url(need to http:// or https://)');
+          return;
+      }
       const srcId = Date.now();
       addSourceState({src: currentUrl, size: null, srcType:'web', srcId});
     }
@@ -295,22 +316,9 @@ const AddDialog = props => {
   const displayModeDefault = displayMode || 'flexRow';
   const displayModeSelected = sources.length > 1 && displayModeDefault;
 
-  const TypeButton = () => {
-    return (
-      <ButtonSmall 
-        background="indigo" 
-        hoverBackground="darkblue" 
-        hoverBorder="1px solid white" 
-        padding="2px" borderRadius="6px" 
-        border="1px solid" 
-        fontSize="5px"
-      >type
-      </ButtonSmall>
-    )
-  }
 
-  const GuideMessage = sources.length === 0 ?
-    ":  Drag & Drop Images or Videos. / Type URL of Page and click +" : 
+  const Guide = sources.length === 0 ?
+    "Drag Images or Videos. Or Type URL and click +" : 
     "";
 
   return (
@@ -318,7 +326,7 @@ const AddDialog = props => {
       <CustomDialog
         open={open}
         TransitionComponent={Transition}
-        keepMounted
+        // keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
         onDrop={handleDrop} 
@@ -327,7 +335,7 @@ const AddDialog = props => {
         <DialogTitle>{titleText}</DialogTitle>
         <DialogContent>
           <OptionItemText
-            autoFocus
+            autoFocus={true}
             onChange={onChangeAssetTitle}
             title="Title"
             id="assetTitle"
@@ -342,7 +350,7 @@ const AddDialog = props => {
               formItems={formItems}
             />
           )}
-          <Box sx={{marginTop: '10px', marginBottom: '10px'}}>Sources {GuideMessage}</Box>
+          <GuideMessage>{Guide}</GuideMessage>
           <AddUrlContainer>
             <DialogAddUrl
               value={currentUrl}
@@ -358,7 +366,7 @@ const AddDialog = props => {
           </DialogAssets>
           {sources.length > 0 && (
             <GuideText>
-              <div>* click <span><TypeButton /></span> button to change type of source.</div>
+              <div>* click <span style={{margin:'5px'}}> <TypeButton /> </span> button to change type of source.</div>
             </GuideText>
           )}
         </DialogContent>
