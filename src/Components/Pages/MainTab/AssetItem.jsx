@@ -85,9 +85,11 @@ const CustomIconButton = styled(IconButton)`
     opacity: 0.6;
   }
 `
-
 const YellowStar = styled(StarIcon)`
   color: yellow;
+`
+const RedDeleteIcon = styled(DeleteIcon)`
+  color: red;
 `
 const AssetItem = (props) => {
   const { asset, rownum } = props;
@@ -234,7 +236,7 @@ const AssetItem = (props) => {
           </IconBox>
           <IconBox>
             <CustomIconButton onClick={onClickRemove}>
-              <DeleteIcon fontSize="small" />
+              <RedDeleteIcon fontSize="small" />
             </CustomIconButton>
           </IconBox>
         </IconContainer>
