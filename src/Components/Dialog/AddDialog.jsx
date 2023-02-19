@@ -175,6 +175,9 @@ const AddDialog = props => {
     assetId,
     assetTitle,
     displayMode,
+    isScrollVideo,
+    isScrollSmooth,
+    scrollSpeed,
   } = useDialogState();
 
   const {
@@ -201,11 +204,11 @@ const AddDialog = props => {
 
   const reqAborters = React.useRef([]);
   const [currentUrl, setCurrentUrl] = React.useState('http://');
-  const [isScrollVideoChecked, setIsScrollVideoChecked] = React.useState(false);
-  const [isScrollSmooth, setIsScrollSmooth] = React.useState(false);
-  const [scrollSpeed, setScrollSpeed] = React.useState(150);
+  // const [isScrollVideoChecked, setIsScrollVideoChecked] = React.useState(false);
+  // const [isScrollSmooth, setIsScrollSmooth] = React.useState(false);
+  // const [scrollSpeed, setScrollSpeed] = React.useState(150);
 
-  const CheckIcon = isScrollVideoChecked ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
+  const CheckIcon = isScrollVideo ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
 
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
@@ -218,7 +221,7 @@ const AddDialog = props => {
   },[clearDialogState, loadAssetListState, setFilesToUpload, setIsEditModeState, setOpen]);
 
   const handleAddAsset = React.useCallback(() => {
-    console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideoChecked);
+    console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo);
     const isChanging = isEditMode;
     const fileSources = isChanging 
                         ? sources.filter(source => !isHttpUrl(source.src) && source.progress === '0%')
@@ -259,7 +262,7 @@ const AddDialog = props => {
         displayMode,
         typeId,
         isFavorite,
-        isScrollVideo: isScrollVideoChecked,
+        isScrollVideo,
         isScrollSmooth,
         scrollSpeed
       }
@@ -279,7 +282,7 @@ const AddDialog = props => {
     filesToUpload, 
     typeId, 
     isFavorite, 
-    isScrollVideoChecked, 
+    isScrollVideo, 
     isEditMode, 
     updateProgressState, 
     isScrollSmooth, 
@@ -289,13 +292,11 @@ const AddDialog = props => {
   ]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
-    // setAssetTitleState(event.target.value);
     setAssetDetailState('assetTitle', event.target.value)
 
   },[setAssetDetailState])
 
   const onChangeDisplayMode = React.useCallback((displayMode) => {
-    // setDisplayModeState(displayMode);
     setAssetDetailState('displayMode', displayMode)
   },[setAssetDetailState])
 
@@ -333,8 +334,17 @@ const AddDialog = props => {
   },[addSourceState, setFilesToUpload])
 
   const toggleEnableScroll = React.useCallback(() => {
-    setIsScrollVideoChecked(checked => !checked);
-  }, [])
+    const newValue = !isScrollVideo;
+    setAssetDetailState('isScrollVideo', newValue);
+  }, [isScrollVideo, setAssetDetailState])
+
+  const setIsScrollSmooth = React.useCallback((value) => {
+    setAssetDetailState('isScrollSmooth', value);
+  }, [setAssetDetailState])
+
+  const setScrollSpeed = React.useCallback((value) => {
+    setAssetDetailState('scrollSpeed', value);
+  }, [setAssetDetailState])
 
   const titleText = isEditMode ? 'Edit Source' : 'Add Source';
   const addBtnText = isEditMode ? 'Apply' : 'Add';
@@ -344,9 +354,9 @@ const AddDialog = props => {
 
   React.useEffect(() => {
     if(showScrollCheck === false) {
-      setIsScrollVideoChecked(false);
+      setAssetDetailState('isScrollVideo', false);
     }
-  }, [showScrollCheck])
+  }, [setAssetDetailState, showScrollCheck])
 
   const Guide = sources.length === 0 ?
     "Drag Images or Videos. Or Type URL and click +" : 
@@ -382,7 +392,7 @@ const AddDialog = props => {
             />
           )}
           <GuideMessage>{Guide}</GuideMessage>
-          {isScrollVideoChecked ? (
+          {isScrollVideo ? (
               <ScrollVideoOptions
                 isScrollSmooth={isScrollSmooth}
                 scrollSpeed={scrollSpeed}

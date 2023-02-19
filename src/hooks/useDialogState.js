@@ -17,7 +17,7 @@ export default function useDialogState() {
   const assetId = useSelector((state) => state.dialog.assetId);
   const assetTitle = useSelector((state) => state.dialog.assetTitle);
   const displayMode = useSelector((state) => state.dialog.displayMode);
-  const isScrollVideoChecked = useSelector((state) => state.dialog.isScrollVideoChecked);
+  const isScrollVideo = useSelector((state) => state.dialog.isScrollVideo);
   const isScrollSmooth = useSelector((state) => state.dialog.isScrollSmooth);
   const scrollSpeed = useSelector((state) => state.dialog.scrollSpeed);
 
@@ -61,7 +61,7 @@ export default function useDialogState() {
     assetId,
     assetTitle,
     displayMode,
-    isScrollVideoChecked,
+    isScrollVideo,
     isScrollSmooth,
     scrollSpeed,
     setDialogOpenState,

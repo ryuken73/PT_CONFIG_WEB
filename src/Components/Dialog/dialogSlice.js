@@ -6,7 +6,7 @@ const initialState = {
   assetId:'',
   assetTitle: '',
   displayMode: '',
-  isScrollVideoChecked: false,
+  isScrollVideo: false,
   isScrollSmooth: false,
   scrollSpeed: 150,
   sources: [],

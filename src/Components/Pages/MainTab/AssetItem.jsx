@@ -97,6 +97,9 @@ const AssetItem = (props) => {
     assetId,
     assetTitle,
     displayMode,
+    isScrollVideo,
+    isScrollSmooth,
+    scrollSpeed,
     checked,
     sources,
     created,
@@ -149,12 +152,12 @@ const AssetItem = (props) => {
       alert('Remove asset from active list first.')
       return
     }
-    // setIdState(assetId);
     setAssetDetailState('assetId', assetId);
     setAssetDetailState('assetTitle', assetTitle);
     setAssetDetailState('displayMode', displayMode);
-    // setAssetTitleState(assetTitle);
-    // setDisplayModeState(displayMode);
+    setAssetDetailState('isScrollVideo', isScrollVideo);
+    setAssetDetailState('isScrollSmooth', isScrollSmooth);
+    setAssetDetailState('scrollSpeed', scrollSpeed);
     const sourcesBasename = sources.map(source => {
       return {
         ...source,
@@ -167,20 +170,7 @@ const AssetItem = (props) => {
     })
     setIsEditModeState(true);
     setDialogOpenState(true);
-  },[
-    isAssetActive, 
-    // setIdState, 
-    assetId, 
-    // setAssetTitleState, 
-    assetTitle, 
-    // setDisplayModeState, 
-    displayMode, 
-    sources, 
-    setSourcesState, 
-    setIsEditModeState, 
-    setDialogOpenState, 
-    updateProgressState
-  ]);
+  },[isAssetActive, setAssetDetailState, assetId, assetTitle, displayMode, isScrollVideo, isScrollSmooth, scrollSpeed, sources, setSourcesState, setIsEditModeState, setDialogOpenState, updateProgressState]);
 
   const toggleActive = React.useCallback(() => {
     if(isAssetActive){
