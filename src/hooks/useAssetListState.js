@@ -137,21 +137,21 @@ export default function useAssetListState() {
     // run axios.del and get new assets 
     // and then dispatch setAssets
     axiosWithAuth.delAsset({assetId})
-    .then(result => {
-      return axiosWithAuth.getAssetList();
-    })
-    .then(result => {
-      setAssetsState(result.assetList);
-    })
-  },[setAssetsState])
+    // .then(result => {
+    //   return axiosWithAuth.getAssetList();
+    // })
+    // .then(result => {
+    //   setAssetsState(result.assetList);
+    // })
+  },[])
 
   const removeAssetAllCheckedState = React.useCallback( async () => {
     const delPromises = assetChecked.map(assetId => axiosWithAuth.delAsset({assetId}))
     Promise.all(delPromises);
-    const assetList = await getAssetList();
-    setAssetsState(assetList);
+    // const assetList = await getAssetList();
+    // setAssetsState(assetList);
     dispatch(setAllAssetUnChecked);
-  }, [assetChecked, dispatch, setAssetsState]);
+  }, [assetChecked, dispatch]);
 
   const resetToDefaultState = React.useCallback(async () => {
     await axiosWithAuth.resetToDefault();
