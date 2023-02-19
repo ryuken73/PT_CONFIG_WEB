@@ -168,9 +168,10 @@ const AddDialog = props => {
     isEditMode,
     setDialogOpenState: setOpen,
     clearDialogState,
-    setAssetTitleState,
-    setDisplayModeState,
+    // setAssetTitleState,
+    // setDisplayModeState,
     setIsEditModeState,
+    setAssetDetailState,
     assetId,
     assetTitle,
     displayMode,
@@ -288,12 +289,15 @@ const AddDialog = props => {
   ]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
-    setAssetTitleState(event.target.value);
-  },[setAssetTitleState])
+    // setAssetTitleState(event.target.value);
+    setAssetDetailState('assetTitle', event.target.value)
+
+  },[setAssetDetailState])
 
   const onChangeDisplayMode = React.useCallback((displayMode) => {
-    setDisplayModeState(displayMode);
-  },[setDisplayModeState])
+    // setDisplayModeState(displayMode);
+    setAssetDetailState('displayMode', displayMode)
+  },[setAssetDetailState])
 
   const onKeyUpUrl = React.useCallback((event) => {
     if(event.keyCode === 13){

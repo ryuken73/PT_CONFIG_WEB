@@ -6,6 +6,9 @@ const initialState = {
   assetId:'',
   assetTitle: '',
   displayMode: '',
+  isScrollVideoChecked: false,
+  isScrollSmooth: false,
+  scrollSpeed: 150,
   sources: [],
 };
 
@@ -50,20 +53,25 @@ export const dialogSlice = createSlice({
       const targetSource = state.sources.find(source => source.srcId === srcId);
       targetSource.progress = progress;
     },
-    setAssetTitle: (state, action) => {
+    // setAssetTitle: (state, action) => {
+    //   const { payload } = action;
+    //   const { assetTitle } = payload;
+    //   state.assetTitle = assetTitle;
+    // },
+    // setDisplayMode: (state, action) => {
+    //   const { payload } = action;
+    //   const { displayMode } = payload;
+    //   state.displayMode = displayMode;
+    // },
+    // setAssetId: (state, action) => {
+    //   const { payload } = action;
+    //   const { assetId } = payload;
+    //   state.assetId = assetId;
+    // },
+    setAssetDetail: (state, action) => {
       const { payload } = action;
-      const { assetTitle } = payload;
-      state.assetTitle = assetTitle;
-    },
-    setDisplayMode: (state, action) => {
-      const { payload } = action;
-      const { displayMode } = payload;
-      state.displayMode = displayMode;
-    },
-    setAssetId: (state, action) => {
-      const { payload } = action;
-      const { assetId } = payload;
-      state.assetId = assetId;
+      const { key, value } = payload;
+      state[key] = value;
     },
     clearDialog: (state, action) => {
       state.assetTitle = '';
@@ -75,15 +83,16 @@ export const dialogSlice = createSlice({
 export const { 
   setDialogOpen, 
   setIsEditMode,
-  setAssetId, 
-  setAssetTitle, 
-  setDisplayMode, 
+  // setAssetId, 
+  // setAssetTitle, 
+  // setDisplayMode, 
   addSource, 
   setSourceProgress, 
   removeSource, 
   setSources, 
   setSrcType,
-  clearDialog 
+  clearDialog,
+  setAssetDetail
 } = dialogSlice.actions;
 
 export default dialogSlice.reducer;

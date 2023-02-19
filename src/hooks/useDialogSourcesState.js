@@ -6,7 +6,8 @@ import {
   setSources,
   setSrcType,
   setSourceProgress, 
-  setAssetTitle,
+  setAssetDetail
+  // setAssetTitle,
 } from 'Components/Dialog/dialogSlice'
 
 const getNextSrcType = srcType => {
@@ -35,7 +36,7 @@ export default function useDialogState() {
           srcId: id + index 
         }));
       })
-      dispatch(setAssetTitle({assetTitle: drops[0].name}))
+      dispatch(setAssetDetail({key: 'assetTitle', value: drops[0].name}))
     },
     [dispatch]
   );

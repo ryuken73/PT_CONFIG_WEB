@@ -112,11 +112,12 @@ const AssetItem = (props) => {
   } = useAssetListState();
 
   const {
-    setIdState,
-    setAssetTitleState,
-    setDisplayModeState,
+    // setIdState,
+    // setAssetTitleState,
+    // setDisplayModeState,
     setDialogOpenState,
     setIsEditModeState,
+    setAssetDetailState,
   } = useDialogState();
 
   const {
@@ -148,9 +149,12 @@ const AssetItem = (props) => {
       alert('Remove asset from active list first.')
       return
     }
-    setIdState(assetId);
-    setAssetTitleState(assetTitle);
-    setDisplayModeState(displayMode);
+    // setIdState(assetId);
+    setAssetDetailState('assetId', assetId);
+    setAssetDetailState('assetTitle', assetTitle);
+    setAssetDetailState('displayMode', displayMode);
+    // setAssetTitleState(assetTitle);
+    // setDisplayModeState(displayMode);
     const sourcesBasename = sources.map(source => {
       return {
         ...source,
@@ -165,11 +169,11 @@ const AssetItem = (props) => {
     setDialogOpenState(true);
   },[
     isAssetActive, 
-    setIdState, 
+    // setIdState, 
     assetId, 
-    setAssetTitleState, 
+    // setAssetTitleState, 
     assetTitle, 
-    setDisplayModeState, 
+    // setDisplayModeState, 
     displayMode, 
     sources, 
     setSourcesState, 
