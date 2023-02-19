@@ -1,4 +1,4 @@
-import React from 'react';
+import React  from 'react';
 import Header from 'Components/Header';
 import MainTab from 'Components/Pages/MainTab';
 import LeftTab from 'Components/Pages/LeftTab';
@@ -8,6 +8,7 @@ import AddDialog from 'Components/Dialog/AddDialog';
 import styled from 'styled-components';
 import constants from 'config/constants';
 import colors from 'config/colors';
+import {SocketContext, socket} from 'context/socket';
 
 const {TOUCH_WEB_SERVER_URL, SERVER_URL} = constants;
 
@@ -93,24 +94,26 @@ export default function App() {
   // });
 
   return (
-    <AppContainer>
-      <HeaderContainer>
-        <Header />
-      </HeaderContainer>
-      <BodyContainer>
-        <LeftPane>
-          <LeftTab></LeftTab>
-        </LeftPane>
-        <CenterPane>
-          <MainTab setFilesToUpload={setFilesToUpload} />
-        </CenterPane>
-      </BodyContainer>
-      <MessageBox />
-      <Loading />
-      <AddDialog 
-        filesToUpload={filesToUpload} 
-        setFilesToUpload={setFilesToUpload} 
-      />
-    </AppContainer>
+    <SocketContext.Provider value={socket}>
+      <AppContainer>
+        <HeaderContainer>
+          <Header />
+        </HeaderContainer>
+        <BodyContainer>
+          <LeftPane>
+            <LeftTab></LeftTab>
+          </LeftPane>
+          <CenterPane>
+            <MainTab setFilesToUpload={setFilesToUpload} />
+          </CenterPane>
+        </BodyContainer>
+        <MessageBox />
+        <Loading />
+        <AddDialog 
+          filesToUpload={filesToUpload} 
+          setFilesToUpload={setFilesToUpload} 
+        />
+      </AppContainer>
+    </SocketContext.Provider>
   );
 }

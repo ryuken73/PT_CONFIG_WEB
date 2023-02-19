@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import useHeaderState from 'hooks/useHeaderState';
-import useSocketIO from 'hooks/useSocketIO';
+import useAssetListState from 'hooks/useAssetListState';
+import {SocketContext} from 'context/socket';
 import constants from 'config/constants';
 
 const { TOUCH_WEB_SERVER_URL } = constants;
@@ -18,7 +19,6 @@ const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
-
   return result;
 };
 
@@ -51,22 +51,27 @@ const getListStyle = isDraggingOver => ({
 const MenuControl = (props) => {
     // const [items, setItems] = React.useState(getItems(6));
     const { assetsActive, loadAssetsActiveState, setAssetsActiveState } = useHeaderState();
+    const { setAssetsState } = useAssetListState();
     const { children } = props;
 
-    const [connected, setSocketConnected] = React.useState(false);
-    const { socket } = useSocketIO({
-      hostAddress: TOUCH_WEB_SERVER_URL,
-      setSocketConnected,
-    });
+    const socket = useContext(SocketContext);
 
     React.useEffect(() => {
-      if(socket === null) return;
-      socket.emit('ASSET_CHANGE', assetsActive);
-    },[assetsActive, socket])
+      socket.onAny((eventName, args) => {
+        console.log(`event: [${eventName}],`, args);
+        if (eventName === 'ASSET_CHANGE'){
+          setAssetsState(args);
+        }
+      })
+      return () => {
+        socket.offAny();
+      }
+    })
 
     React.useEffect(() => {
       loadAssetsActiveState();
     },[loadAssetsActiveState])
+
     const onDragEnd = React.useCallback((result) => {
 
         // dropped outside the list
