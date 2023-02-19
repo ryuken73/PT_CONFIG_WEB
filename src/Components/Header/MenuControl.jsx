@@ -50,8 +50,8 @@ const getListStyle = isDraggingOver => ({
 
 const MenuControl = (props) => {
     // const [items, setItems] = React.useState(getItems(6));
-    const { assetsActive, loadAssetsActiveState, setAssetsActiveState } = useHeaderState();
-    const { setAssetsState } = useAssetListState();
+    const { assetsActive, loadAssetsActiveState, setAssetsActiveState, orderChangeAssetActiveState } = useHeaderState();
+    const { setAssetState, setAssetsState } = useAssetListState();
     const { children } = props;
 
     const socket = useContext(SocketContext);
@@ -61,6 +61,13 @@ const MenuControl = (props) => {
         console.log(`event: [${eventName}],`, args);
         if (eventName === 'ASSET_CHANGE'){
           setAssetsState(args);
+        }
+        if (eventName === 'ASSET_ITEM_CHANGE'){
+          const {assetId, asset} = args;
+          setAssetState(assetId, asset);
+        }
+        if (eventName === 'ACTIVE_ASSET_CHANGE'){
+          setAssetsActiveState(args);
         }
       })
       return () => {
@@ -73,19 +80,18 @@ const MenuControl = (props) => {
     },[loadAssetsActiveState])
 
     const onDragEnd = React.useCallback((result) => {
-
         // dropped outside the list
         if (!result.destination) {
             return;
         }
-
-        const newAssetsActive = reorder(
-            assetsActive,
-            result.source.index,
-            result.destination.index
-        );
-        setAssetsActiveState(newAssetsActive)
-    },[assetsActive, setAssetsActiveState])
+        orderChangeAssetActiveState(result);
+        // const newAssetsActive = reorder(
+        //     assetsActive,
+        //     result.source.index,
+        //     result.destination.index
+        // );
+        // setAssetsActiveState(newAssetsActive)
+    },[orderChangeAssetActiveState])
 
     console.log(')))', assetsActive)
 
@@ -102,7 +108,7 @@ const MenuControl = (props) => {
                   <div>No Menu Selected</div>
               )}
               {assetsActive.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
+                <Draggable key={item.assetId} draggableId={item.assetId.toString()} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -115,6 +121,7 @@ const MenuControl = (props) => {
                     >
                       {React.cloneElement(children, {
                         id: item.assetId,
+                        assetId: item.assetId,
                         title: item.assetTitle
                       })}
                     </div>

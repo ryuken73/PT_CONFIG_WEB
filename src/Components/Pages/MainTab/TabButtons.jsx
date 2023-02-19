@@ -40,6 +40,7 @@ const TabButtons = () => {
     setAssetsActiveState,
     addAssetActiveState,
     loadAssetsActiveState,
+    addAssetsActiveState
   } = useHeaderState();
 
   const setDialogOpen = React.useCallback(() => {
@@ -47,30 +48,17 @@ const TabButtons = () => {
   },[setDialogOpenState])
 
   const addAssetsActive = React.useCallback(() => {
-    const assetsFiltered = assetListChecked.filter(asset => {
-      if(assetsActive.some(activeAsset => activeAsset.assetId === asset.assetId )){
-        alert('Alreay Exists!');
-        return false;
-      }
-      return true
-    })
-    setAssetsActiveState([...assetsActive, ...assetsFiltered]);
-    
-    // const addPromises = assetListChecked.map(asset => {
+    console.log('xxxx:', assetListChecked);
+    addAssetsActiveState(assetListChecked)
+    // const assetsFiltered = assetListChecked.filter(asset => {
     //   if(assetsActive.some(activeAsset => activeAsset.assetId === asset.assetId )){
     //     alert('Alreay Exists!');
-    //     return Promise.resolve({succes: true});
+    //     return false;
     //   }
-    //   return addAssetActiveState(asset);
+    //   return true
     // })
-    // Promise.all(addPromises)
-    // .then(results => {
-    //   loadAssetsActiveState();
-    // })
-    // .catch(err => {
-    //   console.error(err);
-    // })
-  }, [assetListChecked, assetsActive, setAssetsActiveState])
+    // setAssetsActiveState([...assetsActive, ...assetsFiltered]);
+  }, [addAssetsActiveState, assetListChecked])
 
   const onClickSetDefault = React.useCallback(() => {
     setConfirmTitle('*[Warning]* Clear All Items?')

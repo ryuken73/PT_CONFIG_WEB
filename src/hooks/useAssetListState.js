@@ -81,7 +81,7 @@ export default function useAssetListState() {
   assetListRef.current = assetList;
 
   const assetListChecked = React.useMemo(() => {
-    assetList.filter(asset => asset.checked);
+    return assetList.filter(asset => asset.checked);
   }, [assetList])
 
   const allChecked = React.useMemo(() => {
@@ -97,6 +97,10 @@ export default function useAssetListState() {
 
   const setAssetsState = React.useCallback((assets) => {
     dispatch(setAssets({assetList: assets}))
+  },[dispatch])
+
+  const setAssetState = React.useCallback((assetId, asset) => {
+    dispatch(setAsset({assetId, asset}))
   },[dispatch])
 
   const addAssetsState = React.useCallback(
@@ -172,6 +176,7 @@ export default function useAssetListState() {
     setAssetTypeState,
     removeAssetState,
     setAssetsState,
+    setAssetState,
     removeAssetAllCheckedState,
     resetToDefaultState
   };

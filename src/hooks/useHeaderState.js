@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
   setAssetsActive, 
-  addAssetActive, 
+  // addAssetActive, 
   removeAssetActive 
 } from 'Components/Header/headerSlice';
 import axiosRequest from 'lib/axiosRequest';
@@ -36,6 +36,14 @@ const delAssetActive = async (id) => {
   })
 }
 
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};
+
 export default function useHeaderState() {
   const dispatch = useDispatch();
   const assetsActive = useSelector((state) => state.header.assetsActive);
@@ -49,40 +57,62 @@ export default function useHeaderState() {
     async (assetsActive) => {
       // first, set assetsActive value in state, and then loadAssetsActive again.
       dispatch(setAssetsActive({ assetsActive }));
-      const result = await putAssetsActive(assetsActive);
-      if(result.success){
-        loadAssetsActiveState();
-      }
+      // await putAssetsActive(assetsActive);
+      // const result = await putAssetsActive(assetsActive);
+      // if(result.success){
+      //   loadAssetsActiveState();
+      // }
     },
-    [dispatch, loadAssetsActiveState]
+    [dispatch]
   );
 
   const addAssetActiveState = React.useCallback(
     async (asset) => {
       // first, set assetsActive value in state, and then loadAssetsActive again.
-      dispatch(addAssetActive({ asset }));
-      const result = await putAssetsActive([...assetsActive, asset])
-      if(result.success){
-        loadAssetsActiveState();
-      }
+      // dispatch(addAssetActive({ asset }));
+       await putAssetsActive([...assetsActive, asset])
+      // if(result.success){
+        // loadAssetsActiveState();
+      // }
     },
-    [assetsActive, dispatch, loadAssetsActiveState]
+    [assetsActive]
   );
+
+  const addAssetsActiveState = React.useCallback(
+    async (assets) => {
+       await putAssetsActive([...assetsActive, ...assets])
+    },
+    [assetsActive]
+  );
+
+  const  orderChangeAssetActiveState = React.useCallback(async (dragResult) => {
+    const newAssetsActive = reorder(
+        assetsActive,
+        dragResult.source.index,
+        dragResult.destination.index
+    );
+    await putAssetsActive(newAssetsActive);
+  }, [assetsActive])
+
+
   const removeAssetActiveState = React.useCallback(
     async (assetId) => {
       dispatch(removeAssetActive({ assetId }));
-      const result = await delAssetActive(assetId);
-      if(result.success){
-        loadAssetsActiveState();
-      }
+      await delAssetActive(assetId);
+      // const result = await delAssetActive(assetId);
+      // if(result.success){
+      //   loadAssetsActiveState();
+      // }
     },
-    [dispatch, loadAssetsActiveState]
+    [dispatch]
   );
   return { 
     assetsActive, 
     loadAssetsActiveState,
     setAssetsActiveState,
+    orderChangeAssetActiveState,
     addAssetActiveState,
+    addAssetsActiveState,
     removeAssetActiveState
   };
 }
