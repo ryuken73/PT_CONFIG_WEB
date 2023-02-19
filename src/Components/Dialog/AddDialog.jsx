@@ -213,12 +213,12 @@ const AddDialog = props => {
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
     reqAborters.current.forEach(aborter => aborter.cancel());
-    loadAssetListState();
+    // loadAssetListState();
     setIsEditModeState(false);
     setOpen(false);
     clearDialogState();
     setFilesToUpload([]);
-  },[clearDialogState, loadAssetListState, setFilesToUpload, setIsEditModeState, setOpen]);
+  },[clearDialogState, setFilesToUpload, setIsEditModeState, setOpen]);
 
   const handleAddAsset = React.useCallback(() => {
     console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo);
