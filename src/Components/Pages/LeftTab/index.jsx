@@ -35,11 +35,11 @@ const CustomInput = styled.input`
 `
 
 function LeftTab() {
-  const {typeList, currentTypeId, setTypeState, addTypeState} = useTypeListState();
+  const {typeList, currentTypeId, initTypeState, addTypeState} = useTypeListState();
   const inputRef = React.useRef(null);
   React.useEffect(() => {
-    setTypeState();
-  }, [setTypeState])
+    initTypeState();
+  }, [initTypeState])
 
   const onClickAdd = React.useCallback(() => {
     const type = inputRef.current.value;

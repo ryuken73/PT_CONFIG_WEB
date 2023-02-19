@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import useHeaderState from 'hooks/useHeaderState';
 import useAssetListState from 'hooks/useAssetListState';
+import useTypeListState from 'hooks/useTypeListState';
 import {SocketContext} from 'context/socket';
 import constants from 'config/constants';
 
@@ -52,6 +53,7 @@ const MenuControl = (props) => {
     // const [items, setItems] = React.useState(getItems(6));
     const { assetsActive, loadAssetsActiveState, setAssetsActiveState, orderChangeAssetActiveState } = useHeaderState();
     const { setAssetState, setAssetsState } = useAssetListState();
+    const { setTypeState } = useTypeListState();
     const { children } = props;
 
     const socket = useContext(SocketContext);
@@ -68,6 +70,9 @@ const MenuControl = (props) => {
         }
         if (eventName === 'ACTIVE_ASSET_CHANGE'){
           setAssetsActiveState(args);
+        }
+        if (eventName === 'TYPE_CHANGE'){
+          setTypeState(args);
         }
       })
       return () => {

@@ -47,7 +47,8 @@ function Type(props) {
     setCurrentTypeIdState(typeId);
   }, [setCurrentTypeIdState, typeId])
 
-  const onClickClose = React.useCallback(() => {
+  const onClickClose = React.useCallback((event) => {
+    event.stopPropagation();
     removeTypeState(typeId)
   }, [removeTypeState, typeId])
 

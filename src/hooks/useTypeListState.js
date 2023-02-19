@@ -42,21 +42,24 @@ export default function useAssetListState() {
   const typeList = useSelector((state) => state.type.typeList);
   const currentTypeId = useSelector((state) => state.type.currentTypeId);
 
-  const setTypeState = React.useCallback(async () => {
+  const initTypeState = React.useCallback(async () => {
     const typeList = await getTypeList();
-    console.log('$$$', typeList);
+    dispatch(setType({ typeList }));
+  },[dispatch])  
+
+  const setTypeState = React.useCallback((typeList) => {
     dispatch(setType({ typeList }));
   },[dispatch])  
 
   const addTypeState = React.useCallback(async (type) => {
-    const types = await appendType(type);
-    dispatch(setType({ typeList: types }));
-  }, [dispatch]);
+    await appendType(type);
+    // dispatch(setType({ typeList: types }));
+  }, []);
 
   const removeTypeState = React.useCallback(async (typeId) => {
-    const types = await delType(typeId);
-    dispatch(setType({ typeList: types }));
-  },[dispatch])
+    await delType(typeId);
+    // dispatch(setType({ typeList: types }));
+  },[])
 
   const setCurrentTypeIdState = React.useCallback(async (currentTypeId) => {
     dispatch(setCurrentTypeId({ currentTypeId }));
@@ -65,6 +68,7 @@ export default function useAssetListState() {
   return {
     typeList,
     currentTypeId,
+    initTypeState,
     setTypeState,
     addTypeState,
     removeTypeState,
