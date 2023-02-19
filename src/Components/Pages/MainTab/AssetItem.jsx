@@ -234,12 +234,12 @@ const AssetItem = (props) => {
             </CustomIconButton>
           </IconBox>
           <IconBox>
-            <CustomIconButton onClick={onClickEdit}>
+            <CustomIconButton onClick={onClickEdit} disabled={isAssetActive}>
               <EditIcon fontSize="small" />
             </CustomIconButton>
           </IconBox>
           <IconBox>
-            <CustomIconButton onClick={onClickRemove}>
+            <CustomIconButton onClick={onClickRemove} disabled={isAssetActive}>
               <RedDeleteIcon fontSize="small" />
             </CustomIconButton>
           </IconBox>
