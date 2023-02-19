@@ -34,7 +34,7 @@ function ScrollOptionSlow(props) {
         aria-label="lineOpacity"
         value={scrollSpeed}
         min={150}
-        step={100}
+        step={50}
         marks
         max={1000}
         onChange={onChange}
