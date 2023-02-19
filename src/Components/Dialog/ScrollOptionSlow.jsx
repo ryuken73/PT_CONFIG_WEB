@@ -17,7 +17,7 @@ const Title = styled.div`
 `
 
 function ScrollOptionSlow(props) {
-  const {scrollSpeed=500, setScrollSpeed} = props;
+  const {scrollSpeed=150, setScrollSpeed} = props;
   const onChange = React.useCallback((event) => {
       const { value } = event.target;
       setScrollSpeed(value);
@@ -33,7 +33,7 @@ function ScrollOptionSlow(props) {
       <Slider
         aria-label="lineOpacity"
         value={scrollSpeed}
-        min={200}
+        min={150}
         step={100}
         marks
         max={1000}

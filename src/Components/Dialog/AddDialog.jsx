@@ -202,7 +202,7 @@ const AddDialog = props => {
   const [currentUrl, setCurrentUrl] = React.useState('http://');
   const [isScrollVideoChecked, setIsScrollVideoChecked] = React.useState(false);
   const [isScrollSmooth, setIsScrollSmooth] = React.useState(false);
-  const [scrollSpeed, setScrollSpeed] = React.useState(500);
+  const [scrollSpeed, setScrollSpeed] = React.useState(150);
 
   const CheckIcon = isScrollVideoChecked ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
 
