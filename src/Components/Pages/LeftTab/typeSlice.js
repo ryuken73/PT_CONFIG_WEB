@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   typeList: [],
-  currentTypeId: 1
+  currentTypeId: 4
 };
 
 export const typeSlice = createSlice({
