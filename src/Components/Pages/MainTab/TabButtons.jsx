@@ -100,7 +100,7 @@ const TabButtons = () => {
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
         onClick={addAssetsActive}
       />
-      <Box sx={{marginLeft:'auto', marginRight: '10px'}}>
+      {/* <Box sx={{marginLeft:'auto', marginRight: '10px'}}>
         <ButtonIcon
           text="초기화"
           iconcomponent={<RestartAltIcon />}
@@ -109,7 +109,7 @@ const TabButtons = () => {
           hoverBorder="2px solid rgba(155, 131, 131, 0.8)"
           onClick={onClickSetDefault}
         />
-      </Box>
+      </Box> */}
       <ConfirmDialog 
         open={confirmOpen} 
         handleYes={resetDefault} 
