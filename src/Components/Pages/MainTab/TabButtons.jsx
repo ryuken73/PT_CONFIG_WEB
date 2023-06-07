@@ -30,7 +30,7 @@ const TabButtons = () => {
   const [ confirmOpen, setConfirmOpen ] = React.useState(false);
   const [ confirmTitle, setConfirmTitle ] = React.useState('Confirm?');
   const { 
-    assetListChecked, 
+    assetChecked: assetListChecked, 
     removeAssetState,
     removeAssetAllCheckedState, 
     resetToDefaultState 

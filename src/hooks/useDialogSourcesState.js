@@ -18,7 +18,7 @@ const getNextSrcType = srcType => {
 export default function useDialogState() {
   const dispatch = useDispatch();
   const sources = useSelector((state) => state.dialog.sources);
-  console.log('###', sources);
+  // console.log('###', sources);
 
   const setDialogAssetState = React.useCallback(
     (drops) => {

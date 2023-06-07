@@ -35,17 +35,18 @@ const getCountFavorite = (assetList) => {
 function Type(props) {
   const { typeName, typeId, irremovable=false, currentTypeId } = props;
   const { removeTypeState, setCurrentTypeIdState } = useTypeListState();
-  const { assetListInState } = useAssetListState();
+  const { assetList, updateAllAssetsState } = useAssetListState();
 
   // const assetsOfType = assetList.filter(asset => asset.typeId === typeId) || [];
-  const countOfAsset = typeId === TYPE_ID_FAVORITE ?  getCountFavorite(assetListInState) : 
-                       typeId === TYPE_ID_ALL ?  assetListInState.length : 
-                       assetListInState.filter(asset => asset.typeId === typeId).length 
+  const countOfAsset = typeId === TYPE_ID_FAVORITE ?  getCountFavorite(assetList) : 
+                       typeId === TYPE_ID_ALL ?  assetList.length : 
+                       assetList.filter(asset => asset.typeId === typeId).length 
 
 
   const onClickType = React.useCallback(() => {
     setCurrentTypeIdState(typeId);
-  }, [setCurrentTypeIdState, typeId])
+    updateAllAssetsState('checked', false);
+  }, [setCurrentTypeIdState, typeId, updateAllAssetsState])
 
   const onClickClose = React.useCallback((event) => {
     event.stopPropagation();

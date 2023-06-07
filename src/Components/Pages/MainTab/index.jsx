@@ -35,7 +35,7 @@ const getAssets = () => {
 
 const MainTab = (props) => {
   const { setFilesToUpload } = props;
-  const { assetList, loadAssetListState } = useAssetListState();
+  const { assetListCurrentType, loadAssetListState } = useAssetListState();
   const { setDialogOpenState } = useDialogState();
   const { setDialogAssetState } = useDialogSourcesState();
 
@@ -43,7 +43,7 @@ const MainTab = (props) => {
     loadAssetListState();
   },[loadAssetListState])
 
-  console.log('####', assetList)
+  console.log('####', assetListCurrentType)
 
   const handleDrop = React.useCallback(
     (drops) => {
@@ -54,7 +54,7 @@ const MainTab = (props) => {
     [setFilesToUpload, setDialogAssetState, setDialogOpenState]
   );
 
-  const showInfoText = assetList.length == 0;
+  const showInfoText = assetListCurrentType.length == 0;
 
   return (
     <Container>
@@ -62,7 +62,7 @@ const MainTab = (props) => {
       <AssetItemHeader />
       <DnD onDrop={handleDrop} showPlaceholder={showInfoText}>
         <ScrollbarSmooth direction='x' show={true}>
-          {assetList.map((asset, index) => (
+          {assetListCurrentType.map((asset, index) => (
             <AssetItem
               asset={asset}
               key={asset.assetId}

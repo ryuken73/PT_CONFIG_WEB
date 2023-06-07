@@ -11,10 +11,6 @@ import {
   removeAsset,
   setAsset,
   updateAsset,
-  toggleChecked,
-  setAssetsChecked,
-  setAllAssetChecked,
-  setAllAssetUnChecked,
   updateAllAssets,
   // startMediainfoQueue,
 } from 'Components/Pages/MainTab/assetSlice';
@@ -61,36 +57,27 @@ const filterAssetsByType = (typeId) => {
 
 export default function useAssetListState() {
   const dispatch = useDispatch();
-  const assetListInState = useSelector((state) => state.asset.assetList);
-  const assetChecked = useSelector((state) => state.asset.assetChecked);
+  const assetList = useSelector((state) => state.asset.assetList);
+  // const assetChecked = useSelector((state) => state.asset.assetChecked);
   const currentTypeId = useSelector((state) => state.type.currentTypeId);
 
   const filterFunction = React.useMemo(() => {
     return filterAssetsByType(currentTypeId)
   }, [currentTypeId])
 
-  const assetList = React.useMemo(() => {
-      return assetListInState.map(asset => {
-        if(assetChecked.includes(asset.assetId)){
-          return {...asset, checked: true}
-        }
-        return {...asset, checked: false}
-      })
-      .filter(filterFunction)
-  }, [assetChecked, assetListInState, filterFunction])
+  const assetListCurrentType = React.useMemo(() => {
+    return assetList.filter(filterFunction)
+  }, [assetList, filterFunction])
 
-  const assetListRef = React.useRef([]);
-  assetListRef.current = assetList;
-
-  const assetListChecked = React.useMemo(() => {
+  const assetChecked = React.useMemo(() => {
     return assetList.filter(asset => asset.checked);
   }, [assetList])
 
   const allChecked = React.useMemo(() => {
-    return assetList.length === 0
+    return assetListCurrentType.length === 0
       ? false
-      : assetList.every((asset) => asset.checked === true);
-  }, [assetList]);
+      : assetListCurrentType.every((asset) => asset.checked === true);
+  }, [assetListCurrentType]);
 
   const loadAssetListState = React.useCallback(async () => {
     const assetList = await getAssetList();
@@ -101,7 +88,7 @@ export default function useAssetListState() {
       asset.checked = false;
       return asset;
     })
-    dispatch(setAssets({ assetList: processTypeUndefined  }));
+    dispatch(setAssets({ assetList: processTypeUndefined }));
   },[dispatch])  
 
   const setAssetsState = React.useCallback((assets) => {
@@ -123,10 +110,6 @@ export default function useAssetListState() {
     [dispatch]
   );
 
-  const toggleCheckedState = React.useCallback((assetId) => {
-    dispatch(toggleChecked({assetId}));
-  },[dispatch])
-
   const toggleIsFavoriteState = React.useCallback( async (assetId, isFavorite) => {
     const asset = await updateAssetIsFavorite(assetId, isFavorite)
     dispatch(setAsset({assetId, asset}))
@@ -137,40 +120,26 @@ export default function useAssetListState() {
     dispatch(setAsset({assetId, asset}))
   },[dispatch])
 
-  const toggleAllCheckedInTypeState = React.useCallback((checked) => {
-    const assetsInType = assetListInState.filter(filterFunction)
-    checked && dispatch(setAssetsChecked({assets: assetsInType}));
-    !checked && dispatch(setAllAssetUnChecked());
-  }, [assetListInState, dispatch, filterFunction])
+  const toggleCheckedState = React.useCallback((assetId) => {
+    const targetAsset = assetList.find(asset => asset.assetId === assetId);
+    console.log(targetAsset)
+    const prevChecked = targetAsset.checked;
+    dispatch(updateAsset({assetId, key:'checked', value: !prevChecked}));
+  },[assetList, dispatch])
 
-  const toggleAllCheckedState = React.useCallback(
-    (checked) => {
-      // dispatch(updateAllAssets({ key: 'checked', value: checked }));
-      checked && dispatch(setAllAssetChecked());
-      !checked && dispatch(setAllAssetUnChecked());
-    },
-    [dispatch]
-  );
+  const toggleAllCheckedInTypeState = React.useCallback((checked) => { 
+    assetListCurrentType.forEach(asset => {
+      dispatch(updateAsset({
+        assetId: asset.assetId,
+        key: 'checked',
+        value: checked
+      }))
+    })
+  }, [assetListCurrentType, dispatch])
 
   const removeAssetState = React.useCallback((assetId) => {
-    // run axios.del and get new assets 
-    // and then dispatch setAssets
     axiosWithAuth.delAsset({assetId})
-    // .then(result => {
-    //   return axiosWithAuth.getAssetList();
-    // })
-    // .then(result => {
-    //   setAssetsState(result.assetList);
-    // })
   },[])
-
-  const removeAssetAllCheckedState = React.useCallback( async () => {
-    const delPromises = assetChecked.map(assetId => axiosWithAuth.delAsset({assetId}))
-    Promise.all(delPromises);
-    // const assetList = await getAssetList();
-    // setAssetsState(assetList);
-    dispatch(setAllAssetUnChecked);
-  }, [assetChecked, dispatch]);
 
   const resetToDefaultState = React.useCallback(async () => {
     await axiosWithAuth.resetToDefault();
@@ -178,22 +147,25 @@ export default function useAssetListState() {
     setAssetsState(assetList);
   },[setAssetsState])
 
+  const updateAllAssetsState = React.useCallback((key, value) => {
+    dispatch(updateAllAssets({key, value}))
+  }, [dispatch])
+
   return {
     assetList,
-    assetListChecked,
+    assetListCurrentType,
+    assetChecked,
     allChecked,
-    assetListInState,
     loadAssetListState,
     addAssetsState,
     toggleCheckedState,
     toggleAllCheckedInTypeState,
-    toggleAllCheckedState,
     toggleIsFavoriteState,
     setAssetTypeState,
     removeAssetState,
     setAssetsState,
     setAssetState,
-    removeAssetAllCheckedState,
-    resetToDefaultState
+    resetToDefaultState,
+    updateAllAssetsState
   };
 }

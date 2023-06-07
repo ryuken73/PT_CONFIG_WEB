@@ -6,7 +6,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   assetList: [],
-  assetChecked: []
+  // assetChecked: []
 };
 
 
@@ -24,6 +24,12 @@ export const assetSlice = createSlice({
       const { assets } = payload;
       state.assetList = [...state.assetList, ...assets];
     },
+    setAsset: (state, action) => {
+      const { payload } = action;
+      const { assetId, asset  } = payload;
+      const targetIndex = state.assetList.findIndex(asset => asset.assetId === assetId);
+      state.assetList[targetIndex] = asset;
+    },
     setAssets: (state, action) => {
       const { payload } = action;
       const { assetList } = payload;
@@ -33,18 +39,6 @@ export const assetSlice = createSlice({
       const { payload } = action;
       const { assetId } = payload;
       state.assetList = state.assetList.filter(asset => asset.assetId !== assetId);
-    },
-    setAsset: (state, action) => {
-      const { payload } = action;
-      const { assetId, asset  } = payload;
-      // state.assetList = state.assetList.map(asset => {
-      //   if(asset.assetId === assetId){
-      //     return newAsset
-      //   }
-      //   return asset;
-      // })
-      const targetIndex = state.assetList.findIndex(asset => asset.assetId === assetId);
-      state.assetList[targetIndex] = asset;
     },
     updateAsset: (state, action) => {
       const { payload } = action;
@@ -56,27 +50,6 @@ export const assetSlice = createSlice({
       const { payload } = action;
       const { key, value } = payload;
       state.assetList.forEach(asset => asset[key] = value);
-    },
-    toggleChecked: (state, action) => {
-      const { payload } = action;
-      const { assetId } = payload;
-      const checked = state.assetChecked.includes(assetId);
-      if(checked){
-        state.assetChecked = state.assetChecked.filter(id => id !== assetId);
-      } else {
-        state.assetChecked.push(assetId);
-      }
-    },
-    setAssetsChecked: (state, action) => {
-      const { payload } = action;
-      const { assets } = payload;
-      state.assetChecked = assets;
-    },
-    setAllAssetChecked: (state, action) => {
-      state.assetChecked = state.assetList.map(asset => asset.assetId);
-    },
-    setAllAssetUnChecked: (state, action) => {
-      state.assetChecked = [];
     },
     updateJobProgress: (state, action) => {
       const { payload } = action;
@@ -98,10 +71,10 @@ export const {
   setAsset,
   updateAsset, 
   updateAllAssets, 
-  toggleChecked,
-  setAssetsChecked,
-  setAllAssetChecked,
-  setAllAssetUnChecked,
+  // toggleChecked,
+  // setAssetsChecked,
+  // setAllAssetChecked,
+  // setAllAssetUnChecked,
   updateJobProgress 
 } = assetSlice.actions;
 
