@@ -44,6 +44,12 @@ const TabButtons = () => {
     addAssetsActiveState
   } = useHeaderState();
 
+  const isActiveAssetChecked = React.useMemo(() => {
+    return assetListChecked.some(assetChecked => {
+      return assetsActive.some(assetActive => assetActive.assetId === assetChecked.assetId)
+    })
+  }, [assetListChecked, assetsActive])
+
   const setDialogOpen = React.useCallback(() => {
     setDialogOpenState(true);
   },[setDialogOpenState])
@@ -55,10 +61,14 @@ const TabButtons = () => {
 
   const delAssetsChecked = React.useCallback(() => {
     console.log('xxxx:', assetListChecked);
+    if(isActiveAssetChecked){
+      alert("Can't remove registered asset. Remove from top menu first!");
+      return;
+    }
     assetListChecked.forEach(async assetChecked => {
       await removeAssetState(assetChecked.assetId)
     })
-  }, [assetListChecked, removeAssetState])
+  }, [assetListChecked, isActiveAssetChecked, removeAssetState])
 
   const onClickSetDefault = React.useCallback(() => {
     setConfirmTitle('*[Warning]* Clear All Items?')
