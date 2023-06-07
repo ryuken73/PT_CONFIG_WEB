@@ -98,6 +98,7 @@ export default function useAssetListState() {
       if (asset.typeId === undefined){
         asset.typeId = TYPE_ID_NONE;
       }
+      asset.checked = false;
       return asset;
     })
     dispatch(setAssets({ assetList: processTypeUndefined  }));
