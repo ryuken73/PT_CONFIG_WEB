@@ -50,25 +50,33 @@ const TabButtons = () => {
     })
   }, [assetListChecked, assetsActive])
 
+  const nonActiveAssetsChecked = React.useMemo(() => {
+    return assetListChecked.filter(assetChecked => {
+      return !assetsActive.some(assetActive => assetActive.assetId === assetChecked.assetId)
+    })
+  }, [assetListChecked, assetsActive])
+
   const setDialogOpen = React.useCallback(() => {
     setDialogOpenState(true);
   },[setDialogOpenState])
 
   const addAssetsActive = React.useCallback(() => {
     console.log('xxxx:', assetListChecked);
-    addAssetsActiveState(assetListChecked)
-  }, [addAssetsActiveState, assetListChecked])
+    if(isActiveAssetChecked){
+      alert('Some assets are already registered.');
+    }
+    addAssetsActiveState(nonActiveAssetsChecked)
+  }, [addAssetsActiveState, assetListChecked, isActiveAssetChecked, nonActiveAssetsChecked])
 
   const delAssetsChecked = React.useCallback(() => {
     console.log('xxxx:', assetListChecked);
     if(isActiveAssetChecked){
-      alert("Can't remove registered asset. Remove from top menu first!");
-      return;
+      alert("Some assets are not deleted. Remove from top menu first!");
     }
-    assetListChecked.forEach(async assetChecked => {
+    nonActiveAssetsChecked.forEach(async assetChecked => {
       await removeAssetState(assetChecked.assetId)
     })
-  }, [assetListChecked, isActiveAssetChecked, removeAssetState])
+  }, [assetListChecked, isActiveAssetChecked, nonActiveAssetsChecked, removeAssetState])
 
   const onClickSetDefault = React.useCallback(() => {
     setConfirmTitle('*[Warning]* Clear All Items?')
