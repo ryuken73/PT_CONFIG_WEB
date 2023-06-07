@@ -71,12 +71,12 @@ const PaddingBox = styled.div`
 `
 
 const JobItem = () => {
-  const { allChecked, toggleAllCheckedState } = useAssetListState();
+  const { allChecked, toggleAllCheckedInTypeState } = useAssetListState();
 
   return (
     <Container>
       <TextContainer>
-        <CheckBox checked={allChecked} setChecked={toggleAllCheckedState}/>
+        <CheckBox checked={allChecked} setChecked={toggleAllCheckedInTypeState}/>
         <IconBox>
           <CustomTextBox text="" />
         </IconBox>

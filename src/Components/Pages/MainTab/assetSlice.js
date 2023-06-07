@@ -9,7 +9,6 @@ const initialState = {
   assetChecked: []
 };
 
-const TYPE_ID_NONE = 2;
 
 export const assetSlice = createSlice({
   name: 'assetSlice',
@@ -28,13 +27,7 @@ export const assetSlice = createSlice({
     setAssets: (state, action) => {
       const { payload } = action;
       const { assetList } = payload;
-      const processTypeUndefined = assetList.map(asset => {
-        if (asset.typeId === undefined){
-          asset.typeId = TYPE_ID_NONE;
-        }
-        return asset;
-      })
-      state.assetList = processTypeUndefined;
+      state.assetList = assetList;
     },
     removeAsset: (state, action) => {
       const { payload } = action;
@@ -74,6 +67,11 @@ export const assetSlice = createSlice({
         state.assetChecked.push(assetId);
       }
     },
+    setAssetsChecked: (state, action) => {
+      const { payload } = action;
+      const { assets } = payload;
+      state.assetChecked = assets;
+    },
     setAllAssetChecked: (state, action) => {
       state.assetChecked = state.assetList.map(asset => asset.assetId);
     },
@@ -101,6 +99,7 @@ export const {
   updateAsset, 
   updateAllAssets, 
   toggleChecked,
+  setAssetsChecked,
   setAllAssetChecked,
   setAllAssetUnChecked,
   updateJobProgress 

@@ -31,6 +31,7 @@ const TabButtons = () => {
   const [ confirmTitle, setConfirmTitle ] = React.useState('Confirm?');
   const { 
     assetListChecked, 
+    removeAssetState,
     removeAssetAllCheckedState, 
     resetToDefaultState 
   } = useAssetListState();
@@ -50,15 +51,14 @@ const TabButtons = () => {
   const addAssetsActive = React.useCallback(() => {
     console.log('xxxx:', assetListChecked);
     addAssetsActiveState(assetListChecked)
-    // const assetsFiltered = assetListChecked.filter(asset => {
-    //   if(assetsActive.some(activeAsset => activeAsset.assetId === asset.assetId )){
-    //     alert('Alreay Exists!');
-    //     return false;
-    //   }
-    //   return true
-    // })
-    // setAssetsActiveState([...assetsActive, ...assetsFiltered]);
   }, [addAssetsActiveState, assetListChecked])
+
+  const delAssetsChecked = React.useCallback(() => {
+    console.log('xxxx:', assetListChecked);
+    assetListChecked.forEach(async assetChecked => {
+      await removeAssetState(assetChecked.assetId)
+    })
+  }, [assetListChecked, removeAssetState])
 
   const onClickSetDefault = React.useCallback(() => {
     setConfirmTitle('*[Warning]* Clear All Items?')
@@ -91,7 +91,7 @@ const TabButtons = () => {
         iconcomponent={<DeleteIcon />}
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
-        onClick={removeAssetAllCheckedState}
+        onClick={delAssetsChecked}
       />
       <ButtonIcon
         text="메뉴등록"

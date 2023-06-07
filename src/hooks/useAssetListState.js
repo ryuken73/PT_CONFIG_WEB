@@ -12,6 +12,7 @@ import {
   setAsset,
   updateAsset,
   toggleChecked,
+  setAssetsChecked,
   setAllAssetChecked,
   setAllAssetUnChecked,
   updateAllAssets,
@@ -43,6 +44,7 @@ const updateAssetType = async (assetId, typeId) => {
 }
 
 const TYPE_ID_FAVORITE = 0;
+const TYPE_ID_NONE = 2;
 const TYPE_ID_ALL = 1;
 
 const filterAssetsByType = (typeId) => {
@@ -92,7 +94,13 @@ export default function useAssetListState() {
 
   const loadAssetListState = React.useCallback(async () => {
     const assetList = await getAssetList();
-    dispatch(setAssets({ assetList }));
+    const processTypeUndefined = assetList.map(asset => {
+      if (asset.typeId === undefined){
+        asset.typeId = TYPE_ID_NONE;
+      }
+      return asset;
+    })
+    dispatch(setAssets({ assetList: processTypeUndefined  }));
   },[dispatch])  
 
   const setAssetsState = React.useCallback((assets) => {
@@ -127,6 +135,12 @@ export default function useAssetListState() {
     const asset = await updateAssetType(assetId, typeId);
     dispatch(setAsset({assetId, asset}))
   },[dispatch])
+
+  const toggleAllCheckedInTypeState = React.useCallback((checked) => {
+    const assetsInType = assetListInState.filter(filterFunction)
+    checked && dispatch(setAssetsChecked({assets: assetsInType}));
+    !checked && dispatch(setAllAssetUnChecked());
+  }, [assetListInState, dispatch, filterFunction])
 
   const toggleAllCheckedState = React.useCallback(
     (checked) => {
@@ -171,6 +185,7 @@ export default function useAssetListState() {
     loadAssetListState,
     addAssetsState,
     toggleCheckedState,
+    toggleAllCheckedInTypeState,
     toggleAllCheckedState,
     toggleIsFavoriteState,
     setAssetTypeState,
