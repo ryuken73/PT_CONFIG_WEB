@@ -23,6 +23,10 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
 `
+const Title = styled.div`
+  font-size: 14px;
+  color: ${props => props.done ? 'black' : 'lightgrey'};
+`
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 300px 300px;
@@ -37,7 +41,7 @@ const DelButton = styled.div`
   cursor: pointer;
   font-size: 12px;
   font-weight: bold;
-  color: red;
+  color: maroon;
 `
 const imageExtensions = ['JPG', 'GIF', 'PNG'];
 const isValidImage = name => {
@@ -203,7 +207,7 @@ function AddImageDialog() {
           {images.map((image, index) => (
             <div key={image.imageId}>
               <ImageTitle>
-                <div>{image.imageName} [{filesToUpload[index].progress}]</div>
+                <Title done={filesToUpload[index].progress === '100%'}>{image.imageName} [{filesToUpload[index].progress}]</Title>
                 {filesToUpload[index].progress !== '100%' ? (
 
                   <DelButton
@@ -213,7 +217,7 @@ function AddImageDialog() {
                     Remove
                   </DelButton>
                 ):(
-                  <div>Done</div>
+                  <div style={{color:"black", fontSize: '12px'}}>Done</div>
                 )}
               </ImageTitle>
               <BlobImage blob={filesToUpload[index].blob} />
