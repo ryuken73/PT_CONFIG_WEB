@@ -4,6 +4,36 @@ import Constants from 'config/constants';
 const { SERVER_URL } = Constants;
 
 const axiosRequest = {
+    async putHomeImage(params, blob, updateProgress) {
+        const {fname, size, imageId} = params;
+        try {
+            const options = {
+                ...this.options,
+                headers : {
+                    ...this.options.headers,
+                    'Content-Type':'application/octet'
+                },
+                onUploadProgress(progressEvent) {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    const percentStrig = `${percentCompleted}%`;
+                    updateProgress(percentStrig);
+                }
+            }
+
+            const putUrl = `${SERVER_URL}/homeImage?fname=${fname}&size=${size}&imageId=${imageId}`
+            const response = await axios.put(putUrl, blob, options);
+
+            if(response.status === 200 && response.data.success){
+                console.log('complete');
+                return response.data;
+            } else {
+                updateProgress('0%');
+            }
+        } catch(err) { 
+            console.error(err)
+            return {success:false};
+        }
+    },
     async putAttach(params, blob, updateProgress) {
         const {fname, size, srcId} = params;
         try {

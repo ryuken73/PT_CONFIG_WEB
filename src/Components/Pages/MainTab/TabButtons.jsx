@@ -6,10 +6,12 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ButtonIcon from 'Components/Common/ButtonIcon';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ConfirmDialog from 'Components/Dialog/ConfirmDialog';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
 import useHeaderState from 'hooks/useHeaderState';
+import useImageDialogState from 'hooks/useImageDialogState';
 
 const Container = styled.div`
   display: flex;
@@ -36,6 +38,7 @@ const TabButtons = () => {
     resetToDefaultState 
   } = useAssetListState();
   const { setDialogOpenState } = useDialogState();
+  const { setImageDialogOpenState } = useImageDialogState();
   const { 
     assetsActive,
     setAssetsActiveState,
@@ -94,6 +97,10 @@ const TabButtons = () => {
     setConfirmTitle('Confirm?');
   }, [resetToDefaultState])
 
+  const addHomeImage = React.useCallback(() => {
+    setImageDialogOpenState(true)
+  }, [setImageDialogOpenState])
+
   // console.log('re-render TabButtons');
   return (
     <ButtonContainer>
@@ -117,6 +124,13 @@ const TabButtons = () => {
         border="2px solid rgba(255, 255, 255, .5)"
         hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
         onClick={addAssetsActive}
+      />
+      <ButtonIcon
+        text="홈이미지 업로드"
+        iconcomponent={<AddPhotoAlternateIcon />}
+        border="2px solid rgba(255, 255, 255, .5)"
+        hoverBorder="2px solid rgba(255, 255, 255, 0.8)"
+        onClick={addHomeImage}
       />
       {/* <Box sx={{marginLeft:'auto', marginRight: '10px'}}>
         <ButtonIcon

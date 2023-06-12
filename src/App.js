@@ -5,6 +5,7 @@ import LeftTab from 'Components/Pages/LeftTab';
 import Loading from 'Components/Common/Loading';
 import MessageBox from 'Components/Common/MessageBox';
 import AddDialog from 'Components/Dialog/AddDialog';
+import AddImageDialog from 'Components/AddImageDialog';
 import styled from 'styled-components';
 import constants from 'config/constants';
 import colors from 'config/colors';
@@ -113,6 +114,7 @@ export default function App() {
           filesToUpload={filesToUpload} 
           setFilesToUpload={setFilesToUpload} 
         />
+        <AddImageDialog></AddImageDialog>
       </AppContainer>
     </SocketContext.Provider>
   );
