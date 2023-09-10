@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
+  addAssetText,
+  removeAssetText,
   setDialogOpen, 
   setIsEditMode,
   clearDialog, 
@@ -16,10 +18,26 @@ export default function useDialogState() {
   const isEditMode = useSelector((state) => state.dialog.isEditMode);
   const assetId = useSelector((state) => state.dialog.assetId);
   const assetTitle = useSelector((state) => state.dialog.assetTitle);
+  const assetText = useSelector((state) => state.dialog.assetText);
+  const assetTexts = useSelector((state) => state.dialog.assetTexts);
   const displayMode = useSelector((state) => state.dialog.displayMode);
   const isScrollVideo = useSelector((state) => state.dialog.isScrollVideo);
   const isScrollSmooth = useSelector((state) => state.dialog.isScrollSmooth);
   const scrollSpeed = useSelector((state) => state.dialog.scrollSpeed);
+  
+  const addAssetTextState = React.useCallback(
+    (assetText) => {
+      dispatch(addAssetText({ assetText }));
+    },
+    [dispatch]
+  );
+
+  const removeAssetTextState = React.useCallback(
+    (assetText, index) => {
+      dispatch(removeAssetText({ assetText, index }));
+    },
+    [dispatch]
+  );
 
   const setDialogOpenState = React.useCallback(
     (open) => {
@@ -60,10 +78,14 @@ export default function useDialogState() {
     isEditMode,
     assetId,
     assetTitle,
+    assetText,
+    assetTexts,
     displayMode,
     isScrollVideo,
     isScrollSmooth,
     scrollSpeed,
+    addAssetTextState,
+    removeAssetTextState,
     setDialogOpenState,
     setIsEditModeState,
     // setIdState,

@@ -170,10 +170,14 @@ const AddDialog = props => {
     clearDialogState,
     // setAssetTitleState,
     // setDisplayModeState,
+    addAssetTextState,
+    removeAssetTextState,
     setIsEditModeState,
     setAssetDetailState,
     assetId,
     assetTitle,
+    assetText,
+    assetTexts,
     displayMode,
     isScrollVideo,
     isScrollSmooth,
@@ -295,6 +299,16 @@ const AddDialog = props => {
     setAssetDetailState('assetTitle', event.target.value)
 
   },[setAssetDetailState])
+
+  const onChangeAssetText = React.useCallback((event) => {
+    setAssetDetailState('assetText', event.target.value)
+  },[setAssetDetailState])
+
+  const onKeyUpAssetText = React.useCallback((event) => {
+    if (event.key === 'Enter' || event.keyCode === 13) {
+      addAssetTextState(assetText);
+    }
+  }, [addAssetTextState, assetText])
 
   const onChangeDisplayMode = React.useCallback((displayMode) => {
     setAssetDetailState('displayMode', displayMode)
@@ -430,6 +444,17 @@ const AddDialog = props => {
               )}
             </GuideContainer>
           )}
+          <OptionItemText
+            autoFocus={false}
+            onChange={onChangeAssetText}
+            onKeyUp={onKeyUpAssetText}
+            title="Text"
+            id="assetText"
+            value={assetText}
+          />
+          {assetTexts.map(assetText => (
+            <div>{assetText}</div>
+          ))}
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: 'black' }} onClick={handleClose}>

@@ -5,6 +5,8 @@ const initialState = {
   isEditMode: false,
   assetId:'',
   assetTitle: '',
+  assetText: '',
+  assetTexts: [],
   displayMode: '',
   isScrollVideo: false,
   isScrollSmooth: false,
@@ -25,6 +27,18 @@ export const dialogSlice = createSlice({
       const { payload } = action;
       const { isEditMode } = payload;
       state.isEditMode = isEditMode;
+    },
+    addAssetText: (state, action) => {
+      const { payload } = action;
+      const { assetText } = payload;
+      state.assetTexts.push(assetText);
+    },
+    removeAssetText: (state, action) => {
+      const { payload } = action;
+      const { assetText, index } = payload;
+      state.assetTexts = state.assetTexts.filter((text, textIndex) => {
+        return text !== assetText && textIndex !== index;
+      });
     },
     addSource: (state, action) => {
       const { payload } = action;
@@ -86,6 +100,8 @@ export const {
   // setAssetId, 
   // setAssetTitle, 
   // setDisplayMode, 
+  addAssetText,
+  removeAssetText,
   addSource, 
   setSourceProgress, 
   removeSource, 
