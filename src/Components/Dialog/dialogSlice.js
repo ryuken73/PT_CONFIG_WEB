@@ -30,14 +30,14 @@ export const dialogSlice = createSlice({
     },
     addAssetText: (state, action) => {
       const { payload } = action;
-      const { assetText } = payload;
-      state.assetTexts.push(assetText);
+      const { textId, assetText } = payload;
+      state.assetTexts.push({ textId, assetText });
     },
     removeAssetText: (state, action) => {
       const { payload } = action;
-      const { assetText, index } = payload;
-      state.assetTexts = state.assetTexts.filter((text, textIndex) => {
-        return text !== assetText && textIndex !== index;
+      const { textId: targetId } = payload;
+      state.assetTexts = state.assetTexts.filter(({textId}) => {
+        return textId !== targetId;
       });
     },
     addSource: (state, action) => {

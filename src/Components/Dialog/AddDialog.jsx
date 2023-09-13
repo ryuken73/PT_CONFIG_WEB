@@ -16,6 +16,7 @@ import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogAddUrl from 'Components/Dialog/DialogAddUrl';
 import DialogSources from 'Components/Dialog/DialogSources';
 import ScrollVideoOptions from 'Components/Dialog/ScrollVideoOptions';
+import AssetText from 'Components/Dialog/AssetText';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useAssetListState from 'hooks/useAssetListState';
@@ -53,6 +54,12 @@ const CustomDialog = styled(Dialog)`
     }
   }
 `
+const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+`
 const AddUrlContainer = styled.div`
   width: 100%;
   background: transparent;
@@ -72,12 +79,14 @@ const DialogAssets = styled.div`
 const GuideContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-contents: flex-start;
+  justify-content: flex-start;
+  font-size: 12px;
 `
 const GuideText = styled.div`
-  color: maroon;
+  color: darkblue;
   padding: 1px;
   margin-top: 10px;
+  margin-left: 12px;
 `
 const EnableScrollVideo = styled.div`
   display: flex;
@@ -110,7 +119,9 @@ const TypeButton = () => {
 }
 
 const GuideMessage = styled.div`
-  color: maroon;
+  font-size: 12px;
+  margin-left: 5px;
+  color: darkblue;
 `
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -225,7 +236,7 @@ const AddDialog = props => {
   },[clearDialogState, setFilesToUpload, setIsEditModeState, setOpen]);
 
   const handleAddAsset = React.useCallback(() => {
-    console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo);
+    console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo, assetTexts);
     const isChanging = isEditMode;
     const fileSources = isChanging 
                         ? sources.filter(source => !isHttpUrl(source.src) && source.progress === '0%')
@@ -268,7 +279,8 @@ const AddDialog = props => {
         isFavorite,
         isScrollVideo,
         isScrollSmooth,
-        scrollSpeed
+        scrollSpeed,
+        assetTexts
       }
       isChanging 
       ? await changeAsset(assetId, assetDetail)
@@ -292,7 +304,8 @@ const AddDialog = props => {
     isScrollSmooth, 
     scrollSpeed, 
     assetId, 
-    handleClose
+    handleClose,
+    assetTexts
   ]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
@@ -306,9 +319,11 @@ const AddDialog = props => {
 
   const onKeyUpAssetText = React.useCallback((event) => {
     if (event.key === 'Enter' || event.keyCode === 13) {
-      addAssetTextState(assetText);
+      const textId = Date.now();
+      addAssetTextState(textId, assetText);
+      setAssetDetailState('assetText', '')
     }
-  }, [addAssetTextState, assetText])
+  }, [addAssetTextState, assetText, setAssetDetailState])
 
   const onChangeDisplayMode = React.useCallback((displayMode) => {
     setAssetDetailState('displayMode', displayMode)
@@ -326,6 +341,7 @@ const AddDialog = props => {
       }
       const srcId = Date.now();
       addSourceState({src: currentUrl, size: null, srcType:'web', srcId});
+      setCurrentUrl('http://');
     }
   },[addSourceState, currentUrl])
 
@@ -373,7 +389,7 @@ const AddDialog = props => {
   }, [setAssetDetailState, showScrollCheck])
 
   const Guide = sources.length === 0 ?
-    "Drag Images or Videos. Or Type URL and click +" : 
+    "[Drag Images or Videos. Or Type URL and click +]" : 
     "";
 
   return (
@@ -387,7 +403,14 @@ const AddDialog = props => {
         onDrop={handleDrop} 
         onDragOver={handleDragOver}
         >
-        <DialogTitle>{titleText}</DialogTitle>
+        <TitleContainer>
+          <DialogTitle>
+            {titleText}
+          </DialogTitle>
+          <GuideMessage>
+            {Guide}
+          </GuideMessage>
+        </TitleContainer>
         <DialogContent>
           <OptionItemText
             autoFocus={true}
@@ -405,7 +428,6 @@ const AddDialog = props => {
               formItems={formItems}
             />
           )}
-          <GuideMessage>{Guide}</GuideMessage>
           {isScrollVideo ? (
               <ScrollVideoOptions
                 isScrollSmooth={isScrollSmooth}
@@ -452,8 +474,13 @@ const AddDialog = props => {
             id="assetText"
             value={assetText}
           />
-          {assetTexts.map(assetText => (
-            <div>{assetText}</div>
+          {assetTexts.map(({textId, assetText}) => (
+            <AssetText 
+              key={textId} 
+              textId={textId} 
+              assetText={assetText} 
+              removeAssetText={removeAssetTextState}
+            />
           ))}
         </DialogContent>
         <DialogActions>

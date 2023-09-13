@@ -26,15 +26,15 @@ export default function useDialogState() {
   const scrollSpeed = useSelector((state) => state.dialog.scrollSpeed);
   
   const addAssetTextState = React.useCallback(
-    (assetText) => {
-      dispatch(addAssetText({ assetText }));
+    (textId, assetText) => {
+      dispatch(addAssetText({ textId, assetText }));
     },
     [dispatch]
   );
 
   const removeAssetTextState = React.useCallback(
-    (assetText, index) => {
-      dispatch(removeAssetText({ assetText, index }));
+    (textId) => {
+      dispatch(removeAssetText({ textId }));
     },
     [dispatch]
   );
