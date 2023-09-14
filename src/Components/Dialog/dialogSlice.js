@@ -40,6 +40,9 @@ export const dialogSlice = createSlice({
         return textId !== targetId;
       });
     },
+    clearAssetText: (state, action) => {
+      state.assetTexts = [];
+    },
     addSource: (state, action) => {
       const { payload } = action;
       const { src, size, srcId, srcType } = payload;
@@ -102,6 +105,7 @@ export const {
   // setDisplayMode, 
   addAssetText,
   removeAssetText,
+  clearAssetText,
   addSource, 
   setSourceProgress, 
   removeSource, 

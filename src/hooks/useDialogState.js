@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { 
   addAssetText,
   removeAssetText,
+  clearAssetText,
   setDialogOpen, 
   setIsEditMode,
   clearDialog, 
@@ -35,6 +36,12 @@ export default function useDialogState() {
   const removeAssetTextState = React.useCallback(
     (textId) => {
       dispatch(removeAssetText({ textId }));
+    },
+    [dispatch]
+  );
+  const clearAssetTextState = React.useCallback(
+    (textId) => {
+      dispatch(clearAssetText());
     },
     [dispatch]
   );
@@ -86,6 +93,7 @@ export default function useDialogState() {
     scrollSpeed,
     addAssetTextState,
     removeAssetTextState,
+    clearAssetTextState,
     setDialogOpenState,
     setIsEditModeState,
     // setIdState,

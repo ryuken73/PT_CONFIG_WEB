@@ -100,6 +100,7 @@ const AssetItem = (props) => {
     isScrollVideo,
     isScrollSmooth,
     scrollSpeed,
+    assetTexts,
     checked,
     sources,
     created,
@@ -158,6 +159,7 @@ const AssetItem = (props) => {
     setAssetDetailState('isScrollVideo', isScrollVideo);
     setAssetDetailState('isScrollSmooth', isScrollSmooth);
     setAssetDetailState('scrollSpeed', scrollSpeed);
+    setAssetDetailState('assetTexts', assetTexts);
     const sourcesBasename = sources.map(source => {
       return {
         ...source,
@@ -170,7 +172,7 @@ const AssetItem = (props) => {
     })
     setIsEditModeState(true);
     setDialogOpenState(true);
-  },[isAssetActive, setAssetDetailState, assetId, assetTitle, displayMode, isScrollVideo, isScrollSmooth, scrollSpeed, sources, setSourcesState, setIsEditModeState, setDialogOpenState, updateProgressState]);
+  },[assetTexts, isAssetActive, setAssetDetailState, assetId, assetTitle, displayMode, isScrollVideo, isScrollSmooth, scrollSpeed, sources, setSourcesState, setIsEditModeState, setDialogOpenState, updateProgressState]);
 
   const toggleActive = React.useCallback(() => {
     if(isAssetActive){

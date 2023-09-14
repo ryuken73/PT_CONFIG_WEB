@@ -183,6 +183,7 @@ const AddDialog = props => {
     // setDisplayModeState,
     addAssetTextState,
     removeAssetTextState,
+    clearAssetTextState,
     setIsEditModeState,
     setAssetDetailState,
     assetId,
@@ -232,8 +233,9 @@ const AddDialog = props => {
     setIsEditModeState(false);
     setOpen(false);
     clearDialogState();
+    clearAssetTextState();
     setFilesToUpload([]);
-  },[clearDialogState, setFilesToUpload, setIsEditModeState, setOpen]);
+  },[clearDialogState, setFilesToUpload, setIsEditModeState, setOpen, clearAssetTextState]);
 
   const handleAddAsset = React.useCallback(() => {
     console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo, assetTexts);
