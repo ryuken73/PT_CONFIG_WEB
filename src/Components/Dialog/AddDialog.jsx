@@ -189,7 +189,7 @@ const AddDialog = props => {
     assetId,
     assetTitle,
     assetText,
-    assetTexts,
+    assetTexts=[],
     displayMode,
     isScrollVideo,
     isScrollSmooth,
