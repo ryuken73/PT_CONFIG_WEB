@@ -42,15 +42,16 @@ const typeInfer = name => {
 const formItems = [
   {label: 'Row', value: 'flexRow'},
   {label: 'Column', value: 'flexColumn'},
-  {label: 'Swipe', value: 'swipe'}
+  {label: 'Swipe', value: 'swipe'},
+  {label: 'News Preview', value: 'newsPreview'},
 ];
 
 const CustomDialog = styled(Dialog)`
   div.MuiDialog-container {
     div.MuiPaper-root {
       background: #9f7f7f;
-      width: 800px;
-      max-width: 800px;
+      width: 1000px;
+      max-width: 1000px;
     }
   }
 `
@@ -450,6 +451,7 @@ const AddDialog = props => {
           )}
           <DialogAssets>
             <DialogSources
+              displayMode={displayMode}
               sources={sources}
             ></DialogSources>
           </DialogAssets>

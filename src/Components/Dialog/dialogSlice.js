@@ -48,6 +48,14 @@ export const dialogSlice = createSlice({
       const { src, size, srcId, srcType } = payload;
       state.sources.push({src, size, srcId, srcType, progress:'0%'});
     },
+    updateSource: (state, action) => {
+      const { payload } = action;
+      const { srcId, key, value } = payload;
+      const targetSource = state.sources.find(src => src.srcId === srcId); 
+      if(targetSource){
+        targetSource[key] = value;
+      }
+    },
     removeSource: (state, action) => {
       const { payload } = action;
       const { srcId } = payload;
@@ -107,6 +115,7 @@ export const {
   removeAssetText,
   clearAssetText,
   addSource, 
+  updateSource,
   setSourceProgress, 
   removeSource, 
   setSources, 

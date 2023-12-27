@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
   addSource, 
+  updateSource,
   removeSource,
   setSources,
   setSrcType,
@@ -50,6 +51,11 @@ export default function useDialogState() {
     dispatch(addSource({src, size, srcId, srcType}));
   },[dispatch])
 
+  const updateSourceState = React.useCallback((source) => {
+    const {srcId, key, value} = source;
+    dispatch(updateSource({srcId, key, value}));
+  },[dispatch])
+
   const removeSourceState = React.useCallback((id) => {
     dispatch(removeSource({srcId: id}));
   },[dispatch])
@@ -71,6 +77,7 @@ export default function useDialogState() {
     setDialogAssetState,
     setSourcesState,
     addSourceState,
+    updateSourceState,
     toggleSrcTypeState,
     removeSourceState,
     updateProgressState,

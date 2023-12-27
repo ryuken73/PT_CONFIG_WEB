@@ -25,12 +25,12 @@ const OptionItemText = props => {
     },[onChange])
     return (
         <Item>
-            <Box width="100px" mr="10px">{title}</Box>
+            <Box minWidth="100px" mr="10px">{title}</Box>
             <FormControl>
                 <RadioGroup row value={selected} onChange={onChangeRadio}>
                     {formItems.map((formItem, index) => {
                         const {value, label} = formItem;
-                        return <FormControlLabel sx={{width:'100px'}} key={index} id={label} value={value} label={label} control={<CustomRadio />}></FormControlLabel>
+                        return <FormControlLabel sx={{minWidth:'100px'}} key={index} id={label} value={value} label={label} control={<CustomRadio />}></FormControlLabel>
                     })}
                 </RadioGroup>
             </FormControl>
