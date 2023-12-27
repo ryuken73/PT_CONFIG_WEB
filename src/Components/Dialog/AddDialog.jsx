@@ -42,8 +42,7 @@ const typeInfer = name => {
 const formItems = [
   {label: 'Row', value: 'flexRow'},
   {label: 'Column', value: 'flexColumn'},
-  {label: 'Swipe', value: 'swipe'},
-  {label: 'News Preview', value: 'newsPreview'},
+  {label: 'Swipe', value: 'swipe'}
 ];
 
 const CustomDialog = styled(Dialog)`
@@ -94,6 +93,10 @@ const EnableScrollVideo = styled.div`
   flex-direction: row;
   align-items: center;
   margin-left: auto;
+`
+const IsNewsPreview = styled(EnableScrollVideo)`
+  margin-left: 10px;
+  margin-bottom: 5px;
 `
 const CustomIconButton = styled(IconButton)`
   && {
@@ -193,6 +196,7 @@ const AddDialog = props => {
     assetTexts=[],
     displayMode,
     isScrollVideo,
+    isNewsPreview,
     isScrollSmooth,
     scrollSpeed,
   } = useDialogState();
@@ -225,6 +229,7 @@ const AddDialog = props => {
   // const [isScrollSmooth, setIsScrollSmooth] = React.useState(false);
   // const [scrollSpeed, setScrollSpeed] = React.useState(150);
 
+  const CheckIconPreview = isNewsPreview ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
   const CheckIcon = isScrollVideo ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
 
   const handleClose = React.useCallback((event, reason) => {
@@ -236,7 +241,7 @@ const AddDialog = props => {
     clearDialogState();
     clearAssetTextState();
     setFilesToUpload([]);
-  },[clearDialogState, setFilesToUpload, setIsEditModeState, setOpen, clearAssetTextState]);
+  },[setIsEditModeState, setOpen, clearDialogState, clearAssetTextState, setFilesToUpload]);
 
   const handleAddAsset = React.useCallback(() => {
     console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo, assetTexts);
@@ -260,7 +265,7 @@ const AddDialog = props => {
         return {
           ...result,
           srcId: parseInt(result.srcId),
-          size: parseInt(result.size)
+          size: parseInt(result.size),
         }
       })
       const httpSrcFakeResults = httpSources.map(source => {
@@ -281,6 +286,7 @@ const AddDialog = props => {
         typeId,
         isFavorite,
         isScrollVideo,
+        isNewsPreview,
         isScrollSmooth,
         scrollSpeed,
         assetTexts
@@ -302,6 +308,7 @@ const AddDialog = props => {
     typeId, 
     isFavorite, 
     isScrollVideo, 
+    isNewsPreview,
     isEditMode, 
     updateProgressState, 
     isScrollSmooth, 
@@ -366,6 +373,16 @@ const AddDialog = props => {
     })
   },[addSourceState, setFilesToUpload])
 
+  const toggleNewsPreview = React.useCallback(() => {
+    const newValue = !isNewsPreview;
+    setAssetDetailState('isNewsPreview', newValue);
+    if(newValue === true){
+      const today = new Date();
+      const todayString = new Intl.DateTimeFormat("en-US").format(today)
+      setAssetDetailState('assetTitle', `8뉴스예고-${todayString}`)
+    }
+  }, [isNewsPreview, setAssetDetailState])
+
   const toggleEnableScroll = React.useCallback(() => {
     const newValue = !isScrollVideo;
     setAssetDetailState('isScrollVideo', newValue);
@@ -413,6 +430,12 @@ const AddDialog = props => {
           <GuideMessage>
             {Guide}
           </GuideMessage>
+          <IsNewsPreview>
+            <CustomIconButton onClick={toggleNewsPreview}>
+              <CheckIconPreview fontSize="small" />
+            </CustomIconButton>
+            <div>8뉴스 예고</div>
+          </IsNewsPreview>
         </TitleContainer>
         <DialogContent>
           <OptionItemText
@@ -422,7 +445,7 @@ const AddDialog = props => {
             id="assetTitle"
             value={assetTitle}
           />
-          {sources.length > 1 && (
+          {sources.length > 1 && !isNewsPreview && (
             <OptionItemRadio
               onChange={onChangeDisplayMode}
               title="Mode"
@@ -451,8 +474,8 @@ const AddDialog = props => {
           )}
           <DialogAssets>
             <DialogSources
-              displayMode={displayMode}
               sources={sources}
+              isNewsPreview={isNewsPreview}
             ></DialogSources>
           </DialogAssets>
           {sources.length > 0 && (

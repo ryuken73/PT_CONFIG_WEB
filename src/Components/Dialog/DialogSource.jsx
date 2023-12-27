@@ -63,8 +63,22 @@ const StyledTextField = styled(TextField)`
 `
 
 const DialogSource = (props) => {
-    const { displayMode, id, srcText, srcType, srcTitle, size, progress, playUrl, isHttpUrl } = props
-    const { removeSourceState, toggleSrcTypeState, updateSourceState } = useDialogSourcesState();
+    const { 
+      id, 
+      srcText, 
+      srcType, 
+      srcTitle, 
+      size, 
+      progress, 
+      playUrl, 
+      isHttpUrl, 
+      isNewsPreview 
+    } = props
+    const { 
+      removeSourceState, 
+      toggleSrcTypeState, 
+      updateSourceState
+    } = useDialogSourcesState();
     const onClickDelete = React.useCallback(() => {
       removeSourceState(id);
     },[id, removeSourceState])
@@ -80,6 +94,7 @@ const DialogSource = (props) => {
     }, [id, updateSourceState])
     const prorgressToPrint = isHttpUrl ? '-' : progress;
     const sizeToPrint = isHttpUrl ? '-' : prettyBytes(size);
+    console.log('is news preview:', isNewsPreview)
     return (
         <Container>
           <StyledButtonSmall onClick={onClickDelete} startIcon={<CloseIcon />} minWidth="20px" />
@@ -95,7 +110,7 @@ const DialogSource = (props) => {
           <LightTextBox text={prorgressToPrint}></LightTextBox>
           <LightTextBox text={sizeToPrint} minWidth="60px"></LightTextBox>
           <LightTextBoxWithPointer text={srcText} onClick={previewSrc}></LightTextBoxWithPointer>
-          {displayMode === 'newsPreview' && (
+          {isNewsPreview && (
             <div style={{marginLeft: 'auto', marginRight: '10px'}}>
               <StyledTextField 
                 onBlur={onBlur}

@@ -8,13 +8,12 @@ const Container = styled.div`
 const isHttpUrl = src => src.startsWith('http');
 
 const DialogSources = (props) => {
-  const { sources, displayMode } = props;
+  const { sources, isNewsPreview } = props;
   const showPadding = sources.length > 0;
   return (
     <Container showPadding={showPadding}>
         {sources.map(source => (
             <DialogSource
-              displayMode={displayMode}
               id={source.srcId}
               key={source.srcId}
               srcText={source.src}
@@ -24,6 +23,7 @@ const DialogSources = (props) => {
               progress={source.progress}
               playUrl={source.srcRemote||'http://non'}
               isHttpUrl={isHttpUrl(source.src)}
+              isNewsPreview={isNewsPreview}
             ></DialogSource>
             )
         )}

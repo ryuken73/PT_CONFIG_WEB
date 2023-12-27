@@ -9,6 +9,7 @@ const initialState = {
   assetTexts: [],
   displayMode: '',
   isScrollVideo: false,
+  isNewsPreview: false,
   isScrollSmooth: false,
   scrollSpeed: 150,
   sources: [],
@@ -101,6 +102,8 @@ export const dialogSlice = createSlice({
     clearDialog: (state, action) => {
       state.assetTitle = '';
       state.sources = [];
+      // state.isNewsPreview = false;
+      // state.isScrollVideo = false;
     },
   },
 })

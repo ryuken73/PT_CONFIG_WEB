@@ -23,6 +23,7 @@ export default function useDialogState() {
   const assetTexts = useSelector((state) => state.dialog.assetTexts);
   const displayMode = useSelector((state) => state.dialog.displayMode);
   const isScrollVideo = useSelector((state) => state.dialog.isScrollVideo);
+  const isNewsPreview = useSelector((state) => state.dialog.isNewsPreview);
   const isScrollSmooth = useSelector((state) => state.dialog.isScrollSmooth);
   const scrollSpeed = useSelector((state) => state.dialog.scrollSpeed);
   
@@ -89,6 +90,7 @@ export default function useDialogState() {
     assetTexts,
     displayMode,
     isScrollVideo,
+    isNewsPreview,
     isScrollSmooth,
     scrollSpeed,
     addAssetTextState,
