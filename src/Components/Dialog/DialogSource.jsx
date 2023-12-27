@@ -23,6 +23,9 @@ const LightTextBox = styled(TextBox)`
     min-width: ${props => props.minWidth ? props.minWidth : '20px'};
     max-width: 500px;
 `
+const LightTextBoxWithPointer = styled(LightTextBox)`
+  cursor: pointer;
+`
 const StyledButtonSmall = styled(ButtonSmall)`
   padding: 1px 20px !important;
   span {
@@ -60,7 +63,7 @@ const StyledTextField = styled(TextField)`
 `
 
 const DialogSource = (props) => {
-    const { displayMode, id, srcText, srcType, srcTitle, size, progress, isHttpUrl } = props
+    const { displayMode, id, srcText, srcType, srcTitle, size, progress, playUrl, isHttpUrl } = props
     const { removeSourceState, toggleSrcTypeState, updateSourceState } = useDialogSourcesState();
     const onClickDelete = React.useCallback(() => {
       removeSourceState(id);
@@ -68,6 +71,9 @@ const DialogSource = (props) => {
     const toggleSrcType = React.useCallback(() => {
       toggleSrcTypeState(id);
     },[id, toggleSrcTypeState])
+    const previewSrc = React.useCallback(() => {
+      window.open(playUrl, '미리보기', 'touch preview')
+    },[playUrl])
     const onBlur = React.useCallback((event) => {
       const srcTitle = event.target.value || '';
       updateSourceState({srcId:id, key:'srcTitle', value: srcTitle})
@@ -88,7 +94,7 @@ const DialogSource = (props) => {
           </ButtonSmall>
           <LightTextBox text={prorgressToPrint}></LightTextBox>
           <LightTextBox text={sizeToPrint} minWidth="60px"></LightTextBox>
-          <LightTextBox text={srcText}></LightTextBox>
+          <LightTextBoxWithPointer text={srcText} onClick={previewSrc}></LightTextBoxWithPointer>
           {displayMode === 'newsPreview' && (
             <div style={{marginLeft: 'auto', marginRight: '10px'}}>
               <StyledTextField 

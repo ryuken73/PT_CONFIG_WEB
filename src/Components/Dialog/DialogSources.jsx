@@ -22,6 +22,7 @@ const DialogSources = (props) => {
               srcTitle={source.srcTitle}
               size={source.size}
               progress={source.progress}
+              playUrl={source.srcRemote||'http://non'}
               isHttpUrl={isHttpUrl(source.src)}
             ></DialogSource>
             )
