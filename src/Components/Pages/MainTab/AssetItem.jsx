@@ -98,6 +98,7 @@ const AssetItem = (props) => {
     assetTitle,
     displayMode,
     isScrollVideo,
+    isNewsPreview,
     isScrollSmooth,
     scrollSpeed,
     assetTexts,
@@ -157,6 +158,7 @@ const AssetItem = (props) => {
     setAssetDetailState('assetTitle', assetTitle);
     setAssetDetailState('displayMode', displayMode);
     setAssetDetailState('isScrollVideo', isScrollVideo);
+    setAssetDetailState('isNewsPreview', isNewsPreview);
     setAssetDetailState('isScrollSmooth', isScrollSmooth);
     setAssetDetailState('scrollSpeed', scrollSpeed);
     setAssetDetailState('assetTexts', assetTexts);
