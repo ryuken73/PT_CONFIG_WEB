@@ -27,7 +27,7 @@ const LightTextBoxWithPointer = styled(LightTextBox)`
   cursor: pointer;
 `
 const StyledButtonSmall = styled(ButtonSmall)`
-  padding: 1px 20px !important;
+  padding: 1px 10px !important;
   span {
     margin-left: 0px;
     margin-right: 0px;
