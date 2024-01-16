@@ -23,10 +23,12 @@ import useAssetListState from 'hooks/useAssetListState';
 import useTypeListState from 'hooks/useTypeListState';
 import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
+import { SystemSecurityUpdate, WindowSharp } from '@mui/icons-material';
 
 const isHttpUrl = src => src.startsWith('http');
 const isSrcTypeVideo = src => src.srcType === 'video';
 
+const {TOUCH_WEB_SERVER_URL} = CONSTANTS;
 const videoExtensions = ['M3M8', 'MP4'];
 const imageExtensions = ['JPG', 'GIF', 'PNG', 'ICO', 'BMP'];
 const typeInfer = name => {
@@ -95,6 +97,9 @@ const EnableScrollVideo = styled.div`
   margin-left: auto;
 `
 const IsNewsPreview = styled(EnableScrollVideo)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-left: 10px;
   margin-bottom: 5px;
 `
@@ -206,6 +211,10 @@ const AddDialog = props => {
     addSourceState,
     updateProgressState,    
   } = useDialogSourcesState();
+
+  const allSourcesUploaded = sources.every((source) => {
+    return source.progress === '100%';
+  })
 
   const { 
     loadAssetListState, 
@@ -396,6 +405,12 @@ const AddDialog = props => {
     setAssetDetailState('scrollSpeed', value);
   }, [setAssetDetailState])
 
+  const openBrowser = React.useCallback(() => {
+    const url = `${TOUCH_WEB_SERVER_URL}/html/news-preview?assetId=${assetId}`;
+    console.log(url)
+    window.open(url, '_blank', ) 
+  }, [assetId])
+
   const titleText = isEditMode ? 'Edit Source' : 'Add Source';
   const addBtnText = isEditMode ? 'Apply' : 'Add';
   const displayModeDefault = displayMode || 'flexRow';
@@ -435,6 +450,15 @@ const AddDialog = props => {
               <CheckIconPreview fontSize="small" />
             </CustomIconButton>
             <div>8뉴스 예고</div>
+            {isNewsPreview && (
+              <Button
+                size="small"
+                variant="contained"
+                sx={{marginLeft: '20px'}}
+                onClick={openBrowser}
+                disabled={!allSourcesUploaded || sources.length === 0}
+              >Preview</Button>
+            )}
           </IsNewsPreview>
         </TitleContainer>
         <DialogContent>
