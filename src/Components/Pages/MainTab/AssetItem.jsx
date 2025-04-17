@@ -14,7 +14,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import colors from 'config/colors';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogAssetState from 'hooks/useDialogAssetState';
-import useDialogSourcesState from 'hooks/useDialogSourcesState';
+import useDialogAssetSourcesState from 'hooks/useDialogAssetSourcesState';
 import useHeaderState from 'hooks/useHeaderState';
 
 const basename = path => path.substring(path.lastIndexOf('\\') + 1);
@@ -128,7 +128,7 @@ const AssetItem = (props) => {
   const {
     setSourcesState,
     updateProgressState,
-  } = useDialogSourcesState();
+  } = useDialogAssetSourcesState();
 
   const { 
     assetsActive, 
