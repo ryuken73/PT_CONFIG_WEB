@@ -13,7 +13,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import colors from 'config/colors';
 import useAssetListState from 'hooks/useAssetListState';
-import useDialogState from 'hooks/useDialogState';
+import useDialogAssetState from 'hooks/useDialogAssetState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useHeaderState from 'hooks/useHeaderState';
 
@@ -123,7 +123,7 @@ const AssetItem = (props) => {
     setDialogOpenState,
     setIsEditModeState,
     setAssetDetailState,
-  } = useDialogState();
+  } = useDialogAssetState();
 
   const {
     setSourcesState,
@@ -174,7 +174,7 @@ const AssetItem = (props) => {
     })
     setIsEditModeState(true);
     setDialogOpenState(true);
-  },[assetTexts, isAssetActive, setAssetDetailState, assetId, assetTitle, displayMode, isScrollVideo, isScrollSmooth, scrollSpeed, sources, setSourcesState, setIsEditModeState, setDialogOpenState, updateProgressState]);
+  },[isAssetActive, setAssetDetailState, assetId, assetTitle, displayMode, isScrollVideo, isNewsPreview, isScrollSmooth, scrollSpeed, assetTexts, sources, setSourcesState, setIsEditModeState, setDialogOpenState, updateProgressState]);
 
   const toggleActive = React.useCallback(() => {
     if(isAssetActive){
