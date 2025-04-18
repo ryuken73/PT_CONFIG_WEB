@@ -71,7 +71,8 @@ const YellowStar = styled(StarIcon)`
   color: yellow;
 `
 const AssetItem = (props) => {
-  const { asset, rownum } = props;
+  console.log('3333', props)
+  const { item: asset, rownum } = props;
   const {
     assetId,
     assetTitle,

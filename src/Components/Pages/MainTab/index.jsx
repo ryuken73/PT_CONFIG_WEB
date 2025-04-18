@@ -4,6 +4,7 @@ import DnD from 'Components/Common/DnD';
 import TabButtons from 'Components/Pages/MainTab/TabButtons';
 import AssetItem from 'Components/Pages/MainTab/AssetItem';
 import AssetItemHeader from 'Components/Pages/MainTab/AssetItemHeader';
+import ScrollBarVirtual from 'Components/Common/ScrollBarVirtual';
 import ScrollbarSmooth from 'Components/Common/ScrollBarSmooth';
 import useAssetListState from 'hooks/useAssetListState';
 import useDialogState from 'hooks/useDialogState';
@@ -61,16 +62,21 @@ const MainTab = (props) => {
       <TabButtons />
       <AssetItemHeader />
       <DnD onDrop={handleDrop} showPlaceholder={showInfoText}>
-        <ScrollbarSmooth direction='x' show={true}>
-          {assetListCurrentType.map((asset, index) => (
+        {/* <ScrollbarSmooth direction='x' show={true}> */}
+          <ScrollBarVirtual
+            items={assetListCurrentType}
+            ItemElement={AssetItem}
+            rowHeight={40}
+          ></ScrollBarVirtual>
+          {/* {assetListCurrentType.map((asset, index) => (
             <AssetItem
               asset={asset}
               key={asset.assetId}
               checked={asset.checked}
               rownum={index+1}
             />
-          ))}
-        </ScrollbarSmooth>
+          ))} */}
+        {/* </ScrollbarSmooth> */}
       </DnD>
     </Container>
   );

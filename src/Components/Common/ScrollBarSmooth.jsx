@@ -31,6 +31,7 @@ const ScrollBarSmooth = (props, ref) => {
   const { getMoreItem = () => {}, refreshRefByTime = () => {} } = props;
   const scrollbar = React.useRef(null);
   const [parentRef, setParentRef] = React.useState(ref);
+  console.log(height)
   React.useEffect(() => {
     // console.log('^^^ in scroll effect!')
     if (scrollbar === null) return;
@@ -49,6 +50,7 @@ const ScrollBarSmooth = (props, ref) => {
     // console.log(scroll.offset.y, scroll.limit.y)
     const haveReachedBottom = scroll.offset.y === scroll.limit.y;
     if (haveReachedBottom) {
+      console.log('bottom')
       getMoreItem();
     }
   }, []);
