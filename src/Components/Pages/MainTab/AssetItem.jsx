@@ -57,6 +57,7 @@ const BigBox = styled(Box)`
 const LightTextBox = styled(TextBox)`
   text-align: center;
   opacity: 1;
+  cursor: ${props => props.clickable && 'pointer'};
 `
 const CustomIconButton = styled(IconButton)`
   && {
@@ -108,6 +109,11 @@ const AssetItem = (props) => {
   };
   const displayModeText = displayModeMap[displayMode] || '-';
 
+  const openBrowser = React.useCallback(() => {
+    const url = sources[0].srcRemote;
+    window.open(url, '_blank'); 
+  }, [sources])
+
   return (
     <Container>
       <TextContainer>
@@ -134,7 +140,7 @@ const AssetItem = (props) => {
           asset={asset}
         ></AssetItemIcons>
         <BigBox>
-          <LightTextBox textAlign="left" maxWidth="300px" text={firstSource} />
+          <LightTextBox clickable onClick={openBrowser} textAlign="left" maxWidth="300px" text={firstSource} />
         </BigBox>
         <TinyBox>
           <LightTextBox text={sources.length} />
