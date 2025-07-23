@@ -64,7 +64,24 @@ const axiosRequest = {
             return {success:false};
         }
     },
+    async convertIframeOnly(sourceFile) {
+        try {
+            const options = {
+                ...this.options
+            }
+            const postParams = {sourceFile}
+            const postUrl = `${SERVER_URL}/ffmpeg/toIframeOnly`;
+            const response = await axios.post(postUrl, postParams, options);
+            if(response.status === 200 && response.data.success){
+                return response.data;
+            }
+            return {success:false};
+        } catch (err) {
+            console.error(err)
+            return {success:false};
+        }
 
+    },
     async putAsset(params) {
         // const {assetTitle, displayMode, typeId, isFavorite, sources} = params;
         const postParams = {...params};
@@ -263,6 +280,7 @@ const axiosRequest = {
             return {success:false};
         }
     },
+
 
     // old code
     async requestVerifySecret(url, params){

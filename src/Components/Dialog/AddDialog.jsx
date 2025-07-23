@@ -23,12 +23,11 @@ import useAssetListState from 'hooks/useAssetListState';
 import useTypeListState from 'hooks/useTypeListState';
 import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
-import { SystemSecurityUpdate, WindowSharp } from '@mui/icons-material';
 
 const isHttpUrl = src => src.startsWith('http');
 const isSrcTypeVideo = src => src.srcType === 'video';
 
-const {TOUCH_WEB_SERVER_URL} = CONSTANTS;
+const {TOUCH_WEB_SERVER_URL, SERVER_URL} = CONSTANTS;
 const videoExtensions = ['M3M8', 'MP4'];
 const imageExtensions = ['JPG', 'GIF', 'PNG', 'ICO', 'BMP'];
 const typeInfer = name => {
@@ -162,6 +161,11 @@ const mergeResults = (sources, results) => {
   })
 }
 
+const convertIframeOnly = (sourceFile) => {
+  const [axiosRequestWithAuth, ] = axiosRequest();
+  return axiosRequestWithAuth.convertIframeOnly(sourceFile);
+}
+
 const saveAsset = (assetDetail) => {
   // console.log('$$$1', assetTitle, displayMode, sources, results);
   const [axiosRequestWithAuth, ] = axiosRequest();
@@ -234,6 +238,8 @@ const AddDialog = props => {
 
   const reqAborters = React.useRef([]);
   const [currentUrl, setCurrentUrl] = React.useState('http://');
+  const [isConverting, setIsConverting] = React.useState(false);
+  const [ffmpegProgress, setFfmpegProgress] = React.useState({});
   // const [isScrollVideoChecked, setIsScrollVideoChecked] = React.useState(false);
   // const [isScrollSmooth, setIsScrollSmooth] = React.useState(false);
   // const [scrollSpeed, setScrollSpeed] = React.useState(150);
@@ -252,6 +258,37 @@ const AddDialog = props => {
     setFilesToUpload([]);
   },[setIsEditModeState, setOpen, clearDialogState, clearAssetTextState, setFilesToUpload]);
 
+  const listenSSE = React.useCallback((jobId) => {
+    return new Promise((resolve, reject) => {
+      if (!jobId) return;
+      const source = new EventSource(`${SERVER_URL}/ffmpeg/progress/${jobId}`);
+      source.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data)
+        if (data.status === 'complete') {
+          setFfmpegProgress(data);
+          // setStatus('완료!');
+          resolve('done')
+          source.close();
+        } else if (data.status === 'error') {
+          // setStatus(`에러: ${data.error}`);
+          setFfmpegProgress({});
+          source.close();
+          resolve('done')
+        } else {
+          setFfmpegProgress(data);
+          // setStatus(`처리 중: ${data.timemark} (${data.percent}%)`);
+        }
+      };
+
+      source.onerror = () => {
+        // setStatus('연결 오류. 다시 시도해주세요.');
+        source.close();
+        resolve('done')
+      };
+    })
+  }, [])
+
   const handleAddAsset = React.useCallback(() => {
     console.log('$$$', assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo, assetTexts);
     const isChanging = isEditMode;
@@ -267,7 +304,7 @@ const AddDialog = props => {
     .then(async results => {
       console.log('$$$$',results);
       if(results.some(result => result.success === false)){
-        alert('cacnceled!');
+        alert('error in sendFile! check server alive');
         return;
       }
       const resultsParsed = results.map(result => {
@@ -300,6 +337,22 @@ const AddDialog = props => {
         scrollSpeed,
         assetTexts
       }
+      console.log('assetDetail=', assetDetail);
+      // isScrollVideo && await convertIframeOnly(sources)
+      if(isScrollVideo && !isChanging){
+        const sourceFile = assetDetail.sources[0].srcLocal;
+        const result = await convertIframeOnly(sourceFile);
+        if(!result.success){
+          setIsConverting(false)
+          alert('error to convert')
+          return;
+        } else {
+          setIsConverting(true)
+          const {jobId} = result;
+          await listenSSE(jobId)
+        }
+        setIsConverting(false)
+      }
       isChanging 
       ? await changeAsset(assetId, assetDetail)
       : await saveAsset(assetDetail);
@@ -309,23 +362,7 @@ const AddDialog = props => {
       console.error(err);
       reqAborters.current.forEach(aborter => aborter.cancel());
     })
-  }, [
-    assetTitle, 
-    displayMode, 
-    sources, 
-    filesToUpload, 
-    typeId, 
-    isFavorite, 
-    isScrollVideo, 
-    isNewsPreview,
-    isEditMode, 
-    updateProgressState, 
-    isScrollSmooth, 
-    scrollSpeed, 
-    assetId, 
-    handleClose,
-    assetTexts
-  ]);
+  }, [assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo, assetTexts, isEditMode, updateProgressState, isNewsPreview, isScrollSmooth, scrollSpeed, assetId, handleClose, listenSSE]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
     setAssetDetailState('assetTitle', event.target.value)
@@ -478,15 +515,7 @@ const AddDialog = props => {
               formItems={formItems}
             />
           )}
-          {isScrollVideo ? (
-              <ScrollVideoOptions
-                isScrollSmooth={isScrollSmooth}
-                scrollSpeed={scrollSpeed}
-                setIsScrollSmooth={setIsScrollSmooth}
-                setScrollSpeed={setScrollSpeed}
-              >
-              </ScrollVideoOptions>
-            ) : (
+          {!isScrollVideo && (
             <AddUrlContainer>
               <DialogAddUrl
                 value={currentUrl}
@@ -509,6 +538,9 @@ const AddDialog = props => {
               </GuideText>
               {showScrollCheck && (
                 <EnableScrollVideo>
+                  {isConverting && (
+                    <div>Extracting Iframe...{ffmpegProgress.percent}%</div>
+                  )}
                   <CustomIconButton onClick={toggleEnableScroll}>
                     <CheckIcon fontSize="small" />
                   </CustomIconButton>
