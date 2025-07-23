@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -15,11 +14,9 @@ import OptionItemText from 'Components/Dialog/OptionItemText';
 import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogAddUrl from 'Components/Dialog/DialogAddUrl';
 import DialogSources from 'Components/Dialog/DialogSources';
-import ScrollVideoOptions from 'Components/Dialog/ScrollVideoOptions';
 import AssetText from 'Components/Dialog/AssetText';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
-import useAssetListState from 'hooks/useAssetListState';
 import useTypeListState from 'hooks/useTypeListState';
 import axiosRequest from 'lib/axiosRequest';
 import CONSTANTS from 'config/constants';
@@ -192,8 +189,6 @@ const AddDialog = props => {
     isEditMode,
     setDialogOpenState: setOpen,
     clearDialogState,
-    // setAssetTitleState,
-    // setDisplayModeState,
     addAssetTextState,
     removeAssetTextState,
     clearAssetTextState,
@@ -220,11 +215,6 @@ const AddDialog = props => {
     return source.progress === '100%';
   })
 
-  const { 
-    loadAssetListState, 
-    // setAssetsState 
-  } = useAssetListState();
-
   const { currentTypeId } = useTypeListState();
   const typeId = currentTypeId === TYPE_ID_ALL ?  TYPE_ID_NONE :
                  currentTypeId === TYPE_ID_FAVORITE ? TYPE_ID_NONE :
@@ -240,9 +230,6 @@ const AddDialog = props => {
   const [currentUrl, setCurrentUrl] = React.useState('http://');
   const [isConverting, setIsConverting] = React.useState(false);
   const [ffmpegProgress, setFfmpegProgress] = React.useState({});
-  // const [isScrollVideoChecked, setIsScrollVideoChecked] = React.useState(false);
-  // const [isScrollSmooth, setIsScrollSmooth] = React.useState(false);
-  // const [scrollSpeed, setScrollSpeed] = React.useState(150);
 
   const CheckIconPreview = isNewsPreview ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
   const CheckIcon = isScrollVideo ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
@@ -250,7 +237,6 @@ const AddDialog = props => {
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
     reqAborters.current.forEach(aborter => aborter.cancel());
-    // loadAssetListState();
     setIsEditModeState(false);
     setOpen(false);
     clearDialogState();
@@ -433,14 +419,6 @@ const AddDialog = props => {
     const newValue = !isScrollVideo;
     setAssetDetailState('isScrollVideo', newValue);
   }, [isScrollVideo, setAssetDetailState])
-
-  const setIsScrollSmooth = React.useCallback((value) => {
-    setAssetDetailState('isScrollSmooth', value);
-  }, [setAssetDetailState])
-
-  const setScrollSpeed = React.useCallback((value) => {
-    setAssetDetailState('scrollSpeed', value);
-  }, [setAssetDetailState])
 
   const openBrowser = React.useCallback(() => {
     const url = `${TOUCH_WEB_SERVER_URL}/html/news-preview?assetId=${assetId}`;
