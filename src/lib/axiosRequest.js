@@ -64,6 +64,34 @@ const axiosRequest = {
             return {success:false};
         }
     },
+    async putAws3dConfig(params, blob) {
+        const { fname } = params;
+        try {
+            const options = {
+                ...this.options,
+                headers: {
+                    ...this.options.headers,
+                    'Content-Type': 'application/octet'
+                }
+            };
+            const putUrl = `${SERVER_URL}/aws3dConfig?fname=${encodeURIComponent(fname)}`;
+            const response = await axios.put(putUrl, blob, options);
+            if (response.status === 200 && response.data.success) {
+                return response.data;
+            }
+            return {
+                success: false,
+                message: (response.data && response.data.message) || 'upload failed'
+            };
+        } catch (err) {
+            console.error(err);
+            const message =
+                (err.response && err.response.data && err.response.data.message) ||
+                err.message ||
+                'upload failed';
+            return { success: false, message };
+        }
+    },
     async convertIframeOnly(sourceFile) {
         try {
             const options = {

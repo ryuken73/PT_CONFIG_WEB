@@ -26,6 +26,8 @@ export default function useDialogState() {
   const isNewsPreview = useSelector((state) => state.dialog.isNewsPreview);
   const isScrollSmooth = useSelector((state) => state.dialog.isScrollSmooth);
   const scrollSpeed = useSelector((state) => state.dialog.scrollSpeed);
+  const aws3dConfig = useSelector((state) => state.dialog.aws3dConfig);
+  const aws3dConfigRemoved = useSelector((state) => state.dialog.aws3dConfigRemoved);
   
   const addAssetTextState = React.useCallback(
     (textId, assetText) => {
@@ -93,6 +95,8 @@ export default function useDialogState() {
     isNewsPreview,
     isScrollSmooth,
     scrollSpeed,
+    aws3dConfig,
+    aws3dConfigRemoved,
     addAssetTextState,
     removeAssetTextState,
     clearAssetTextState,

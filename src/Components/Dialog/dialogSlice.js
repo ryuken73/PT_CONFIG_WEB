@@ -13,6 +13,8 @@ const initialState = {
   isScrollSmooth: false,
   scrollSpeed: 150,
   sources: [],
+  aws3dConfig: null,
+  aws3dConfigRemoved: false,
 };
 
 export const dialogSlice = createSlice({
@@ -102,6 +104,8 @@ export const dialogSlice = createSlice({
     clearDialog: (state, action) => {
       state.assetTitle = '';
       state.sources = [];
+      state.aws3dConfig = null;
+      state.aws3dConfigRemoved = false;
       // state.isNewsPreview = false;
       // state.isScrollVideo = false;
     },

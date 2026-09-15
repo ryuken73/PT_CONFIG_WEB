@@ -94,10 +94,13 @@ const AssetItemIcons = (props) => {
     setAssetDetailState('isScrollSmooth', isScrollSmooth);
     setAssetDetailState('scrollSpeed', scrollSpeed);
     setAssetDetailState('assetTexts', assetTexts);
+    setAssetDetailState('aws3dConfig', asset.aws3dConfig || null);
+    setAssetDetailState('aws3dConfigRemoved', false);
     const sourcesBasename = sources.map(source => {
       return {
         ...source,
-        src:basename(source.srcLocal)
+        // Prefer srcLocal (base URL without configFile) for edit form
+        src: basename(source.srcLocal)
       }
     });
     setSourcesState(sourcesBasename);
@@ -106,7 +109,7 @@ const AssetItemIcons = (props) => {
     })
     setIsEditModeState(true);
     setDialogOpenState(true);
-  },[isAssetActive, setAssetDetailState, assetId, assetTitle, displayMode, isScrollVideo, isNewsPreview, isScrollSmooth, scrollSpeed, assetTexts, sources, setSourcesState, setIsEditModeState, setDialogOpenState, updateProgressState]);
+  },[isAssetActive, setAssetDetailState, assetId, assetTitle, displayMode, isScrollVideo, isNewsPreview, isScrollSmooth, scrollSpeed, assetTexts, sources, setSourcesState, setIsEditModeState, setDialogOpenState, updateProgressState, asset]);
 
   const toggleActive = React.useCallback(() => {
     if(isAssetActive){

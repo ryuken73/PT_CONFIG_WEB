@@ -15,10 +15,12 @@ import OptionItemRadio from 'Components/Dialog/OptionItemRadio';
 import DialogAddUrl from 'Components/Dialog/DialogAddUrl';
 import DialogSources from 'Components/Dialog/DialogSources';
 import AssetText from 'Components/Dialog/AssetText';
+import Aws3dConfigField from 'Components/Dialog/Aws3dConfigField';
 import useDialogState from 'hooks/useDialogState';
 import useDialogSourcesState from 'hooks/useDialogSourcesState';
 import useTypeListState from 'hooks/useTypeListState';
 import axiosRequest from 'lib/axiosRequest';
+import { applyAws3dConfigToSources } from 'lib/aws3dUrl';
 import CONSTANTS from 'config/constants';
 
 const isHttpUrl = src => src.startsWith('http');
@@ -163,6 +165,11 @@ const convertIframeOnly = (sourceFile) => {
   return axiosRequestWithAuth.convertIframeOnly(sourceFile);
 }
 
+const uploadAws3dConfig = (file) => {
+  const [axiosRequestWithAuth, ] = axiosRequest();
+  return axiosRequestWithAuth.putAws3dConfig({ fname: file.name }, file);
+}
+
 const saveAsset = (assetDetail) => {
   // console.log('$$$1', assetTitle, displayMode, sources, results);
   const [axiosRequestWithAuth, ] = axiosRequest();
@@ -203,6 +210,8 @@ const AddDialog = props => {
     isNewsPreview,
     isScrollSmooth,
     scrollSpeed,
+    aws3dConfig,
+    aws3dConfigRemoved,
   } = useDialogState();
 
   const {
@@ -230,9 +239,20 @@ const AddDialog = props => {
   const [currentUrl, setCurrentUrl] = React.useState('http://');
   const [isConverting, setIsConverting] = React.useState(false);
   const [ffmpegProgress, setFfmpegProgress] = React.useState({});
+  const [pendingAws3dFile, setPendingAws3dFile] = React.useState(null);
+  const [pendingAws3dMeta, setPendingAws3dMeta] = React.useState(null);
 
   const CheckIconPreview = isNewsPreview ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
   const CheckIcon = isScrollVideo ? CheckBoxIcon : CheckBoxOutlineBlankIcon;
+
+  const firstWebSourceUrl = React.useMemo(() => {
+    const web = sources.find((source) => {
+      const candidate = source.srcLocal || source.src || source.srcRemote;
+      return source.srcType === 'web' && candidate && String(candidate).startsWith('http');
+    });
+    if (!web) return null;
+    return web.srcLocal || web.src || web.srcRemote;
+  }, [sources]);
 
   const handleClose = React.useCallback((event, reason) => {
     if(reason === 'backdropClick') return;
@@ -242,7 +262,27 @@ const AddDialog = props => {
     clearDialogState();
     clearAssetTextState();
     setFilesToUpload([]);
+    setPendingAws3dFile(null);
+    setPendingAws3dMeta(null);
   },[setIsEditModeState, setOpen, clearDialogState, clearAssetTextState, setFilesToUpload]);
+
+  const onSelectAws3dFile = React.useCallback((file, meta) => {
+    setPendingAws3dFile(file);
+    setPendingAws3dMeta(meta);
+    setAssetDetailState('aws3dConfigRemoved', false);
+  }, [setAssetDetailState]);
+
+  const onClearPendingAws3d = React.useCallback(() => {
+    setPendingAws3dFile(null);
+    setPendingAws3dMeta(null);
+  }, []);
+
+  const onRemoveSavedAws3d = React.useCallback(() => {
+    setPendingAws3dFile(null);
+    setPendingAws3dMeta(null);
+    setAssetDetailState('aws3dConfig', null);
+    setAssetDetailState('aws3dConfigRemoved', true);
+  }, [setAssetDetailState]);
 
   const listenSSE = React.useCallback((jobId) => {
     return new Promise((resolve, reject) => {
@@ -310,7 +350,26 @@ const AddDialog = props => {
       })
       const sourceUploadResults = [...resultsParsed, ...httpSrcFakeResults];
       console.log(resultsParsed, httpSrcFakeResults);
-      const merged = mergeResults(sources, sourceUploadResults);
+      let merged = mergeResults(sources, sourceUploadResults);
+
+      let nextAws3dConfig = aws3dConfig;
+      if (pendingAws3dFile) {
+        const uploadResult = await uploadAws3dConfig(pendingAws3dFile);
+        if (!uploadResult.success) {
+          alert(uploadResult.message || 'AWS 3D 방송 구성 업로드에 실패했습니다.');
+          return;
+        }
+        nextAws3dConfig = uploadResult.aws3dConfig;
+      } else if (aws3dConfigRemoved) {
+        nextAws3dConfig = null;
+      }
+
+      const publicRelativePath =
+        nextAws3dConfig && nextAws3dConfig.publicRelativePath
+          ? nextAws3dConfig.publicRelativePath
+          : null;
+      merged = applyAws3dConfigToSources(merged, publicRelativePath);
+
       const assetDetail = {
         assetTitle,
         sources: merged,
@@ -321,7 +380,12 @@ const AddDialog = props => {
         isNewsPreview,
         isScrollSmooth,
         scrollSpeed,
-        assetTexts
+        assetTexts,
+      };
+      if (pendingAws3dFile || (!isChanging && nextAws3dConfig)) {
+        assetDetail.aws3dConfig = nextAws3dConfig;
+      } else if (aws3dConfigRemoved) {
+        assetDetail.aws3dConfig = null;
       }
       console.log('assetDetail=', assetDetail);
       // isScrollVideo && await convertIframeOnly(sources)
@@ -348,7 +412,7 @@ const AddDialog = props => {
       console.error(err);
       reqAborters.current.forEach(aborter => aborter.cancel());
     })
-  }, [assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo, assetTexts, isEditMode, updateProgressState, isNewsPreview, isScrollSmooth, scrollSpeed, assetId, handleClose, listenSSE]);
+  }, [assetTitle, displayMode, sources, filesToUpload, typeId, isFavorite, isScrollVideo, assetTexts, isEditMode, updateProgressState, isNewsPreview, isScrollSmooth, scrollSpeed, assetId, handleClose, listenSSE, aws3dConfig, aws3dConfigRemoved, pendingAws3dFile]);
 
   const onChangeAssetTitle = React.useCallback((event) => {
     setAssetDetailState('assetTitle', event.target.value)
@@ -509,6 +573,15 @@ const AddDialog = props => {
               isNewsPreview={isNewsPreview}
             ></DialogSources>
           </DialogAssets>
+          <Aws3dConfigField
+            aws3dConfig={aws3dConfigRemoved ? null : aws3dConfig}
+            pendingFile={pendingAws3dFile}
+            pendingMeta={pendingAws3dMeta}
+            onSelectFile={onSelectAws3dFile}
+            onClearPending={onClearPendingAws3d}
+            onRemoveSaved={onRemoveSavedAws3d}
+            previewServiceUrl={firstWebSourceUrl}
+          />
           {sources.length > 0 && (
             <GuideContainer>
               <GuideText>

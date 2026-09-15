@@ -83,7 +83,8 @@ const AssetItem = (props) => {
     created,
     updated,
     isFavorite,
-    typeId
+    typeId,
+    aws3dConfig
   } = asset;
 
   const {
@@ -102,6 +103,8 @@ const AssetItem = (props) => {
   }, [assetId, isFavorite, toggleIsFavoriteState])
 
   const firstSource = sources.length === 0 ? 'none' : basename(sources[0].srcLocal);
+  const hasAws3dConfig = Boolean(aws3dConfig && aws3dConfig.publicRelativePath);
+  const sourceLabel = hasAws3dConfig ? `[구성연결] ${firstSource}` : firstSource;
   const displayModeMap = {
     'flexRow': 'Row',
     'flexColumn': 'Column',
@@ -140,7 +143,7 @@ const AssetItem = (props) => {
           asset={asset}
         ></AssetItemIcons>
         <BigBox>
-          <LightTextBox clickable onClick={openBrowser} textAlign="left" maxWidth="300px" text={firstSource} />
+          <LightTextBox clickable onClick={openBrowser} textAlign="left" maxWidth="300px" text={sourceLabel} />
         </BigBox>
         <TinyBox>
           <LightTextBox text={sources.length} />
