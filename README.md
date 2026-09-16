@@ -94,6 +94,18 @@ AWS 3D 연동 상세는 서버 repo:
 
 ---
 
+## Git remotes
+
+| remote | URL |
+|--------|-----|
+| GitHub (`origin` fetch) | https://github.com/ryuken73/PT_CONFIG_WEB.git |
+| GitLab | https://gitlabsvr.sbs.co.kr/weather_system/touch_config.git |
+
+`git push origin` → GitHub + GitLab 둘 다 push (dual push).  
+GitLab만: `git push gitlab`.
+
+---
+
 ## 관련 저장소
 
 | repo | 역할 |
